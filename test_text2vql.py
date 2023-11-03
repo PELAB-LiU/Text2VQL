@@ -4,8 +4,8 @@ import unittest
 import openai
 
 from text2vql.metamodel import MetaModel
-from text2vql.postprocessor import postprocess
-from text2vql.template import get_formatted_query, get_instruction
+from text2vql.postprocessor import postprocess_nl_queries
+from text2vql.template import get_formatted_nl_query, get_instruction_nl_queries
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -30,9 +30,9 @@ class TestMetaModel(unittest.TestCase):
     def test_template(self):
         queries = []
         for j, (q, nl) in enumerate(PAIRS):
-            queries.append(get_formatted_query(j + 1, nl, q))
+            queries.append(get_formatted_nl_query(j + 1, nl, q))
         queries = '\n'.join(queries)
-        instruction = get_instruction(METAMODEL.get_metamodel_info(), queries, 5, METAMODEL2.get_metamodel_info())
+        instruction = get_instruction_nl_queries(METAMODEL.get_metamodel_info(), queries, 5, METAMODEL2.get_metamodel_info())
         print(instruction)
 
         # example request
@@ -43,7 +43,7 @@ class TestMetaModel(unittest.TestCase):
             temperature=0
         )
         response = response["choices"][0]["text"]
-        print(postprocess(response))
+        print(postprocess_nl_queries(response))
 
 
 if __name__ == '__main__':
