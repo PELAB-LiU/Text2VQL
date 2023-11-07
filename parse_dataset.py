@@ -1,15 +1,35 @@
+import argparse
 import glob
 import os
+import sqlite3
 
 from tqdm import tqdm
 
 from text2vql.metamodel import MetaModel
 
-FOLDER = 'ecore555'
+# parse arguments
+parser = argparse.ArgumentParser(description='Parse dataset')
+parser.add_argument('--metamodels_dataset', type=str, default='ecore555',
+                    help='metamodels dataset folder')
+parser.add_argument('--db', type=str, default='dataset.db', help='database file')
+args = parser.parse_args()
+folder = args.metamodels_dataset
+db = args.db
+
+
+def index_metamodels(metamodels, db, folder):
+    conn = sqlite3.connect(db)
+    cursor = conn.cursor()
+    for m in tqdm(metamodels, desc="Indexing metamodels"):
+        tuple = (m.path, folder, m.get_metamodel_info(), m.number_of_elements())
+        cursor.execute("INSERT INTO metamodels(id, dataset, definition, elements) VALUES (?,?,?,?)", tuple)
+    conn.commit()
+    conn.close()
+
 
 metamodels = []
 # for each *.ecore
-for file in tqdm(glob.glob(os.path.join(FOLDER, "*.ecore")), desc="Parsing metamodels"):
+for file in tqdm(glob.glob(os.path.join(folder, "**", "*.ecore"), recursive=True), desc="Parsing metamodels"):
     try:
         metamodel = MetaModel(file)
         info = metamodel.get_metamodel_info()
@@ -19,11 +39,4 @@ for file in tqdm(glob.glob(os.path.join(FOLDER, "*.ecore")), desc="Parsing metam
     except:
         continue
 
-print(f"Parsed {len(metamodels)} metamodels out of {len(glob.glob(os.path.join(FOLDER, '*.ecore')))}")
-
-number_elements = [m.number_of_elements() for m in metamodels]
-
-print(f"Average number of elements: {sum(number_elements) / len(number_elements):.2f}")
-
-threshold = 30
-print(f"Metamodels with less than {threshold} elements: {len([n for n in number_elements if n < threshold])}")
+index_metamodels(metamodels, db, folder)

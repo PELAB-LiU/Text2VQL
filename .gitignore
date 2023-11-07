@@ -167,3 +167,7 @@ cython_debug/
 /falcon/
 /gptneo/
 /opt-125-vql2text/
+
+/repo-ecore-all/
+/repo-atlanmod/
+
