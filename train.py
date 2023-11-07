@@ -1,0 +1,138 @@
+from dataclasses import dataclass, field
+from typing import Optional
+
+import torch
+import transformers
+from datasets import load_dataset
+from peft import TaskType, LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser
+
+IGNORE_INDEX = -100
+PROMPT = """Below there is the specification of a meta-model
+{metamodel}
+Write the patterns using the Viatra Query Language of the following natural language specification:
+{nl}
+Patterns:
+"""
+
+
+def load_model_and_tokenizer(args):
+    model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
+                                                 trust_remote_code=True, torch_dtype=torch.float16)
+                                                 # torch_dtype=torch.float16)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path)
+
+    if args.training_method == "lora":
+        peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM,
+                                 r=8,
+                                 lora_alpha=16,
+                                 lora_dropout=0.1,
+                                 bias="none")
+        model = get_peft_model(model, peft_config)
+        model.print_trainable_parameters()
+
+    if getattr(tokenizer, "pad_token_id") is None:
+        tokenizer.pad_token_id = tokenizer.eos_token_id
+        model.config.pad_token_id = model.config.eos_token_id
+
+    tokenizer.padding_side = "left"
+
+    return model, tokenizer
+
+
+@dataclass
+class ModelArguments:
+    model_name_or_path: Optional[str] = field(default="Salesforce/codegen-350M-mono")
+    training_method: Optional[str] = field(default="ft")
+
+
+@dataclass
+class DataArguments:
+    data_path: str = field(default="antolin/text2vql", metadata={"help": "Path to the training data."})
+    max_target_length: int = field(default=512)
+    max_input_length: int = field(default=128)
+
+
+@dataclass
+class TrainingArguments(transformers.TrainingArguments):
+    cache_dir: Optional[str] = field(default=None)
+    optim: str = field(default="adamw_torch")
+    per_device_train_batch_size: int = field(default=2)
+    per_device_eval_batch_size: int = field(default=2)
+    gradient_accumulation_steps: int = field(default=16)
+    fp16: bool = field(default=True)
+    save_strategy: str = field(default="epoch")
+    logging_steps: int = field(default=1)
+    learning_rate: float = field(default=5e-5)
+    seed: int = field(default=123)
+    max_grad_norm: float = field(default=1.)
+    output_dir: str = field(default="codegen-mono-350-vql2text")
+    evaluation_strategy: str = field(default="epoch")
+    load_best_model_at_end: bool = field(default=True)
+    save_total_limit: int = field(default=1)
+    num_train_epochs: int = field(default=10)
+
+
+def preprocess_function(example, tokenizer, max_target_length, max_input_length):
+    """
+    # we tokenize, pad and truncate the samples in the following way:
+    #   <pad><pad>...### Instruction:\n<intent>\n### Answer:\n<snippet><eos>
+    #
+    #   - prompt tokens `<pad><pad>...<intent + \n>` are ignored in the computation of the loss (-100 labels)
+    #   - `<eos>` delimits the snippet and allows the model to have more focused predictions at inference
+    """
+    tokenized_target = tokenizer(example['pattern'],
+                                 truncation=True,
+                                 max_length=max_target_length - 1,
+                                 # incoder adds eos token before the start of a sequence -> ignore
+                                 add_special_tokens=False)
+    tokenized_target["input_ids"] = tokenized_target["input_ids"] + [tokenizer.eos_token_id]
+    tokenized_target["attention_mask"] = tokenized_target["attention_mask"] + [1]
+
+    prompt = PROMPT.format(
+        metamodel=example['metamodel_definition'],
+        nl=example['nl']
+    )
+    max_prompt_len = (max_input_length + max_target_length) - \
+                     len(tokenized_target["input_ids"])
+    model_inputs = tokenizer(prompt,
+                             truncation=True,
+                             padding="max_length",
+                             max_length=max_prompt_len)
+
+    model_inputs["labels"] = [-100] * len(model_inputs["input_ids"]) + tokenized_target["input_ids"]
+    model_inputs["input_ids"] = model_inputs["input_ids"] + tokenized_target["input_ids"]
+    model_inputs["attention_mask"] = model_inputs["attention_mask"] + tokenized_target["attention_mask"]
+    return model_inputs
+
+
+def train(model_args, data_args, training_args):
+    dataset = load_dataset(data_args.data_path)
+    model, tokenizer = load_model_and_tokenizer(model_args)
+
+    dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
+                                                        data_args.max_target_length,
+                                                        data_args.max_input_length),
+                          remove_columns=dataset["train"].column_names,
+                          desc="Generating samples features.")
+
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=dataset["train"],
+        eval_dataset=dataset["test"],
+        tokenizer=tokenizer,
+        data_collator=default_data_collator,
+    )
+
+    trainer.train()
+
+
+def main():
+    parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
+    model_args, data_args, training_args = parser.parse_args_into_dataclasses()
+    train(model_args, data_args, training_args)
+
+
+if __name__ == '__main__':
+    main()
