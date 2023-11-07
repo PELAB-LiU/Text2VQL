@@ -19,7 +19,9 @@ def main(args):
         contexts.append(metamodel.get_metamodel_info())
     df['metamodel_definition'] = contexts
     dataset = Dataset.from_pandas(df)
+    dataset = dataset.train_test_split(test_size=0.2)
     dataset.push_to_hub(args.hf_dataset, private=True)
+    print(dataset)
 
 
 if __name__ == '__main__':

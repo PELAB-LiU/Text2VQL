@@ -1,14 +1,14 @@
 import argparse
-import glob
 import os
 import sqlite3
 import time
 
 import openai
+import pandas as pd
 from tqdm import tqdm
 
-from seed_sample import SEED_METAMODEL, PAIRS
-from text2vql.metamodel import MetaModel
+from seed_metamodels.seed_sample_yakindu import SEED_METAMODEL, COMPLEX_PAIRS, SIMPLE_PAIRS
+from seed_metamodels.seed_sample_relational import SEED_METAMODEL_RELATIONAL, RELATIONAL_PAIRS
 from text2vql.postprocessor import postprocess_nl_queries
 from text2vql.template import get_formatted_nl_query, get_instruction_nl_queries
 
@@ -19,33 +19,25 @@ def save_to_db(db, metamodel, pairs):
     conn = sqlite3.connect(db)
     cursor = conn.cursor()
 
-    # define the data to be inserted as a tuple
-    tuple_metamodel = (metamodel.path,
-                       metamodel.path,
-                       str(metamodel.domain))
-
-    # execute the insert statement
-    cursor.execute("INSERT INTO metamodels (id, path, domain) VALUES (?, ?, ?)", tuple_metamodel)
-
     for i, (nl, q) in enumerate(pairs):
         tuple_query = (nl,
                        q,
-                       metamodel.path)
+                       metamodel)
         cursor.execute("INSERT INTO pairs (nl, pattern, metamodel) VALUES (?, ?, ?)",
                        tuple_query)
     conn.commit()
     conn.close()
 
 
-def call_gpt(seed_metamodel, seed_nl_queries, metamodel, requested_queries=10, max_tokens=3000,
+def call_gpt(seed_metamodel, seed_nl_queries, metamodel_des, metamodel_id, requested_queries=10, max_tokens=3000,
              temperature=0.4, model="gpt-3.5-turbo", tries=3):
     seed_queries = []
     for j, (q, nl) in enumerate(seed_nl_queries):
         seed_queries.append(get_formatted_nl_query(j + 1, nl, q))
     seed_queries = '\n'.join(seed_queries)
     instruction = get_instruction_nl_queries(seed_metamodel.get_metamodel_info(), seed_queries, requested_queries,
-                                             metamodel.get_metamodel_info())
-    print(f'Trying to generate {requested_queries} queries for metamodel {metamodel.path}')
+                                             metamodel_des)
+    print(f'Trying to generate {requested_queries} queries for metamodel {metamodel_id}')
     for _ in range(tries):
         try:
             response = openai.ChatCompletion.create(
@@ -63,41 +55,31 @@ def call_gpt(seed_metamodel, seed_nl_queries, metamodel, requested_queries=10, m
     return generated_pairs
 
 
-def get_metamodels(dataset_folder, threshold_size=30):
-    metamodels = []
-    # for each *.ecore
-    for file in tqdm(glob.glob(os.path.join(dataset_folder, "*.ecore")), desc="Parsing metamodels"):
-        try:
-            metamodel = (MetaModel(file, int(file.split('_')[1])))
-            info = metamodel.get_metamodel_info()
-            if len(info.strip()) == 0:
-                continue
-            metamodels.append(metamodel)
-        except:
-            continue
-    metamodels = [m for m in metamodels if m.number_of_elements() <= threshold_size]
-    return metamodels
+def get_metamodels(db, min_elements=30, max_elements=60):
+    conn = sqlite3.connect(db)
+    query = f"""select m.id, m.definition from representatives join metamodels m on representatives.id = m.id 
+    where m.elements >= {min_elements} and m.elements <= {max_elements}"""
+    df = pd.read_sql_query(query, conn)
+    return df
 
 
 def main(args):
-    metamodels = get_metamodels(args.metamodels_dataset)
-
-    candidates = []
-    for i in range(10):
-        aux = [m for m in metamodels if m.domain == i]
-        if aux:
-            candidates += aux[0:5]
-    for m in tqdm(candidates, desc="Generating dataset"):
-        output_pairs = call_gpt(SEED_METAMODEL, PAIRS, m)
-        save_to_db(args.db, m, output_pairs)
+    df = get_metamodels(args.db, args.min_elements, args.max_elements)
+    df = df.sample(n=250, random_state=42)
+    for _, row in tqdm(df.iterrows(), desc='Generating dataset', total=df.shape[0]):
+        output_pairs = call_gpt(SEED_METAMODEL, COMPLEX_PAIRS, row['definition'], row['id'], requested_queries=5)
+        output_pairs += call_gpt(SEED_METAMODEL, SIMPLE_PAIRS, row['definition'], row['id'], requested_queries=5)
+        output_pairs += call_gpt(SEED_METAMODEL_RELATIONAL, RELATIONAL_PAIRS, row['definition'], row['id'],
+                                 requested_queries=5)
+        save_to_db(args.db, row['id'], output_pairs)
 
 
 if __name__ == '__main__':
     # parse arguments
     parser = argparse.ArgumentParser(description='Generate dataset by calling GPT')
     parser.add_argument('--db', type=str, default='dataset.db', help='database file')
-    parser.add_argument('--metamodels_dataset', type=str, default='ecore555',
-                        help='metamodels dataset folder')
+    parser.add_argument('--max_elements', type=int, default=50, help='max number of elements in metamodel')
+    parser.add_argument('--min_elements', type=int, default=30, help='min number of elements in metamodel')
 
     args = parser.parse_args()
     main(args)

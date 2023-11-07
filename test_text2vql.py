@@ -9,8 +9,8 @@ from text2vql.template import get_formatted_nl_query, get_instruction_nl_queries
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-METAMODEL = MetaModel('test_metamodels/yakindu_simplified.ecore')
-METAMODEL2 = MetaModel('test_metamodels/relational.ecore')
+METAMODEL = MetaModel('seed_metamodels/yakindu_simplified.ecore')
+METAMODEL2 = MetaModel('seed_metamodels/relational.ecore')
 QUERY1 = """pattern transition(t : Transition, src : Vertex, trg : Vertex) {
 	Transition.source(t, src);
 	Transition.target(t, trg);
