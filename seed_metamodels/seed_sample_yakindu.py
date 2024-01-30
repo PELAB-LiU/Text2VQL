@@ -51,7 +51,7 @@ QUERY7 = """pattern exitStateWithOutgoingTransition(e : Exit) {
 
 NL8 = "Regions that have no states"
 QUERY8 = """pattern noStateInRegion(region: Region) {
-	neg find StateInRegion(region, _);
+	neg find stateInRegion(region, _);
 }
 
 //auxiliary pattern
