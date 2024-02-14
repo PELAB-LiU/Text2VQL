@@ -1,0 +1,92 @@
+# Verify that the target metamode has inheriance.
+# Works better with lower number of output queries. (target metamode dependent?)
+
+Given this metamodel 
+
+class Pseudostate extends Vertex {
+}
+class Vertex {
+	ref Transition[0, *] incomingTransitions;
+	ref Transition[0, *] outgoingTransitions;
+}
+class Region {
+	ref Vertex[0, *] vertices;
+}
+class Transition {
+	ref Vertex[1, 1] target;
+	ref Vertex[0, 1] source;
+}
+class Statechart extends CompositeElement {
+}
+class Entry extends Pseudostate {
+}
+class Synchronization extends Pseudostate {
+}
+class State extends RegularState, CompositeElement {
+}
+class RegularState extends Vertex {
+}
+class CompositeElement {
+	ref Region[0, *] regions;
+...
+}
+class FinalState extends RegularState {
+}
+
+and the following Viatra Query examples
+
+Example 1:
+Description: "RegularState is a vertex."
+Query:
+pattern regularState(state: Vertex){
+    RegularState(state);
+}
+
+Example 2:
+Description: "Entry is a Pseudostate"
+Query:
+pattern entries(transition: Pseudostate){
+    Entry(transition);
+}
+
+Generate 2 Viatra Queries similar to the examples using the following metamodel
+
+class Database extends ModelElement {
+	attr EString[0, 1] name;
+	attr EString[0, 1] url;
+	ref Schema[0, *] ownedSchemas;
+}
+class Schema extends ModelElement {
+	attr EString[0, 1] name;
+	ref Table[0, *] ownedTables;
+	ref Database[1, 1] owner;
+}
+class Table extends ModelElement {
+	attr EString[0, 1] name;
+	ref Column[0, *] ownedColumns;
+	ref ForeignKey[0, *] ownedForeignKeys;
+	ref Schema[1, 1] owner;
+}
+class ForeignKey extends ModelElement {
+	attr EString[0, 1] name;
+	ref Table[1, 1] foreignTable;
+	ref Table[1, 1] sourceTable;
+}
+class Column extends ModelElement {
+	attr EString[0, 1] name;
+	attr Type[0, 1] type;
+	attr EBoolean[0, 1] isPrimaryKey;
+	attr EBoolean[0, 1] isUnique;
+	ref Table[1, 1] owner;
+}
+enum Type {
+	NUMERIC;
+	VARCHAR;
+	DATE;
+	TIME;
+	FLOAT;
+	CHAR;
+}
+class ModelElement {
+	attr EString[0, 1] comment;
+}
