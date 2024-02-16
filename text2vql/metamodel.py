@@ -17,10 +17,14 @@ class MetaModel:
         for classifier in self.root.eClassifiers:
             if isinstance(classifier, EClass):
                 supertypes = ', '.join(s.name for s in classifier.eSuperTypes)
-                if classifier.eSuperTypes:
-                    info += f"class {classifier.name} extends {supertypes}" + " {\n"
+                if classifier.abstract:
+                    info += "abstract class "
                 else:
-                    info += f"class {classifier.name}" + " {\n"
+                    info += "class "
+                if classifier.eSuperTypes:
+                    info += f"{classifier.name} extends {supertypes}" + " {\n"
+                else:
+                    info += f"{classifier.name}" + " {\n"
                 for feature in classifier.eStructuralFeatures:
                     keyword = "ref" if isinstance(feature, EReference) else "attr"
                     info += f"\t{keyword} {feature.eType.name}[{feature.lowerBound}, {feature.upperBound if feature.upperBound!= -1 else '*'}] {feature.name};\n"
