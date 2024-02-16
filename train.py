@@ -8,26 +8,57 @@ from peft import TaskType, LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser
 
 IGNORE_INDEX = -100
-PROMPT = """Below there is the specification of a meta-model
+PROMPT_NL = """Below there is the specification of a meta-model
 {metamodel}
 Write the patterns using the Viatra Query Language of the following natural language specification:
 {nl}
 Patterns:
 """
 
+PROMPT_CODE = """{metamodel}
+//{nl}
+"""
+
+LORA_TARGET_MODULES = {
+    "Salesforce/codegen2-1B": {
+        "target_modules": ["qkv_proj"],
+        "ff_modules": ["out_proj", "fc_in", "fc_out"]
+    },
+    "Salesforce/codegen2-3_7B": {
+        "target_modules": ["qkv_proj"],
+        "ff_modules": []
+    },
+    "Salesforce/codegen2-7B": {
+        "target_modules": ["qkv_proj"],
+        "ff_modules": []
+    }
+}
+
 
 def load_model_and_tokenizer(args):
-    model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
-                                                 trust_remote_code=True, torch_dtype=torch.float16)
-                                                 # torch_dtype=torch.float16)
+
+    if args.fp16_model:
+        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
+                                                     trust_remote_code=True, torch_dtype=torch.float16)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
+                                                     trust_remote_code=True)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path)
 
     if args.training_method == "lora":
-        peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM,
-                                 r=8,
-                                 lora_alpha=16,
-                                 lora_dropout=0.1,
-                                 bias="none")
+        if args.model_name_or_path in LORA_TARGET_MODULES:
+            peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM,
+                                     r=8,
+                                     lora_alpha=16,
+                                     lora_dropout=0.1,
+                                     bias="none",
+                                     target_modules=LORA_TARGET_MODULES[args.model_name_or_path]["target_modules"])
+        else:
+            peft_config = LoraConfig(task_type=TaskType.CAUSAL_LM,
+                                     r=8,
+                                     lora_alpha=16,
+                                     lora_dropout=0.1,
+                                     bias="none")
         model = get_peft_model(model, peft_config)
         model.print_trainable_parameters()
 
@@ -42,8 +73,10 @@ def load_model_and_tokenizer(args):
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: Optional[str] = field(default="Salesforce/codegen-350M-mono")
+    model_name_or_path: Optional[str] = field(default="Salesforce/codegen-350M-multi")
     training_method: Optional[str] = field(default="ft")
+    nl_or_code: str = field(default="code")
+    fp16_model: bool = field(default=False)
 
 
 @dataclass
@@ -66,14 +99,14 @@ class TrainingArguments(transformers.TrainingArguments):
     learning_rate: float = field(default=5e-5)
     seed: int = field(default=123)
     max_grad_norm: float = field(default=1.)
-    output_dir: str = field(default="codegen-mono-350-vql2text")
+    output_dir: str = field(default="codegen-multi-ff")
     evaluation_strategy: str = field(default="epoch")
     load_best_model_at_end: bool = field(default=True)
     save_total_limit: int = field(default=1)
     num_train_epochs: int = field(default=10)
 
 
-def preprocess_function(example, tokenizer, max_target_length, max_input_length):
+def preprocess_function(example, tokenizer, max_target_length, max_input_length, nl_or_code):
     """
     # we tokenize, pad and truncate the samples in the following way:
     #   <pad><pad>...### Instruction:\n<intent>\n### Answer:\n<snippet><eos>
@@ -88,6 +121,8 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length)
                                  add_special_tokens=False)
     tokenized_target["input_ids"] = tokenized_target["input_ids"] + [tokenizer.eos_token_id]
     tokenized_target["attention_mask"] = tokenized_target["attention_mask"] + [1]
+
+    PROMPT = PROMPT_NL if nl_or_code == "nl" else PROMPT_CODE
 
     prompt = PROMPT.format(
         metamodel=example['metamodel_definition'],
@@ -112,7 +147,8 @@ def train(model_args, data_args, training_args):
 
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
                                                         data_args.max_target_length,
-                                                        data_args.max_input_length),
+                                                        data_args.max_input_length,
+                                                        model_args.nl_or_code),
                           remove_columns=dataset["train"].column_names,
                           desc="Generating samples features.")
 
