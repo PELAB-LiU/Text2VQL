@@ -18,7 +18,7 @@ sqlite3 dataset.db < schema.sql
 Parse datasets and insert into database.
 
 ```bash
-python parse_datasets.py --metamodels_dataset ecore555|repo-atlanmod|repo-ecore-all
+python parse_dataset.py --metamodels_dataset ecore555|repo-atlanmod|repo-ecore-all|test_metamodel
 ```
 
 Compute similar metamodels.

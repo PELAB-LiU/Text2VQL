@@ -171,4 +171,7 @@ cython_debug/
 /repo-ecore-all/
 /repo-atlanmod/
 
+
 /codegen2-3_7b/
+/valid_ids.txt
+
