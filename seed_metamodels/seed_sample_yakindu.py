@@ -62,7 +62,6 @@ NORMAL_QUERY4 = """pattern entryWithMultipleOutgoingTransitions(entry : Entry) {
 NORMAL_PAIRS = [(NORMAL_QUERY1, NORMAL_NL1), (NORMAL_QUERY2, NORMAL_NL2), (NORMAL_QUERY3, NORMAL_NL3),
                 (NORMAL_QUERY4, NORMAL_NL4)]
 
-
 TYPE_NL1 = "RegularState is a vertex"
 TYPE_QUERY1 = """pattern regularState(state: Vertex){
     RegularState(state);
@@ -97,3 +96,5 @@ pattern stateInRegion(region: Region, state: State) {
 }"""
 
 FIND_PAIRS = [(FIND_QUERY1, FIND_NL1), (FIND_QUERY2, FIND_NL2)]
+
+ALL_PAIRS = FIND_PAIRS + OR_PAIRS + TYPE_PAIRS + NORMAL_PAIRS
