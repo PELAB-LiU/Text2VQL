@@ -73,10 +73,10 @@ def load_model_and_tokenizer(args):
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: Optional[str] = field(default="Salesforce/codegen-350M-multi")
-    training_method: Optional[str] = field(default="ft")
+    model_name_or_path: Optional[str] = field(default="Salesforce/codegen2-3_7B")
+    training_method: Optional[str] = field(default="lora")
     nl_or_code: str = field(default="code")
-    fp16_model: bool = field(default=False)
+    fp16_model: bool = field(default=True)
 
 
 @dataclass
@@ -96,10 +96,10 @@ class TrainingArguments(transformers.TrainingArguments):
     fp16: bool = field(default=True)
     save_strategy: str = field(default="epoch")
     logging_steps: int = field(default=1)
-    learning_rate: float = field(default=5e-5)
+    learning_rate: float = field(default=3e-4)
     seed: int = field(default=123)
     max_grad_norm: float = field(default=1.)
-    output_dir: str = field(default="codegen-multi-ff")
+    output_dir: str = field(default="codegen2-3_7b")
     evaluation_strategy: str = field(default="epoch")
     load_best_model_at_end: bool = field(default=True)
     save_total_limit: int = field(default=1)
@@ -143,6 +143,7 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length,
 
 def train(model_args, data_args, training_args):
     dataset = load_dataset(data_args.data_path)
+    print(dataset)
     model, tokenizer = load_model_and_tokenizer(model_args)
 
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,

@@ -20,8 +20,8 @@ Patterns:
 {header}
 """
 
-PATH = "codegen_7b/checkpoint-166"
-BASE_MODEL = "Salesforce/codegen2-7B"
+PATH = "codegen2-3_7b/checkpoint-273"
+BASE_MODEL = "Salesforce/codegen2-3_7B"
 METAMODEL = MetaModel('seed_metamodels/family.ecore')
 model = AutoModelForCausalLM.from_pretrained(BASE_MODEL,
                                              trust_remote_code=True,
@@ -45,7 +45,10 @@ prompt6 = PROMPT_CODE.format(metamodel=METAMODEL.get_metamodel_info(),
 prompt7 = PROMPT_WITH_HEADER_CODE.format(metamodel=METAMODEL.get_metamodel_info(),
                                          nl="Retrieve all pairs of people that have the same father",
                                          header="pattern peopleSameFathers(person1 : Person, person2 : Person) {")
-prompts = [prompt1, prompt2, prompt3, prompt4, prompt5, prompt6, prompt7]
+prompt8 = PROMPT_WITH_HEADER_CODE.format(metamodel=METAMODEL.get_metamodel_info(),
+                                         nl="Retrieve all people whose that have either one father, or have one uncle whose age is 29",
+                                         header="pattern peopleFatherOrUncle(person : Person) {")
+prompts = [prompt1, prompt2, prompt3, prompt4, prompt5, prompt6, prompt7, prompt8]
 
 for prompt in tqdm(prompts, desc='main loop'):
     print(prompt)
