@@ -23,6 +23,9 @@ def get_graph(paths, pairs):
     return G
 
 
+TEST_METAMODEL = 'test_metamodel/railway.ecore'
+
+
 def main(args):
     paths = get_metamodel_paths(args.db)
     pairs = get_metamodel_pairs(args.db)
@@ -33,6 +36,9 @@ def main(args):
     for c in nx.connected_components(G):
         c = list(c)
         c.sort()
+        # remove component of the test model
+        if TEST_METAMODEL in c:
+            continue
         representatives.append(c[0])
 
     # register representatives

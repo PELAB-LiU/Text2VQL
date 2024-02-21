@@ -3,7 +3,7 @@ INSTRUCTION_NL_QUERY = """Given the following meta-model:
 Some example queries in Viatra Query Language are:
 {example_queries}
 
-Note that one query could have some auxiliary patterns. Now write {number} queries for the following meta-model:
+Now write {number} similar queries for the following meta-model and follow the same format as the one in the example:
 {new_metamodel}
 """
 
@@ -14,29 +14,24 @@ NL_QUERY = """
 {query}
 ```"""
 
-INSTRUCTION_NL = """Given the following meta-model:
-{example_metamodel}
-Some example of queries that people could write are:
+NL = "{idx}. {nl_description}"
+
+INSTRUCTION_NL_QUERY_WITHOUT_METAMODEL = """Some example queries in Viatra Query Language are:
 {example_queries}
 
-Come up with {number} queries for the following meta-model. Be sure that the queries are within the scope of the meta-model.
+Now write {number} similar queries for the following meta-model and follow the same format as the one in the example:
 {new_metamodel}
 """
 
-NL = "{idx}. {nl_description}"
-
 
 def get_instruction_nl_queries(example_metamodel, example_queries, number, new_metamodel):
+    if example_metamodel is None:
+        return INSTRUCTION_NL_QUERY_WITHOUT_METAMODEL.format(
+            example_queries=example_queries,
+            number=number,
+            new_metamodel=new_metamodel
+        )
     return INSTRUCTION_NL_QUERY.format(
-        example_metamodel=example_metamodel,
-        example_queries=example_queries,
-        number=number,
-        new_metamodel=new_metamodel
-    )
-
-
-def get_instruction_nl(example_metamodel, example_queries, number, new_metamodel):
-    return INSTRUCTION_NL.format(
         example_metamodel=example_metamodel,
         example_queries=example_queries,
         number=number,

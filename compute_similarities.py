@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # parse args
     parser = argparse.ArgumentParser()
     parser.add_argument('--db', type=str, default='dataset.db')
-    parser.add_argument('--threshold', type=float, default=0.6)
+    parser.add_argument('--threshold', type=float, default=0.7)
     args = parser.parse_args()
 
     main(args)
