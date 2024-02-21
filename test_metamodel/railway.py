@@ -49,6 +49,29 @@ pattern switchSet(semaphore : Semaphore, route : Route, swP : SwitchPosition, sw
 	swpPosition != swCurrentPosition;
 }"""
 
+NL4_1 = "Active GO route with misaligned switch"
+QUERY4_1 = """
+pattern switchSet2(route: Route){
+	find goRoute(route);
+	Route.follows(route, swP);
+	find misalignedSwitchPosition(swP);
+}"""
+NL4_2 = "Active route with GO semaphore"
+QUERY4_2 = """
+pattern goRoute(route: Route){
+	Route.active(route,true);
+	Route.entry(route, semaphore);
+	Semaphore.signal(semaphore, Signal::GO);	
+}"""
+NL4_3="Misaligned switch"
+QUERY4_3 = """
+pattern misalignedSwitchPosition(swP : SwitchPosition){
+	SwitchPosition.target(swP, sw);
+	SwitchPosition.position(swP, swpPosition);
+	Switch.currentPosition(sw, swCurrentPosition);
+	swpPosition != swCurrentPosition;
+}"""
+
 NL5 = "Retrieve six segments monitored by a sensor and connected in a row (i.e., the first with the second, the second with the third, and so on)"
 QUERY5 = """pattern connectedSegments(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
 	Segment.connectsTo(segment1, segment2);
