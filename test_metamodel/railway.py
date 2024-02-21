@@ -87,6 +87,24 @@ QUERY5 = """pattern connectedSegments(sensor : Sensor, segment1 : Segment, segme
 	Segment.monitoredBy(segment6, sensor);
 }"""
 
+
+NL5_1 = "TODO"
+QUERQ5_1 = """
+pattern connectedSegments2(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+	find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
+	find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
+	find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
+	find connectedSegmentWithSameMonitor(segment4, segment5, sensor);
+	find connectedSegmentWithSameMonitor(segment5, segment6, sensor);
+}"""
+NL5_2 = "Two connected segments with the same sensor."
+QUERY5_5 = """
+pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, sensor: Sensor){
+	Segment.connectsTo(segment1,segment2);
+	Segment.monitoredBy(segment1,sensor);
+	Segment.monitoredBy(segment2,sensor);
+}"""
+
 # requires routes which
 # are connected through a pair of sensors and a pair of
 # track elements to belong to the same semaphore.
@@ -109,6 +127,32 @@ pattern entrySemaphore(route, semaphore){
 }"""
 
 
+
+
+
+NL6_ = ""
+QUERY6_ = """
+pattern SemaphoreNeighbor2(semaphore: Semaphore){
+	Route.exit(route1,semaphore);
+	find path(route1,track1);
+	find path(route2,track2);
+	TrackElement.connectsTo(track1,track2);
+	route1 != route2;
+	neg find entrySemaphore(route2, semaphore);
+}"""
+NL6_ = "Route and Track connected with the seame sensor."
+QUERY6_ = """
+pattern path(route: Route, track: TrackElement){
+	Route.requires(route,sensor);
+	TrackElement.monitoredBy(track,sensor);
+}"""
+NL6_ = "Route and its entry Semaphore."
+QUERY6_ = """
+//auxiliary pattern
+pattern entrySemaphore(route: Route, semaphore: Semaphore){
+	Route.entry(route, semaphore);
+}
+"""
 
 
 
