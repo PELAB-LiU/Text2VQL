@@ -126,12 +126,8 @@ pattern entrySemaphore(route, semaphore){
 	Route.entry(route, semaphore);
 }"""
 
-
-
-
-
-NL6_ = ""
-QUERY6_ = """
+NL6_1 = "TODO"
+QUERY6_1 = """
 pattern SemaphoreNeighbor2(semaphore: Semaphore){
 	Route.exit(route1,semaphore);
 	find path(route1,track1);
@@ -140,14 +136,14 @@ pattern SemaphoreNeighbor2(semaphore: Semaphore){
 	route1 != route2;
 	neg find entrySemaphore(route2, semaphore);
 }"""
-NL6_ = "Route and Track connected with the seame sensor."
-QUERY6_ = """
+NL6_2 = "Route and Track connected with the seame sensor."
+QUERY6_2 = """
 pattern path(route: Route, track: TrackElement){
 	Route.requires(route,sensor);
 	TrackElement.monitoredBy(track,sensor);
 }"""
-NL6_ = "Route and its entry Semaphore."
-QUERY6_ = """
+NL6_3 = "Route and its entry Semaphore."
+QUERY6_3 = """
 //auxiliary pattern
 pattern entrySemaphore(route: Route, semaphore: Semaphore){
 	Route.entry(route, semaphore);
