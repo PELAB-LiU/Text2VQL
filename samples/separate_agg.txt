@@ -45,6 +45,19 @@ pattern verticesInRegion(region: Region, vertex: Vertex){
 }
 
 Example 2:
+Description: "Verte with at most 3 outgoing transition."
+Query:
+pattern max3outgoing(vertex: Vertex) {
+    cnt == count find outgoingHelper(region, _);
+    check(cnt<=3);
+}
+
+//auxiliary pattern
+pattern outgoingHelper(vertex: Vertex, transition: Transition){
+	Vertex.outgoingTransitions(vertex, transition);
+}
+
+Example 3:
 Description: "Number of States."
 Query:
 pattern countStates(cnt: java Integer) {
@@ -56,7 +69,7 @@ pattern stateHelper(state: State){
 	State(state);
 }
 
-Example 3:
+Example 4:
 Description: "Vertex with the least incoming transitions."
 Query:
 pattern vertexLeastIncoming(vertex: Vertex, minlength: java Integer) {
@@ -74,20 +87,20 @@ pattern incomingHelper(vertex: Vertex, transition: Transition){
 	Vertex.incomingTransitions(vertex, transition);
 }
 
-Example 4:
-Description: "Verte with at most 3 outgoing transition."
+Example 5:
+Description: "Tere are at least 5 Entries in the model."
 Query:
-pattern max3outgoing(vertex: Vertex) {
-    cnt == count find outgoingHelper(region, _);
-    check(cnt<=3);
+pattern exist5entries() {
+    cnt == count find entryHelper(_);
+    check(cnt>=5);
 }
 
 //auxiliary pattern
-pattern outgoingHelper(vertex: Vertex, transition: Transition){
-	Vertex.outgoingTransitions(vertex, transition);
+pattern entryHelper(entry: Entry){
+	Entry(entry);
 }
 
-Based on the followign mentamodel, generate 5 Viatra Queries containing aggregation and their descriptions .
+Based on the followign mentamodel, generate 4 Viatra Queries containing aggregation and their descriptions .
 Tips:
 * Use helper patterns for count find.
 * Use # for min, max, avg, or sum.
