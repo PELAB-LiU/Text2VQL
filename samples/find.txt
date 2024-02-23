@@ -1,17 +1,18 @@
 Given this metamodel
 
-class Pseudostate extends Vertex {
+abstract class Pseudostate extends Vertex {
 }
-class Vertex {
-    ref Transition[0, *] incomingTransitions;
-    ref Transition[0, *] outgoingTransitions;
+abstract class Vertex {
+	reference Transition[0..*] incomingTransitions;
+	reference Transition[0..*] outgoingTransitions;
 }
 class Region {
-    ref Vertex[0, *] vertices;
+	reference Vertex[0..*] vertices;
+	attribute EString[0..1] name;
 }
 class Transition {
-    ref Vertex[1, 1] target;
-    ref Vertex[0, 1] source;
+	reference Vertex[1..1] target;
+	reference Vertex[0..1] source;
 }
 class Statechart extends CompositeElement {
 }
@@ -21,11 +22,14 @@ class Synchronization extends Pseudostate {
 }
 class State extends RegularState, CompositeElement {
 }
-class RegularState extends Vertex {
+abstract class RegularState extends Vertex {
 }
-class CompositeElement {
-    ref Region[0, *] regions;
-...
+abstract class CompositeElement {
+	reference Region[0..*] regions;
+}
+class Choice extends Pseudostate {
+}
+class Exit extends Pseudostate {
 }
 class FinalState extends RegularState {
 }
@@ -33,85 +37,85 @@ class FinalState extends RegularState {
 and the following Viatra Query examples
 
 Example 1:
-Description: "Entries that do not have outgoing transitions. Auxilary pattern is hasOutgoingTransition."
+Description: "Vertex that has an incoming transition from a different region and an outgoing transition to a Pseudostate"
 Query:
-pattern entryWithoutOutgoingTransitions(e : Entry) {
-    Entry(e);
-    neg find hasOutgoingTransition(e);
+pattern regionAndPseudostate(vertex: Vertex){
+	Vertex.outgoingTransitions(vertex, transition1);
+	find toPseudoState(transition1);
+	Vertex.incomingTransitions(vertex, transition2);
+	find differentRegion(transition2);
 }
-
-//auxiliary pattern
-pattern hasOutgoingTransition(vertex : Vertex) {
-    Vertex.outgoingTransitions(vertex,_);
+//Auxiliary pattern
+pattern toPseudoState(transition: Transition){
+	Transition.target(transition, state);
+	Pseudostate(state);
+}
+//Auxiliary pattern
+pattern differentRegion(transition: Transition){
+	Region.vertices(region1, vertex1);
+	Transition.source(transition, vertex1);
+	Transition.target(transition, vertex2);
+	Region.vertices(region2,vertex2);
 }
 
 Example 2:
-Description: "Regions that have no states. Auxilary pattern is stateInRegion."
-Query:
-pattern noStateInRegion(region: Region) {
-    neg find StateInRegion(region, _);
+Description: "Final state that has an incoming transition from a Pseudostate"
+Query: 
+pattern regionWithPseudoToRegular(vertex: FinalState){
+	Vertex.incomingTransitions(vertex, transition);
+	FinalState(vertex);
+	find pseudoToRegular(transition);
+}
+//Auxiliary pattern
+pattern pseudoToRegular(transition: Transition){
+	Transition.source(transition, source);
+	Pseudostate(source);
+	Transition.target(transition, target);
+	RegularState(target);
 }
 
-//auxiliary pattern
-pattern stateInRegion(region: Region, state: State) {
-    Region.vertices(region, state);
-}
-
-Example 3:
-Description: "Entries that have multiple outgoing transitions"
-Query:
-pattern entryWithMultipleOutgoingTransitions(entry : Entry) {
-    Entry.outgoingTransitions(entry, transition1);
-    Entry.outgoingTransitions(entry, transition2);
-    transition1!=transition2;
-}
-
-Example 4:
-Description: "All entries with their regions"
-Query:
-pattern entryInRegion(region : Region, entry : Entry) {
-    Region.vertices(region, entry);
-}
-
-Based on the followign mentamodel, generate 5 Viatra Queries of increasing complexity and ther descriptions that containing neg statement.
-Provide description for the auxilary pattern.
+Based on the followign mentamodel, generate 5 Viatra Query sets where the 1st query is an arbitrary query, and the 2nd query uses to the 1st with 'find' keyword. 
+Extend the 2nd querry with additional constraints.
+Also generate query descriptions.
 
 class Database extends ModelElement {
-    attr EString[0, 1] name;
-    attr EString[0, 1] url;
-    ref Schema[0, *] ownedSchemas;
+	attribute EString[0..1] name;
+	attribute EString[0..1] url;
+	reference Schema[0..*] ownedSchemas;
 }
 class Schema extends ModelElement {
-    attr EString[0, 1] name;
-    ref Table[0, *] ownedTables;
-    ref Database[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Table[0..*] ownedTables;
+	reference Database[1..1] owner;
 }
 class Table extends ModelElement {
-    attr EString[0, 1] name;
-    ref Column[0, *] ownedColumns;
-    ref ForeignKey[0, *] ownedForeignKeys;
-    ref Schema[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Column[0..*] ownedColumns;
+	reference ForeignKey[0..*] ownedForeignKeys;
+	reference Schema[1..1] owner;
 }
 class ForeignKey extends ModelElement {
-    attr EString[0, 1] name;
-    ref Table[1, 1] foreignTable;
-    ref Table[1, 1] sourceTable;
+	attribute EString[0..1] name;
+	reference Table[1..1] foreignTable;
+	reference Table[1..1] sourceTable;
 }
 class Column extends ModelElement {
-    attr EString[0, 1] name;
-    attr Type[0, 1] type;
-    attr EBoolean[0, 1] isPrimaryKey;
-    attr EBoolean[0, 1] isUnique;
-    ref Table[1, 1] owner;
+	attribute EString[0..1] name;
+	attribute Type[0..1] type;
+	attribute EBoolean[0..1] isPrimaryKey;
+	attribute EBoolean[0..1] isUnique;
+	reference Table[1..1] owner;
 }
 enum Type {
-    NUMERIC;
-    VARCHAR;
-    DATE;
-    TIME;
-    FLOAT;
-    CHAR;
+	NUMERIC;
+	VARCHAR;
+	DATE;
+	TIME;
+	FLOAT;
+	CHAR;
 }
-class ModelElement {
-    attr EString[0, 1] comment;
+abstract class ModelElement {
+	attribute EString[0..1] comment;
 }
+
+Use find <ither query> patterns.
