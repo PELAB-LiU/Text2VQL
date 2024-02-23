@@ -26,8 +26,8 @@ class MetaModel:
                 else:
                     info += f"{classifier.name}" + " {\n"
                 for feature in classifier.eStructuralFeatures:
-                    keyword = "ref" if isinstance(feature, EReference) else "attr"
-                    info += f"\t{keyword} {feature.eType.name}[{feature.lowerBound}, {feature.upperBound if feature.upperBound!= -1 else '*'}] {feature.name};\n"
+                    keyword = "reference" if isinstance(feature, EReference) else "attribute"
+                    info += f"\t{keyword} {feature.eType.name}[{feature.lowerBound}..{feature.upperBound if feature.upperBound!= -1 else '*'}] {feature.name};\n"
                 info += "}\n"
             elif isinstance(classifier, EEnum):
                 info += f"enum {classifier.name}" + " {\n"

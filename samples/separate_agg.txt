@@ -1,17 +1,18 @@
 Given this metamodel 
 
-class Pseudostate extends Vertex {
+abstract class Pseudostate extends Vertex {
 }
-class Vertex {
-	ref Transition[0, *] incomingTransitions;
-	ref Transition[0, *] outgoingTransitions;
+abstract class Vertex {
+	reference Transition[0..*] incomingTransitions;
+	reference Transition[0..*] outgoingTransitions;
 }
 class Region {
-	ref Vertex[0, *] vertices;
+	reference Vertex[0..*] vertices;
+	attribute EString[0..1] name;
 }
 class Transition {
-	ref Vertex[1, 1] target;
-	ref Vertex[0, 1] source;
+	reference Vertex[1..1] target;
+	reference Vertex[0..1] source;
 }
 class Statechart extends CompositeElement {
 }
@@ -21,22 +22,27 @@ class Synchronization extends Pseudostate {
 }
 class State extends RegularState, CompositeElement {
 }
-class RegularState extends Vertex {
+abstract class RegularState extends Vertex {
 }
-class CompositeElement {
-	ref Region[0, *] regions;
+abstract class CompositeElement {
+	reference Region[0..*] regions;
+}
+class Choice extends Pseudostate {
+}
+class Exit extends Pseudostate {
 }
 class FinalState extends RegularState {
 }
+
 
 and the following Viatra Query examples
 
 Example 1:
 Description: "Region with at least 4 vertices."
 Query:
-pattern regionWith4OrMorevertices(region: Region) {
-    cnt == count find verticesInRegion(region, _);
-    check(cnt>=4);
+pattern regionWith4OrMoreVertices(region: Region) {
+	cnt == count find verticesInRegion(region, _);
+	check(cnt>=4);
 }
 
 //auxiliary pattern
@@ -48,8 +54,8 @@ Example 2:
 Description: "Verte with at most 3 outgoing transition."
 Query:
 pattern max3outgoing(vertex: Vertex) {
-    cnt == count find outgoingHelper(region, _);
-    check(cnt<=3);
+	cnt == count find outgoingHelper(region, _);
+	check(cnt<=3);
 }
 
 //auxiliary pattern
@@ -61,7 +67,7 @@ Example 3:
 Description: "Number of States."
 Query:
 pattern countStates(cnt: java Integer) {
-    cnt == count find stateHelper(_);
+	cnt == count find stateHelper(_);
 }
 
 //auxiliary pattern
@@ -73,14 +79,14 @@ Example 4:
 Description: "Vertex with the least incoming transitions."
 Query:
 pattern vertexLeastIncoming(vertex: Vertex, minlength: java Integer) {
-    minlength == min find countIncomingTransitions(_, #);
-    find countIncomingTransitions(vertex, current);
+	minlength == min find countIncomingTransitions(_, #);
+	find countIncomingTransitions(vertex, current);
 	current == minlength;
 }	
 
 //auxiliary pattern
 pattern countIncomingTransitions(vertex : Vertex, cnt: java Integer) {
-    cnt == count find incomingHelper(vertex, _);
+	cnt == count find incomingHelper(vertex, _);
 }
 //auxiliary pattern
 pattern incomingHelper(vertex: Vertex, transition: Transition){
@@ -91,8 +97,8 @@ Example 5:
 Description: "Tere are at least 5 Entries in the model."
 Query:
 pattern exist5entries() {
-    cnt == count find entryHelper(_);
-    check(cnt>=5);
+	cnt == count find entryHelper(_);
+	check(cnt>=5);
 }
 
 //auxiliary pattern
@@ -100,38 +106,38 @@ pattern entryHelper(entry: Entry){
 	Entry(entry);
 }
 
-Based on the followign mentamodel, generate 4 Viatra Queries containing aggregation and their descriptions .
+Based on the following metamodel, generate 4 Viatra Queries containing aggregation and their descriptions.
 Tips:
 * Use helper patterns for count find.
 * Use # for min, max, avg, or sum.
 
 class Database extends ModelElement {
-	attr EString[0, 1] name;
-	attr EString[0, 1] url;
-	ref Schema[0, *] ownedSchemas;
+	attribute EString[0..1] name;
+	attribute EString[0..1] url;
+	reference Schema[0..*] ownedSchemas;
 }
 class Schema extends ModelElement {
-	attr EString[0, 1] name;
-	ref Table[0, *] ownedTables;
-	ref Database[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Table[0..*] ownedTables;
+	reference Database[1..1] owner;
 }
 class Table extends ModelElement {
-	attr EString[0, 1] name;
-	ref Column[0, *] ownedColumns;
-	ref ForeignKey[0, *] ownedForeignKeys;
-	ref Schema[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Column[0..*] ownedColumns;
+	reference ForeignKey[0..*] ownedForeignKeys;
+	reference Schema[1..1] owner;
 }
 class ForeignKey extends ModelElement {
-	attr EString[0, 1] name;
-	ref Table[1, 1] foreignTable;
-	ref Table[1, 1] sourceTable;
+	attribute EString[0..1] name;
+	reference Table[1..1] foreignTable;
+	reference Table[1..1] sourceTable;
 }
 class Column extends ModelElement {
-	attr EString[0, 1] name;
-	attr Type[0, 1] type;
-	attr EBoolean[0, 1] isPrimaryKey;
-	attr EBoolean[0, 1] isUnique;
-	ref Table[1, 1] owner;
+	attribute EString[0..1] name;
+	attribute Type[0..1] type;
+	attribute EBoolean[0..1] isPrimaryKey;
+	attribute EBoolean[0..1] isUnique;
+	reference Table[1..1] owner;
 }
 enum Type {
 	NUMERIC;
@@ -141,7 +147,7 @@ enum Type {
 	FLOAT;
 	CHAR;
 }
-class ModelElement {
-	attr EString[0, 1] comment;
+abstract class ModelElement {
+	attribute EString[0..1] comment;
 }
 
