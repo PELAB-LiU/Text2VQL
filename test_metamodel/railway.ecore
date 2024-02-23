@@ -51,18 +51,18 @@
         eType="#//Semaphore" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Switch" eSuperTypes="#//TrackElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="currentPosition" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
         eType="#//SwitchPosition" eOpposite="#//SwitchPosition/target"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SwitchPosition" eSuperTypes="#//RailwayElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="route" eType="#//Route"
         eOpposite="#//Route/follows"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Switch"
         eOpposite="#//Switch/positions"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Semaphore" eSuperTypes="#//RailwayElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="signal" eType="#//Signal"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="signal" eType="#//Signal"/>
   </eClassifiers>
 </ecore:EPackage>

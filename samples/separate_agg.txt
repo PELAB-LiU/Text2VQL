@@ -34,45 +34,82 @@ class Exit extends Pseudostate {
 class FinalState extends RegularState {
 }
 
+
 and the following Viatra Query examples
 
 Example 1:
-Description: "Veterx that are either entry or final state"
+Description: "Region with at least 4 vertices."
 Query:
-pattern entryOrSynchronizedState(s : Vertex ) {
-	Entry(s);
-} or {
-	FinalState(s);
+pattern regionWith4OrMoreVertices(region: Region) {
+	cnt == count find verticesInRegion(region, _);
+	check(cnt>=4);
+}
+
+//auxiliary pattern
+pattern verticesInRegion(region: Region, vertex: Vertex){
+	Region.vertices(region, vertex);
 }
 
 Example 2:
-Description: Vertex that has incoming or outgoing transition.
-pattern incomingOrOutgoing(vertex: Vertex){
-	Vertex.incomingTransitions(vertex,_);
-} or {
-	Vertex.outgoingTransitions(vertex,_);
+Description: "Verte with at most 3 outgoing transition."
+Query:
+pattern max3outgoing(vertex: Vertex) {
+	cnt == count find outgoingHelper(region, _);
+	check(cnt<=3);
+}
+
+//auxiliary pattern
+pattern outgoingHelper(vertex: Vertex, transition: Transition){
+	Vertex.outgoingTransitions(vertex, transition);
 }
 
 Example 3:
-Description: State that are either entry state or has incoming transition.
-pattern entryorIncoming(vertex: Vertex){
-	Entry(vertex);
-} or {
-	Vertex.incomingTransitions(vertex,_);
+Description: "Number of States."
+Query:
+pattern countStates(cnt: java Integer) {
+	cnt == count find stateHelper(_);
+}
+
+//auxiliary pattern
+pattern stateHelper(state: State){
+	State(state);
 }
 
 Example 4:
-Description: Transitions with the same source or same target.
+Description: "Vertex with the least incoming transitions."
 Query:
-pattern sameSourceOrTarget(transition1: Transition, transition2: Transition){
-	Transition.source(transition1,source);
-	Transition.source(transition2,source);
-} or {
-	Transition.target(transition1,target);
-	Transition.target(transition2,target);
+pattern vertexLeastIncoming(vertex: Vertex, minlength: java Integer) {
+	minlength == min find countIncomingTransitions(_, #);
+	find countIncomingTransitions(vertex, current);
+	current == minlength;
+}	
+
+//auxiliary pattern
+pattern countIncomingTransitions(vertex : Vertex, cnt: java Integer) {
+	cnt == count find incomingHelper(vertex, _);
+}
+//auxiliary pattern
+pattern incomingHelper(vertex: Vertex, transition: Transition){
+	Vertex.incomingTransitions(vertex, transition);
 }
 
-Generate 15 Viatra Queries of increasing complexity and their descriptions that contain or statement based on the following metamodel
+Example 5:
+Description: "Tere are at least 5 Entries in the model."
+Query:
+pattern exist5entries() {
+	cnt == count find entryHelper(_);
+	check(cnt>=5);
+}
+
+//auxiliary pattern
+pattern entryHelper(entry: Entry){
+	Entry(entry);
+}
+
+Based on the following metamodel, generate 4 Viatra Queries containing aggregation and their descriptions.
+Tips:
+* Use helper patterns for count find.
+* Use # for min, max, avg, or sum.
 
 class Database extends ModelElement {
 	attribute EString[0..1] name;
@@ -114,5 +151,3 @@ abstract class ModelElement {
 	attribute EString[0..1] comment;
 }
 
-Ensure that or statement can only be used between query bodies ( "} or {").
-Only use or expressions.
