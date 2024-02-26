@@ -82,8 +82,8 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     data_path: str = field(default="antolin/text2vql", metadata={"help": "Path to the training data."})
-    max_target_length: int = field(default=512)
-    max_input_length: int = field(default=128)
+    max_target_length: int = field(default=256)
+    max_input_length: int = field(default=256)
 
 
 @dataclass
@@ -99,7 +99,7 @@ class TrainingArguments(transformers.TrainingArguments):
     learning_rate: float = field(default=3e-4)
     seed: int = field(default=123)
     max_grad_norm: float = field(default=1.)
-    output_dir: str = field(default="codegen2-3_7b")
+    output_dir: str = field(default="models/codegen2-3_7b")
     evaluation_strategy: str = field(default="epoch")
     load_best_model_at_end: bool = field(default=True)
     save_total_limit: int = field(default=1)
