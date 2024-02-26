@@ -49,6 +49,29 @@ pattern switchSet(semaphore : Semaphore, route : Route, swP : SwitchPosition, sw
 	swpPosition != swCurrentPosition;
 }"""
 
+NL4_1 = "Active GO route with misaligned switch"
+QUERY4_1 = """
+pattern switchSet2(route: Route){
+	find goRoute(route);
+	Route.follows(route, swP);
+	find misalignedSwitchPosition(swP);
+}"""
+NL4_2 = "Active route with GO semaphore"
+QUERY4_2 = """
+pattern goRoute(route: Route){
+	Route.active(route,true);
+	Route.entry(route, semaphore);
+	Semaphore.signal(semaphore, Signal::GO);	
+}"""
+NL4_3="Misaligned switch"
+QUERY4_3 = """
+pattern misalignedSwitchPosition(swP : SwitchPosition){
+	SwitchPosition.target(swP, sw);
+	SwitchPosition.position(swP, swpPosition);
+	Switch.currentPosition(sw, swCurrentPosition);
+	swpPosition != swCurrentPosition;
+}"""
+
 NL5 = "Retrieve six segments monitored by a sensor and connected in a row (i.e., the first with the second, the second with the third, and so on)"
 QUERY5 = """pattern connectedSegments(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
 	Segment.connectsTo(segment1, segment2);
@@ -62,6 +85,24 @@ QUERY5 = """pattern connectedSegments(sensor : Sensor, segment1 : Segment, segme
 	Segment.monitoredBy(segment4, sensor);
 	Segment.monitoredBy(segment5, sensor);
 	Segment.monitoredBy(segment6, sensor);
+}"""
+
+
+NL5_1 = "TODO"
+QUERQ5_1 = """
+pattern connectedSegments2(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+	find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
+	find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
+	find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
+	find connectedSegmentWithSameMonitor(segment4, segment5, sensor);
+	find connectedSegmentWithSameMonitor(segment5, segment6, sensor);
+}"""
+NL5_2 = "Two connected segments with the same sensor."
+QUERY5_5 = """
+pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, sensor: Sensor){
+	Segment.connectsTo(segment1,segment2);
+	Segment.monitoredBy(segment1,sensor);
+	Segment.monitoredBy(segment2,sensor);
 }"""
 
 # requires routes which
@@ -85,7 +126,29 @@ pattern entrySemaphore(route, semaphore){
 	Route.entry(route, semaphore);
 }"""
 
-
+NL6_1 = "TODO"
+QUERY6_1 = """
+pattern SemaphoreNeighbor2(semaphore: Semaphore){
+	Route.exit(route1,semaphore);
+	find path(route1,track1);
+	find path(route2,track2);
+	TrackElement.connectsTo(track1,track2);
+	route1 != route2;
+	neg find entrySemaphore(route2, semaphore);
+}"""
+NL6_2 = "Route and Track connected with the seame sensor."
+QUERY6_2 = """
+pattern path(route: Route, track: TrackElement){
+	Route.requires(route,sensor);
+	TrackElement.monitoredBy(track,sensor);
+}"""
+NL6_3 = "Route and its entry Semaphore."
+QUERY6_3 = """
+//auxiliary pattern
+pattern entrySemaphore(route: Route, semaphore: Semaphore){
+	Route.entry(route, semaphore);
+}
+"""
 
 
 

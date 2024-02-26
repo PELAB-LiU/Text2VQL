@@ -1,17 +1,18 @@
 Given this metamodel 
 
-class Pseudostate extends Vertex {
+abstract class Pseudostate extends Vertex {
 }
-class Vertex {
-	ref Transition[0, *] incomingTransitions;
-	ref Transition[0, *] outgoingTransitions;
+abstract class Vertex {
+	reference Transition[0..*] incomingTransitions;
+	reference Transition[0..*] outgoingTransitions;
 }
 class Region {
-	ref Vertex[0, *] vertices;
+	reference Vertex[0..*] vertices;
+	attribute EString[0..1] name;
 }
 class Transition {
-	ref Vertex[1, 1] target;
-	ref Vertex[0, 1] source;
+	reference Vertex[1..1] target;
+	reference Vertex[0..1] source;
 }
 class Statechart extends CompositeElement {
 }
@@ -21,11 +22,14 @@ class Synchronization extends Pseudostate {
 }
 class State extends RegularState, CompositeElement {
 }
-class RegularState extends Vertex {
+abstract class RegularState extends Vertex {
 }
-class CompositeElement {
-	ref Region[0, *] regions;
-...
+abstract class CompositeElement {
+	reference Region[0..*] regions;
+}
+class Choice extends Pseudostate {
+}
+class Exit extends Pseudostate {
 }
 class FinalState extends RegularState {
 }
@@ -48,19 +52,27 @@ pattern entryInRegion(region : Region, entry : Entry) {
 }
 
 Example 3:
+Description: "Regions where their name contains "noraml" "
+Query:
+pattern normalRegion(region: Region){
+	Region.name(region, name);
+	check(name.contains("normal"));
+}
+
+Example 4:
 Description: "Regions that have several vertexes"
 Query:
 pattern regionWithSeveralEntries(region : Region) {
-    Region.vertices(region, vertex1);
-    Region.vertices(region, vertex2);
-    vertex1 != vertex2;
+	Region.vertices(region, vertex1);
+	Region.vertices(region, vertex2);
+	vertex1 != vertex2;
 }
 
-Example 4: 
+Example 5: 
 Description. "Entries that have multiple outgoing transitions"
 QUERY:
 pattern entryWithMultipleOutgoingTransitions(entry : Entry) {
-    Entry.outgoingTransitions(entry, transition1);
+	Entry.outgoingTransitions(entry, transition1);
 	Entry.outgoingTransitions(entry, transition2);
 	transition1 != transition2;
 }
@@ -68,32 +80,32 @@ pattern entryWithMultipleOutgoingTransitions(entry : Entry) {
 Generate 10 Viatra Queries of different complexity and their descriptions based on the following metamodel
 
 class Database extends ModelElement {
-	attr EString[0, 1] name;
-	attr EString[0, 1] url;
-	ref Schema[0, *] ownedSchemas;
+	attribute EString[0..1] name;
+	attribute EString[0..1] url;
+	reference Schema[0..*] ownedSchemas;
 }
 class Schema extends ModelElement {
-	attr EString[0, 1] name;
-	ref Table[0, *] ownedTables;
-	ref Database[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Table[0..*] ownedTables;
+	reference Database[1..1] owner;
 }
 class Table extends ModelElement {
-	attr EString[0, 1] name;
-	ref Column[0, *] ownedColumns;
-	ref ForeignKey[0, *] ownedForeignKeys;
-	ref Schema[1, 1] owner;
+	attribute EString[0..1] name;
+	reference Column[0..*] ownedColumns;
+	reference ForeignKey[0..*] ownedForeignKeys;
+	reference Schema[1..1] owner;
 }
 class ForeignKey extends ModelElement {
-	attr EString[0, 1] name;
-	ref Table[1, 1] foreignTable;
-	ref Table[1, 1] sourceTable;
+	attribute EString[0..1] name;
+	reference Table[1..1] foreignTable;
+	reference Table[1..1] sourceTable;
 }
 class Column extends ModelElement {
-	attr EString[0, 1] name;
-	attr Type[0, 1] type;
-	attr EBoolean[0, 1] isPrimaryKey;
-	attr EBoolean[0, 1] isUnique;
-	ref Table[1, 1] owner;
+	attribute EString[0..1] name;
+	attribute Type[0..1] type;
+	attribute EBoolean[0..1] isPrimaryKey;
+	attribute EBoolean[0..1] isUnique;
+	reference Table[1..1] owner;
 }
 enum Type {
 	NUMERIC;
@@ -103,6 +115,6 @@ enum Type {
 	FLOAT;
 	CHAR;
 }
-class ModelElement {
-	attr EString[0, 1] comment;
+abstract class ModelElement {
+	attribute EString[0..1] comment;
 }
