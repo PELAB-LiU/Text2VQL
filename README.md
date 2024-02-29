@@ -47,4 +47,8 @@ python upload_to_hf.py --hf_dataset antolin/text2vql
 
 ## Fine-tuning OS models
 
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir models/deepseek-coder
+```
+
 ## Performance

@@ -31,6 +31,10 @@ LORA_TARGET_MODULES = {
     "Salesforce/codegen2-7B": {
         "target_modules": ["qkv_proj"],
         "ff_modules": []
+    },
+    "deepseek-ai/deepseek-coder-6.7b-base": {
+        "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
+        "ff_modules": []
     }
 }
 
@@ -73,7 +77,7 @@ def load_model_and_tokenizer(args):
 
 @dataclass
 class ModelArguments:
-    model_name_or_path: Optional[str] = field(default="Salesforce/codegen2-3_7B")
+    model_name_or_path: Optional[str] = field(default="Salesforce/codegen2-7B")
     training_method: Optional[str] = field(default="lora")
     nl_or_code: str = field(default="code")
     fp16_model: bool = field(default=True)
@@ -90,16 +94,16 @@ class DataArguments:
 class TrainingArguments(transformers.TrainingArguments):
     cache_dir: Optional[str] = field(default=None)
     optim: str = field(default="adamw_torch")
-    per_device_train_batch_size: int = field(default=2)
-    per_device_eval_batch_size: int = field(default=2)
-    gradient_accumulation_steps: int = field(default=16)
+    per_device_train_batch_size: int = field(default=1)
+    per_device_eval_batch_size: int = field(default=1)
+    gradient_accumulation_steps: int = field(default=32)
     fp16: bool = field(default=True)
     save_strategy: str = field(default="epoch")
     logging_steps: int = field(default=1)
     learning_rate: float = field(default=3e-4)
     seed: int = field(default=123)
     max_grad_norm: float = field(default=1.)
-    output_dir: str = field(default="models/codegen2-3_7b")
+    output_dir: str = field(default="models/codegen2-7b")
     evaluation_strategy: str = field(default="epoch")
     load_best_model_at_end: bool = field(default=True)
     save_total_limit: int = field(default=1)
