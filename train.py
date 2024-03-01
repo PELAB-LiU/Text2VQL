@@ -35,6 +35,10 @@ LORA_TARGET_MODULES = {
     "deepseek-ai/deepseek-coder-6.7b-base": {
         "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
         "ff_modules": []
+    },
+    "deepseek-ai/deepseek-coder-7b-base-v1.5": {
+        "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
+        "ff_modules": []
     }
 }
 
@@ -121,7 +125,6 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length,
     tokenized_target = tokenizer(example['pattern'],
                                  truncation=True,
                                  max_length=max_target_length - 1,
-                                 # incoder adds eos token before the start of a sequence -> ignore
                                  add_special_tokens=False)
     tokenized_target["input_ids"] = tokenized_target["input_ids"] + [tokenizer.eos_token_id]
     tokenized_target["attention_mask"] = tokenized_target["attention_mask"] + [1]
