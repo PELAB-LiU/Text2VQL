@@ -160,9 +160,25 @@ cython_debug/
 .idea/
 /ecore555/
 /dataset.db
+/bloom/
+/bloom1b1/
+/codegen-mono-350-vql2text/
+/codegen1b/
+/falcon/
+/gptneo/
+/opt-125-vql2text/
+
 /repo-ecore-all/
 /repo-atlanmod/
+
+
+/codegen2-3_7b/
 /valid_ids.txt
+<<<<<<< HEAD
+
+/models/
+
 /temp.py
 /chatgpt.csv
 /chatgpt_zs.csv
+
