@@ -126,3 +126,20 @@ pattern activeRouteWithGO(route: Route){
     Route.entry(route, entry);
     Semaphore.signal(entry, ::GO);
 }"
+16,neg,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Connected routes where the exit semaphore of a route is not the entry semaphore of the other. Two different routes are connected if each require a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+       Route.exit(route1, semaphore);
+	Route.requires(route1, sensor1);
+	TrackElement.monitoredBy(te1, sensor1);
+	TrackElement.connectsTo(te1, te2);
+	TrackElement.monitoredBy(te2, sensor2);
+	Route.requires(route2, sensor2);
+	
+	neg find entrySemaphore(route2, semaphore);
+
+	route1 != route2;
+}
+
+pattern entrySemaphore(route: Route, semaphore: Semaphore)
+{
+	Route.entry(route, semaphore);
+}"
