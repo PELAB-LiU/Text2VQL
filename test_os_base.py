@@ -3,27 +3,41 @@ from collections import defaultdict
 
 import pandas as pd
 import torch
-from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
-# from test_model_ff import PROMPT_WITH_HEADER_CODE
-from text2vql.metamodel import MetaModel
-
 from transformers.trainer_utils import set_seed
+
+from seed_metamodels.seed_sample_yakindu import FIND_PAIRS, OR_PAIRS, TYPE_PAIRS, NORMAL_PAIRS, SEED_METAMODEL, \
+    AGG_PAIRS, NOT_PAIRS
+from text2vql.metamodel import MetaModel
 
 set_seed(1234)
 
-PROMPT_WITH_HEADER_CODE = """{metamodel}
-//{nl}
+INSTRUCTION_NL_QUERY_ZS = """{new_metamodel}
+
+//{nl_description}
 {header}
 """
 
-PATH = "models/deepseek-coder-mlength-1.5/checkpoint-921"
-BASE_MODEL = "deepseek-ai/deepseek-coder-7b-base-v1.5"
-# "deepseek-ai/deepseek-coder-6.7b-base"
-METAMODEL = MetaModel('test_metamodel/railway.ecore')
+INSTRUCTION_NL_QUERY_HEADER = """{example_metamodel}
+
+{example_queries}
+
+{new_metamodel}
+
+//{nl_description}
+{header}
+"""
+
 test_dataset = pd.read_csv('test_metamodel/test_queries.csv', sep=',')
+RAILWAY_METAMODEL = MetaModel('test_metamodel/railway.ecore')
+
+seed_queries = []
+
+for j, (q, nl) in enumerate([FIND_PAIRS[0], OR_PAIRS[0], TYPE_PAIRS[0], NORMAL_PAIRS[0], AGG_PAIRS[0], NOT_PAIRS[0]]):
+    str_q_nl = '//' + nl + '\n' + q + '\n//end of main pattern'
+    seed_queries.append(str_q_nl)
+seed_queries = '\n'.join(seed_queries)
 
 
 def main(args):
@@ -31,18 +45,21 @@ def main(args):
                                                  trust_remote_code=True,
                                                  torch_dtype=torch.float16,
                                                  device_map="auto")
-
-    model = PeftModel.from_pretrained(model, args.checkpoint).eval()
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
-
+    tokenizer = AutoTokenizer.from_pretrained(args.base_model)
     outputs = defaultdict(list)
 
     for _, row in tqdm(test_dataset.iterrows(), desc='Iterating test dataset', total=test_dataset.shape[0]):
         nl_description = row['nl']
         header = row['header']
-        prompt = PROMPT_WITH_HEADER_CODE.format(metamodel=METAMODEL.get_metamodel_info(),
-                                                nl=nl_description,
-                                                header=header)
+
+        prompt = INSTRUCTION_NL_QUERY_HEADER.format(
+            example_metamodel=SEED_METAMODEL.get_metamodel_info(),
+            example_queries=seed_queries,
+            new_metamodel=RAILWAY_METAMODEL.get_metamodel_info(),
+            nl_description=nl_description,
+            header=header
+        )
+
         sample = tokenizer([prompt], return_tensors="pt")
 
         with torch.no_grad():
@@ -62,13 +79,15 @@ def main(args):
 
         for k, new_tokens in enumerate(generated_new_tokens):
             generated = tokenizer.decode(new_tokens, skip_special_tokens=True)
+            generated = generated.split('//end of main pattern')[0]
             outputs[k].append(header + '\n' + generated)
             print(header + '\n' + generated)
             print('-' * 100)
 
     for k, v in outputs.items():
         test_dataset[f'{k}_output'] = outputs[k]
-    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_lora.csv')
+    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_fs.csv')
+    print(f'Saved {args.base_model.replace("/", "-")}_fs.csv')
 
 
 if __name__ == '__main__':
@@ -77,7 +96,6 @@ if __name__ == '__main__':
     parser.add_argument('--times', type=int, default=1)
     parser.add_argument('--temperature', type=float, default=0.4)
     parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-1.3b-base")
-    parser.add_argument('--checkpoint', default="models/deepseek-coder-1.3b-mlength/checkpoint-921")
 
     args = parser.parse_args()
     main(args)

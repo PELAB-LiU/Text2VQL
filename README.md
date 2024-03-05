@@ -48,7 +48,11 @@ python upload_to_hf.py --hf_dataset antolin/text2vql
 ## Fine-tuning OS models
 
 ```bash
- CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir models/deepseek-coder-mlength-1b --max_input_length 512 --max_target_length 256
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir models/deepseek-coder-mlength --max_input_length 512 --max_target_length 256
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-1.3b-base --output_dir models/deepseek-coder-1.3b-mlength --max_input_length 1024 --max_target_length 256
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path codellama/CodeLlama-7b-hf --output_dir models/codellama-7b --max_input_length 512 --max_target_length 256
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path bigscience/bloom-7b1 --output_dir models/bloom-7b --max_input_length 512 --max_target_length 256
+CUDA_VISIBLE_DEVICES=1 python train.py --model_name_or_path Salesforce/codegen2-7B --output_dir models/codegen2-7b --max_input_length 512 --max_target_length 256
 ```
 
 ## Performance

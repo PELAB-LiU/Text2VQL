@@ -5,7 +5,8 @@ import torch
 import transformers
 from datasets import load_dataset
 from peft import TaskType, LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser
+from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser, \
+    EarlyStoppingCallback
 
 IGNORE_INDEX = -100
 PROMPT_NL = """Below there is the specification of a meta-model
@@ -39,12 +40,23 @@ LORA_TARGET_MODULES = {
     "deepseek-ai/deepseek-coder-7b-base-v1.5": {
         "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
         "ff_modules": []
+    },
+    "deepseek-ai/deepseek-coder-1.3b-base": {
+        "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
+        "ff_modules": []
+    },
+    "codellama/CodeLlama-7b-hf": {
+        "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
+        "ff_modules": []
+    },
+    "meta-llama/Llama-2-7b-hf": {
+        "target_modules": ["q_proj", "v_proj", "o_proj", "k_proj"],
+        "ff_modules": []
     }
 }
 
 
 def load_model_and_tokenizer(args):
-
     if args.fp16_model:
         model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path,
                                                      trust_remote_code=True, torch_dtype=torch.float16)
@@ -167,6 +179,7 @@ def train(model_args, data_args, training_args):
         eval_dataset=dataset["test"],
         tokenizer=tokenizer,
         data_collator=default_data_collator,
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)]
     )
 
     trainer.train()
