@@ -74,10 +74,10 @@ def main(args):
 if __name__ == '__main__':
     # parse arguments
     parser = argparse.ArgumentParser(description='Run deep seek models')
-    parser.add_argument('--times', type=int, default=1)
+    parser.add_argument('--times', type=int, default=5)
     parser.add_argument('--temperature', type=float, default=0.4)
-    parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-1.3b-base")
-    parser.add_argument('--checkpoint', default="models/deepseek-coder-1.3b-mlength/checkpoint-921")
+    parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-6.7b-base")
+    parser.add_argument('--checkpoint', default="models/deepseek-coder-mlength/checkpoint-921")
 
     args = parser.parse_args()
     main(args)
