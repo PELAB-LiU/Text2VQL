@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="railway">
+  <routes active="true"
+      entry="//@regions.0/@elements.0/@semaphores.1"/>
+  <routes active="true"
+      entry="//@regions.0/@elements.0/@semaphores.0"/>
+  <routes entry="//@regions.0/@elements.0/@semaphores.1"/>
+  <routes entry="//@regions.0/@elements.0/@semaphores.0"/>
+  <routes active="true"
+      exit="//@regions.0/@elements.0/@semaphores.1"/>
+  <regions>
+    <elements
+        xsi:type="Segment">
+      <semaphores
+          signal="STOP"/>
+      <semaphores
+          id="1"
+          signal="GO"/>
+    </elements>
+  </regions>
+</RailwayContainer>
