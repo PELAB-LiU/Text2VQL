@@ -55,4 +55,9 @@ CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path bigscience/bloom-7b1
 CUDA_VISIBLE_DEVICES=1 python train.py --model_name_or_path Salesforce/codegen2-7B --output_dir models/codegen2-7b --max_input_length 512 --max_target_length 256
 ```
 
-## Performance
+## Generation
+
+ChatGPT few shot
+```bash
+python test_railway_openai.py --prompt_type fs
+```

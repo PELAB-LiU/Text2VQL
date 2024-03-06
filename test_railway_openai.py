@@ -93,7 +93,7 @@ if __name__ == '__main__':
     # parse arguments
     parser = argparse.ArgumentParser(description='ChatGPT baseline')
     parser.add_argument('--prompt_type', type=str, default='zs', choices=['zs', 'fs'])
-    parser.add_argument('--times', type=int, default=1)
+    parser.add_argument('--times', type=int, default=5)
     parser.add_argument('--temperature', type=float, default=0)
 
     args = parser.parse_args()
