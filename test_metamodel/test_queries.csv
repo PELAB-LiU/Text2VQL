@@ -1,5 +1,5 @@
 id,construct,train_benchmark,nl,header,truth
-0,find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"pattern goRouteMisalignedSwitch(route: Route){
+0,find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"pattern goRouteMisalignedSwitch(route: Route){
  find goRoute(route);
  Route.follows(route, swP);
  find misalignedSwitchPosition(swP);
@@ -17,7 +17,7 @@ pattern misalignedSwitchPosition(swP : SwitchPosition){
 	Switch.currentPosition(sw, swCurrentPosition);
 	swpPosition != swCurrentPosition;
 }"
-1,find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments4(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){","pattern connectedSegments4(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+1,find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
     find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
     find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
     find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
@@ -79,7 +79,7 @@ pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
 9,type,,Railway elements that are Switches.,pattern switchRailwayElements(railway: RailwayElement){,"pattern switchRailwayElements(railway: RailwayElement){
     Switch(railway);
 }"
-10,normal,,Active routes with GO semaphore.,pattern goActiveRoute(route: Route){,"pattern goActiveRoute(route: Route){
+10,normal,,Active routes with entry GO semaphore.,pattern goActiveRoute(route: Route){,"pattern goActiveRoute(route: Route){
     Route.active(route,true);
     Route.entry(route, semaphore);
     Semaphore.signal(semaphore, Signal::GO);    
@@ -114,7 +114,7 @@ pattern sensorInRegion(region:Region, sensor: Sensor){
     Segment.length(track, length);
     check(length >= 7);
 }"
-15,mix,,Active route with GO semaphore but not monitored by any sensor.,pattern dangerousRoute(route: Route){,"pattern dangeriousRoute(route: Route){
+15,mix,,Active route whose entry is a GO semaphore but not monitored by any sensor.,pattern dangerousRoute(route: Route){,"pattern dangeriousRoute(route: Route){
         find activeRouteWithGO(route);
         neg find routeMonitroedBy(route,_);
 }
@@ -126,7 +126,7 @@ pattern activeRouteWithGO(route: Route){
     Route.entry(route, entry);
     Semaphore.signal(entry, ::GO);
 }"
-16,neg,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Connected routes where the exit semaphore of a route is not the entry semaphore of the other. Two different routes are connected if each require a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+16,neg,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Two different routes where the exit semaphore of a route is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
        Route.exit(route1, semaphore);
 	Route.requires(route1, sensor1);
 	TrackElement.monitoredBy(te1, sensor1);
