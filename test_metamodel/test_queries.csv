@@ -114,12 +114,12 @@ pattern sensorInRegion(region:Region, sensor: Sensor){
     Segment.length(track, length);
     check(length >= 7);
 }"
-15,mix,,Active route whose entry is a GO semaphore but not monitored by any sensor.,pattern dangerousRoute(route: Route){,"pattern dangeriousRoute(route: Route){
+15,mix,,Active route whose entry is a GO semaphore but not monitored by any sensor.,pattern dangerousRoute(route: Route){,"pattern dangerousRoute(route: Route){
         find activeRouteWithGO(route);
         neg find routeMonitroedBy(route,_);
 }
 pattern routeMonitroedBy(route: Route, sensor: Sensor){
-    Route.requires(route, sensor);
+    TrackElement.monitoredBy(route, sensor);
 }
 pattern activeRouteWithGO(route: Route){
     Route.active(route, true);

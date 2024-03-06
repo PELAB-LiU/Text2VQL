@@ -51,4 +51,9 @@ python upload_to_hf.py --hf_dataset antolin/text2vql
  CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir models/deepseek-coder-mlength-1b --max_input_length 512 --max_target_length 256
 ```
 
-## Performance
+## Generation
+
+ChatGPT few shot
+```bash
+python test_railway_openai.py --prompt_type fs
+```
