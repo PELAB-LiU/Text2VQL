@@ -1,0 +1,18 @@
+id,has_correct,#truth,syntax_ok,match_ok,review
+0,FALSE,1,"[false, false, false, false, false]","[false, false, false, false, false]",FALSE/KEY
+1,TRUE,2,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+2,TRUE,7,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+3,TRUE,117,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE/?
+4,TRUE,9,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+5,FALSE,1,"[true, true, true, true, true]","[false, false, false, false, false]",FALSE
+6,TRUE,1,"[false, false, true, false, true]","[false, false, true, false, true]",TRUE
+7,TRUE,7,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+8,TRUE,34,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+9,TRUE,18,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+10,TRUE,3,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+11,TRUE,27,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+12,TRUE,8,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+13,FALSE,3,"[true, true, true, true, true]","[false, false, false, false, false]",FALSE
+14,TRUE,25,"[true, true, false, true, true]","[true, true, false, true, true]",TRUE
+15,TRUE,3,"[true, true, true, true, true]","[true, true, true, true, true]",TRUE
+16,FALSE,6,"[true, true, true, true, true]","[false, false, false, false, false]",FALSE
