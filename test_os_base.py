@@ -92,7 +92,7 @@ def main(args):
 
 if __name__ == '__main__':
     # parse arguments
-    parser = argparse.ArgumentParser(description='Run deep seek models')
+    parser = argparse.ArgumentParser(description='Run fs OS models')
     parser.add_argument('--times', type=int, default=5)
     parser.add_argument('--temperature', type=float, default=0.4)
     parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-6.7b-base")
