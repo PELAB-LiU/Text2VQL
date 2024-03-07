@@ -48,7 +48,7 @@ pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, se
 pattern hasSensor(sw : Switch){
     TrackElement.monitoredBy(sw, _);
 }"
-5,neg,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","pattern routeSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+5,neg,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
     Route.follows(route, swP);
     SwitchPosition.target(swP, sw);
     TrackElement.monitoredBy(sw, sensor);
@@ -119,7 +119,7 @@ pattern sensorInRegion(region:Region, sensor: Sensor){
         neg find routeMonitroedBy(route,_);
 }
 pattern routeMonitroedBy(route: Route, sensor: Sensor){
-    TrackElement.monitoredBy(route, sensor);
+    Route.requires(route, sensor);
 }
 pattern activeRouteWithGO(route: Route){
     Route.active(route, true);

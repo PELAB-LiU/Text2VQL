@@ -61,3 +61,8 @@ ChatGPT few shot
 ```bash
 python test_railway_openai.py --prompt_type fs
 ```
+
+Report results
+```bash
+python present_results.py --csv_results results/deepseek-ai-deepseek-coder-6.7b-base_lora_eval.csv --csv_outputs results/deepseek-ai-deepseek-coder-6.7b-base_lora.csv
+```

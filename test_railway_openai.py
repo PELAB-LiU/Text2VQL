@@ -86,7 +86,7 @@ def main(args):
 
         test_dataset[f'chatgpt_{args.prompt_type}_{i}'] = outputs
 
-    test_dataset.to_csv(f'chatgpt_{args.prompt_type}.csv')
+    test_dataset.to_csv(f'chatgpt_{args.prompt_type}.csv', index=False)
 
 
 if __name__ == '__main__':
