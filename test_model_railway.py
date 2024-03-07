@@ -68,7 +68,7 @@ def main(args):
 
     for k, v in outputs.items():
         test_dataset[f'{k}_output'] = outputs[k]
-    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_lora.csv')
+    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_lora.csv', index=False)
 
 
 if __name__ == '__main__':
