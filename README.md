@@ -65,8 +65,8 @@ python test_model_railway.py --base_model codellama/CodeLlama-7b-hf --checkpoint
 
 OS models few shot
 ```bash
-python test_os_base.py --base_model deepseek-ai/deepseek-coder-6.7b-base
-python test_os_base.py --base_model codellama/CodeLlama-7b-hf
+python test_os_base.py --base_model deepseek-ai/deepseek-coder-6.7b-base --mode random
+python test_os_base.py --base_model codellama/CodeLlama-7b-hf --mode random
 ```
 
 ChatGPT few shot

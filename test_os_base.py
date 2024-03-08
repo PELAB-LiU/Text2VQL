@@ -1,4 +1,5 @@
 import argparse
+import random
 from collections import defaultdict
 
 import pandas as pd
@@ -32,12 +33,24 @@ INSTRUCTION_NL_QUERY_HEADER = """{example_metamodel}
 test_dataset = pd.read_csv('test_metamodel/test_queries.csv', sep=',')
 RAILWAY_METAMODEL = MetaModel('test_metamodel/railway.ecore')
 
-seed_queries = []
 
-for j, (q, nl) in enumerate([FIND_PAIRS[0], OR_PAIRS[0], TYPE_PAIRS[0], NORMAL_PAIRS[0], AGG_PAIRS[0], NOT_PAIRS[0]]):
-    str_q_nl = '//' + nl + '\n' + q + '\n//end of main pattern'
-    seed_queries.append(str_q_nl)
-seed_queries = '\n'.join(seed_queries)
+def get_seed_queries(mode):
+    seed_queries = []
+
+    if mode == 'one':
+        queries = [FIND_PAIRS[0], OR_PAIRS[0], TYPE_PAIRS[0], NORMAL_PAIRS[0], AGG_PAIRS[0], NOT_PAIRS[0]]
+    elif mode == 'random':
+        queries = []
+        for pairs in [FIND_PAIRS, OR_PAIRS, TYPE_PAIRS, NORMAL_PAIRS, AGG_PAIRS, NOT_PAIRS]:
+            queries += random.sample(pairs, 1)
+    else:
+        raise ValueError('Not supported')
+
+    for j, (q, nl) in enumerate(queries):
+        str_q_nl = '//' + nl + '\n' + q + '\n//end of main pattern'
+        seed_queries.append(str_q_nl)
+    seed_queries = '\n'.join(seed_queries)
+    return seed_queries
 
 
 def main(args):
@@ -54,7 +67,7 @@ def main(args):
 
         prompt = INSTRUCTION_NL_QUERY_HEADER.format(
             example_metamodel=SEED_METAMODEL.get_metamodel_info(),
-            example_queries=seed_queries,
+            example_queries=get_seed_queries(args.mode),
             new_metamodel=RAILWAY_METAMODEL.get_metamodel_info(),
             nl_description=nl_description,
             header=header
@@ -86,8 +99,8 @@ def main(args):
 
     for k, v in outputs.items():
         test_dataset[f'{k}_output'] = outputs[k]
-    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_fs.csv', index=False)
-    print(f'Saved {args.base_model.replace("/", "-")}_fs.csv')
+    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_fs_{args.mode}.csv', index=False)
+    print(f'Saved {args.base_model.replace("/", "-")}_fs_{args.mode}.csv')
 
 
 if __name__ == '__main__':
@@ -96,6 +109,7 @@ if __name__ == '__main__':
     parser.add_argument('--times', type=int, default=5)
     parser.add_argument('--temperature', type=float, default=0.4)
     parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-6.7b-base")
+    parser.add_argument('--mode', default="one", choices=["one", "random"])
 
     args = parser.parse_args()
     main(args)
