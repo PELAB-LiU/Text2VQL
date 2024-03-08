@@ -55,7 +55,7 @@ python upload_to_hf.py --hf_dataset antolin/text2vql
 
 ChatGPT few shot
 ```bash
-python test_railway_openai.py --prompt_type fs
+python test_railway_openai.py --prompt_type fs --mode random
 ```
 
 Report results

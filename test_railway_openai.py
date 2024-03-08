@@ -1,5 +1,6 @@
 import argparse
 import os
+import random
 import re
 
 import openai
@@ -10,6 +11,8 @@ from seed_metamodels.seed_sample_yakindu import FIND_PAIRS, OR_PAIRS, TYPE_PAIRS
     SEED_METAMODEL
 from text2vql.metamodel import MetaModel
 from text2vql.template import get_formatted_nl_query
+
+random.seed(1234)
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -36,18 +39,31 @@ The query must have the following header. You can use auxiliary patterns if need
 {header}
 """
 
-seed_queries = []
-
-for j, (q, nl) in enumerate([FIND_PAIRS[0], OR_PAIRS[0], TYPE_PAIRS[0], NORMAL_PAIRS[0], AGG_PAIRS[0], NOT_PAIRS[0]]):
-    seed_queries.append(get_formatted_nl_query(j + 1, nl, q))
-seed_queries = '\n'.join(seed_queries)
-
 RAILWAY_METAMODEL = MetaModel('test_metamodel/railway.ecore')
 test_dataset = pd.read_csv('test_metamodel/test_queries.csv', sep=',')
 
 
-def main(args):
+def get_seed_queries(mode):
+    if mode == 'one':
+        seed_queries = []
 
+        for j, (q, nl) in enumerate(
+                [FIND_PAIRS[0], OR_PAIRS[0], TYPE_PAIRS[0], NORMAL_PAIRS[0], AGG_PAIRS[0], NOT_PAIRS[0]]):
+            seed_queries.append(get_formatted_nl_query(j + 1, nl, q))
+        seed_queries = '\n'.join(seed_queries)
+    else:
+        seed_queries = []
+        sampled_queries = []
+        for pairs in [FIND_PAIRS, OR_PAIRS, TYPE_PAIRS, NORMAL_PAIRS, AGG_PAIRS, NOT_PAIRS]:
+            sampled_queries += random.sample(pairs, 1)
+
+        for j, (q, nl) in enumerate(sampled_queries):
+            seed_queries.append(get_formatted_nl_query(j + 1, nl, q))
+        seed_queries = '\n'.join(seed_queries)
+    return seed_queries
+
+
+def main(args):
     for i in range(args.times):
         outputs = []
 
@@ -62,7 +78,7 @@ def main(args):
             )
             instruction_fs_header = INSTRUCTION_NL_QUERY_HEADER.format(
                 example_metamodel=SEED_METAMODEL.get_metamodel_info(),
-                example_queries=seed_queries,
+                example_queries=get_seed_queries(args.mode),
                 new_metamodel=RAILWAY_METAMODEL.get_metamodel_info(),
                 nl_description=nl_description,
                 header=header
@@ -86,7 +102,7 @@ def main(args):
 
         test_dataset[f'chatgpt_{args.prompt_type}_{i}'] = outputs
 
-    test_dataset.to_csv(f'chatgpt_{args.prompt_type}.csv', index=False)
+    test_dataset.to_csv(f'chatgpt_{args.prompt_type}_{args.mode}.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -94,7 +110,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='ChatGPT baseline')
     parser.add_argument('--prompt_type', type=str, default='zs', choices=['zs', 'fs'])
     parser.add_argument('--times', type=int, default=5)
-    parser.add_argument('--temperature', type=float, default=0)
+    parser.add_argument('--temperature', type=float, default=0.4)
+    parser.add_argument('--mode', default='one', choices=['one', 'random'])
 
     args = parser.parse_args()
     main(args)
