@@ -8,18 +8,20 @@ def main(args):
 
     print(f'Pass@5:{len(results[results["has_correct"]]) / len(results)}')
 
-    outputs = pd.read_csv(args.csv_outputs)
+    if args.csv_outputs:
 
-    merged = pd.merge(results, outputs, on="id")
+        outputs = pd.read_csv(args.csv_outputs)
 
-    for c in set(merged["construct"]):
-        m = merged[merged["construct"] == c]
-        print(f'Pass@5 {c}:{len(m[m["has_correct"]]) / len(m)}')
+        merged = pd.merge(results, outputs, on="id")
 
-    # train benchmark queries
-    merged_bench = merged[merged["train_benchmark"].notna()]
+        for c in set(merged["construct"]):
+            m = merged[merged["construct"] == c]
+            print(f'Pass@5 {c}:{len(m[m["has_correct"]]) / len(m)}')
 
-    print(f'Pass@5 TB:{len(merged_bench[merged_bench["has_correct"]]) / len(merged_bench)}')
+        # train benchmark queries
+        merged_bench = merged[merged["train_benchmark"].notna()]
+
+        print(f'Pass@5 TB:{len(merged_bench[merged_bench["has_correct"]]) / len(merged_bench)}')
 
 
 if __name__ == '__main__':
