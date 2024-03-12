@@ -182,3 +182,5 @@ cython_debug/
 /chatgpt.csv
 /chatgpt_zs.csv
 
+.uuid
+
