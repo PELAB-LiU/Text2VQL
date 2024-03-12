@@ -182,3 +182,9 @@ cython_debug/
 /chatgpt.csv
 /chatgpt_zs.csv
 
+/queries_to_review.csv
+/train_openai.jsonl
+/training_status.json
+/val_openai.jsonl
+/train_file_status.json
+/val_file_status.json
