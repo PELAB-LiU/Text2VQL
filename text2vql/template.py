@@ -3,7 +3,7 @@ INSTRUCTION_NL_QUERY = """Given the following meta-model:
 Some example queries in Viatra Query Language are:
 {example_queries}
 
-Now write {number} similar queries (with the same VQL constructs) for the following meta-model and follow the same format as the one in the example:
+Now write {number} similar queries (with the same VQL constructs) for the following meta-model and follow the same format as the examples:
 {new_metamodel}
 """
 
