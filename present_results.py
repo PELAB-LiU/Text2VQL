@@ -7,6 +7,7 @@ def main(args):
     results = pd.read_csv(args.csv_results)
 
     print(f'Pass@5:{len(results[results["has_correct"]]) / len(results)}')
+    print(f'Correct:{len(results[results["has_correct"]])} out of {len(results)}')
 
     if args.csv_outputs:
 

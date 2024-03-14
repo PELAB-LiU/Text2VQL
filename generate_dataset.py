@@ -72,7 +72,7 @@ def call_gpt(seed_metamodel, seed_nl_queries, metamodel_des, metamodel_id, reque
 
                 messages = [[{"role": "assistant", "content": r},
                              {"role": "user",
-                              "content": "write with more complex patterns but similar to the input examples"}]
+                              "content": "write more complex patterns but similar to the input examples"}]
                             for r in all_responses]
                 messages = [x for m in messages for x in m]
                 time.sleep(1)
