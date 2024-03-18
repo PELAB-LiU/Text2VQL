@@ -1,0 +1,795 @@
+construct,train_benchmark,nl,header,truth,0_output,1_output,2_output,3_output,4_output,has_correct,#truth,syntax_ok,match_ok
+find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"pattern goRouteMisalignedSwitch(route: Route){
+ find goRoute(route);
+ Route.follows(route, swP);
+ find misalignedSwitchPosition(swP);
+}
+
+pattern goRoute(route: Route){
+	Route.active(route,true);
+	Route.entry(route, semaphore);
+	Semaphore.signal(semaphore, Signal::GO);	
+}
+
+pattern misalignedSwitchPosition(swP : SwitchPosition){
+	SwitchPosition.target(swP, sw);
+	SwitchPosition.position(swP, swpPosition);
+	Switch.currentPosition(sw, swCurrentPosition);
+	swpPosition != swCurrentPosition;
+}","pattern goRouteMisalignedSwitch(route: Route){
+   Route.active(route, true);
+    Route.entry(route, entry);
+    Semaphore.signal(entry, GO);
+    Switch.currentPosition(switchPosition.target, STRAIGHT);
+    SwitchPosition.position(switchPosition, STRAIGHT);
+    SwitchPosition.route(switchPosition, route);
+    SwitchPosition.target(switchPosition, switch);
+    Switch.connectsTo(switch, segment);
+    Segment.semaphores(segment, semaphore);
+    Semaphore.signal(semaphore, STOP);
+    Switch.connectsTo(switch, segment2);
+    Segment.semaphores(segment2, semaphore2);
+    Semaphore.signal(semaphore2, STOP);
+    Switch.connectsTo(switch, segment3);
+    Segment.semaphores(segment3, semaphore3);
+    Semaphore.signal(semaphore3, STOP);
+    Switch.connectsTo(switch, segment4);
+    Segment.semaphores(segment4, semaphore4);
+    Semaphore.signal(semaphore4, STOP);
+    Switch.connectsTo(switch, segment5);
+    Segment.semaphores(segment5, semaphore5);
+    Semaphore.signal(semaphore5, STOP);
+    Switch.connectsTo(switch, segment6);
+    Segment.semaphores(segment6, semaphore6);
+    Semaphore.signal(semaphore6, STOP);
+    Switch.connectsTo(switch, segment7);
+    Segment.semaphores(segment7, semaphore7);
+    Semaphore.signal(semaphore7, STOP);
+    Switch.connectsTo(switch, segment8);
+    Segment.semaphores(segment8, semaphore8);
+    Semaphore.signal(semaphore8, STOP);
+    Switch.connectsTo(switch, segment9);
+    Segment.semaphores(segment9, semaphore9);
+    Semaphore.signal(semaphore9, STOP);
+    Switch.connectsTo(","pattern goRouteMisalignedSwitch(route: Route){
+   Route.active(route,true);
+    Route.entry(route,entry);
+    Semaphore.signal(entry,GO);
+    Route.follows(route,follows);
+    SwitchPosition.position(follows,position);
+    Switch.currentPosition(follows.target,currentPosition);
+    SwitchPosition.position(follows,position);
+    check(currentPosition!=position);
+}
+","pattern goRouteMisalignedSwitch(route: Route){
+   Route.active(route,true);
+    Route.entry(route,semaphore);
+    Semaphore.signal(semaphore,GO);
+    Route.follows(route,position);
+    SwitchPosition.position(position,DIVERGING);
+    SwitchPosition.target(position,switch);
+    Switch.currentPosition(switch,STRAIGHT);
+}
+","pattern goRouteMisalignedSwitch(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+    find goRouteMisalignedSwitch(route, semaphore);
+}
+
+//auxiliary pattern
+pattern goRouteMisalignedSwitch(route: Route, semaphore: Semaphore){
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+    Switch.currentPosition(SwitchPosition.target(route), position);
+    SwitchPosition.position(SwitchPosition.route(route), position);
+}
+","pattern goRouteMisalignedSwitch(route: Route){
+   Route.active(route,true);
+    Route.entry(route,semaphore);
+    Semaphore.signal(semaphore,GO);
+    Switch(route.SwitchPosition.target.Switch);
+    Switch.currentPosition(route.SwitchPosition.position);
+    SwitchPosition(route.SwitchPosition);
+    SwitchPosition.position(route.SwitchPosition.position);
+    SwitchPosition.route(route);
+    SwitchPosition.target(route.SwitchPosition.target);
+    SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition(route.SwitchPosition);
+    Switch.SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition.position(route.SwitchPosition.target.position);
+    Switch.SwitchPosition.route(route.SwitchPosition.target);
+    Switch.SwitchPosition.target(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.route(route);
+    Switch.SwitchPosition.Switch.SwitchPosition.target(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.route(route.SwitchPosition);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.target(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.route(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.target(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.route(route.SwitchPosition.target);
+    Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.Switch.SwitchPosition.target(route.Switch",False,96,"[false, false, false, false, false]","[false, false, false, false, false]"
+find,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+    find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
+    find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
+    find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
+    find connectedSegmentWithSameMonitor(segment4, segment5, sensor);
+    find connectedSegmentWithSameMonitor(segment5, segment6, sensor);
+
+}
+pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, sensor: Sensor){
+    Segment.connectsTo(segment1,segment2);
+    Segment.monitoredBy(segment1,sensor);
+    Segment.monitoredBy(segment2,sensor);
+}","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+   Sensor.monitors(sensor, segment1);
+    Sensor.monitors(sensor, segment2);
+    Sensor.monitors(sensor, segment3);
+    Sensor.monitors(sensor, segment4);
+    Sensor.monitors(sensor, segment5);
+    Sensor.monitors(sensor, segment6);
+    TrackElement.connectsTo(segment1, segment2);
+    TrackElement.connectsTo(segment2, segment3);
+    TrackElement.connectsTo(segment3, segment4);
+    TrackElement.connectsTo(segment4, segment5);
+    TrackElement.connectsTo(segment5, segment6);
+}
+","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+	Sensor.monitors(sensor, segment1);
+	Segment.monitoredBy(segment1, sensor);
+	Segment.connectsTo(segment1, segment2);
+	Segment.monitoredBy(segment2, sensor);
+	Segment.connectsTo(segment2, segment3);
+	Segment.monitoredBy(segment3, sensor);
+	Segment.connectsTo(segment3, segment4);
+	Segment.monitoredBy(segment4, sensor);
+	Segment.connectsTo(segment4, segment5);
+	Segment.monitoredBy(segment5, sensor);
+	Segment.connectsTo(segment5, segment6);
+	Segment.monitoredBy(segment6, sensor);
+}
+","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+   Sensor.monitors(sensor, segment1);
+    TrackElement.connectsTo(segment1, segment2);
+    Sensor.monitors(sensor, segment2);
+    TrackElement.connectsTo(segment2, segment3);
+    Sensor.monitors(sensor, segment3);
+    TrackElement.connectsTo(segment3, segment4);
+    Sensor.monitors(sensor, segment4);
+    TrackElement.connectsTo(segment4, segment5);
+    Sensor.monitors(sensor, segment5);
+    TrackElement.connectsTo(segment5, segment6);
+    Sensor.monitors(sensor, segment6);
+}
+","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+	Sensor.monitors(sensor, segment1);
+	Segment.connectsTo(segment1, segment2);
+	Segment.connectsTo(segment2, segment3);
+	Segment.connectsTo(segment3, segment4);
+	Segment.connectsTo(segment4, segment5);
+	Segment.connectsTo(segment5, segment6);
+	Sensor.monitors(sensor, segment2);
+	Sensor.monitors(sensor, segment3);
+	Sensor.monitors(sensor, segment4);
+	Sensor.monitors(sensor, segment5);
+	Sensor.monitors(sensor, segment6);
+}
+","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+   Sensor.monitors(sensor, segment1);
+    Segment.connectsTo(segment1, segment2);
+    Segment.connectsTo(segment2, segment3);
+    Segment.connectsTo(segment3, segment4);
+    Segment.connectsTo(segment4, segment5);
+    Segment.connectsTo(segment5, segment6);
+    Sensor.monitors(sensor, segment6);
+}
+",True,74883,"[true, true, true, true, true]","[true, true, true, true, false]"
+or,,Semaphores with STOP or GO signals.,pattern stopOrGo(semaphore: Semaphore){,"pattern stopOrGo(semaphore: Semaphore){
+    Semaphore.signal(semaphore, Signal::GO);
+} or {
+    Semaphore.signal(semaphore, Signal::STOP);
+}","pattern stopOrGo(semaphore: Semaphore){
+   Semaphore.signal(semaphore, signal);
+    check(signal == Signal.STOP or signal == Signal.GO);
+}
+","pattern stopOrGo(semaphore: Semaphore){
+   Semaphore.signal(semaphore, signal);
+    check(signal == Signal.STOP or signal == Signal.GO);
+}
+","pattern stopOrGo(semaphore: Semaphore){
+   Semaphore.signal(semaphore, signal);
+    check (signal == Signal.STOP or signal == Signal.GO);
+}
+","pattern stopOrGo(semaphore: Semaphore){
+   Semaphore.signal(semaphore, signal);
+    signal == Signal.STOP or signal == Signal.GO;
+}
+","pattern stopOrGo(semaphore: Semaphore){
+   Semaphore.signal(semaphore, signal);
+    check(signal == Signal.STOP or signal == Signal.GO);
+}
+",False,914,"[false, false, false, false, false]","[false, false, false, false, false]"
+or,,TrackElements that are either connected or monitored by the same sensor.,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+    TrackElement.monitoredBy(track1, sensor);
+    TrackElement.monitoredBy(track2, sensor);
+} or {
+    TrackElement.connectsTo(track1,track2);
+}","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+   TrackElement.monitoredBy(track1, track2);
+    TrackElement.connectsTo(track1, track2);
+}
+","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+   (TrackElement.monitors(track1,_), TrackElement.monitors(track2,_));
+}
+","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+   TrackElement.monitors(track1,track2);
+} or {
+    TrackElement.connectsTo(track1,track2);
+}
+","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+   TrackElement.monitoredBy(track1, track2);
+} or {
+    TrackElement.connectsTo(track1, track2);
+}
+","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+   (TrackElement.monitors(track1,_);
+     TrackElement.monitors(track2,_);
+    ) or (TrackElement.connectsTo(track1,_);
+     TrackElement.connectsTo(track2,_);
+    )
+}
+",False,46011,"[false, false, false, false, false]","[false, false, false, false, false]"
+neg,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchMonitored.vql,Switches not monitored by a sensor.,pattern switchNotMonitored(sw : Switch){,"pattern switchNotMonitored(sw : Switch){
+    neg find hasSensor(sw);
+}
+//auxiliary pattern
+pattern hasSensor(sw : Switch){
+    TrackElement.monitoredBy(sw, _);
+}","pattern switchNotMonitored(sw : Switch){
+   Switch.monitoredBy(sw, _);
+}
+","pattern switchNotMonitored(sw : Switch){
+   neg find monitoredBy(sw, _);
+}
+","pattern switchNotMonitored(sw : Switch){
+   neg find monitoredBy(sw,_);
+}
+","pattern switchNotMonitored(sw : Switch){
+   neg find monitoredBy(sw, _);
+}
+","pattern switchNotMonitored(sw : Switch){
+   neg find sensorMonitorsSwitch(sw);
+}
+
+//auxiliary pattern
+pattern sensorMonitorsSwitch(sw : Switch){
+    Switch.monitoredBy(sw,_);
+}
+",True,316,"[true, false, false, false, true]","[false, false, false, false, true]"
+neg,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+    Route.follows(route, swP);
+    SwitchPosition.target(swP, sw);
+    TrackElement.monitoredBy(sw, sensor);
+    neg find required(sensor, route);
+}
+//auxiliary pattern
+pattern required(sensor : Sensor, route : Route){
+    Route.requires(route, sensor);
+}","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+   Route.follows(route, swP);
+    SwitchPosition.target(swP, sw);
+    Switch.monitoredBy(sw, sensor);
+    Sensor.monitors(sensor, _);
+    neg find Route.requires(route, _);
+}
+","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+   Route.follows(route, swP);
+    SwitchPosition.target(swP, sw);
+    Switch.positions(sw, swP);
+    Switch.positions(sw, swP2);
+    SwitchPosition.route(swP2, route2);
+    Route.requires(route2, sensor);
+}
+","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+   Route.follows(route, swP);
+    SwitchPosition.route(swP, route);
+    Switch.target(sw, swP);
+    Switch.target(sw, sw);
+    SwitchPosition.target(swP, sw);
+    Switch.currentPosition(sw, Position.DIVERGING);
+    Switch.currentPosition(sw, Position.STRAIGHT);
+    Switch.currentPosition(sw, Position.FAILURE);
+    SwitchPosition.position(swP, Position.DIVERGING);
+    SwitchPosition.position(swP, Position.STRAIGHT);
+    SwitchPosition.position(swP, Position.FAILURE);
+    Sensor.monitors(sensor, sw);
+    TrackElement.connectsTo(sw, sensor);
+    TrackElement.connectsTo(sensor, sw);
+    TrackElement.connectsTo(swP, sw);
+    TrackElement.connectsTo(sw, swP);
+    TrackElement.connectsTo(sensor, swP);
+    TrackElement.connectsTo(swP, sensor);
+    TrackElement.connectsTo(sw, sensor);
+    TrackElement.connectsTo(sensor, sw);
+    TrackElement.connectsTo(swP, sw);
+    TrackElement.connectsTo(sw, swP);
+    TrackElement.connectsTo(sensor, swP);
+    TrackElement.connectsTo(swP, sensor);
+    TrackElement.connectsTo(sw, sensor);
+    TrackElement.connectsTo(sensor, sw);
+    TrackElement.connectsTo(swP, sw);
+    TrackElement.connectsTo(sw, swP);
+    TrackElement.connectsTo(sensor, swP);
+    TrackElement.connectsTo(swP, sensor);
+    TrackElement.connectsTo(sw, sensor);
+    TrackElement.connectsTo(sensor, sw);
+    TrackElement.connectsTo(swP, sw);
+    TrackElement.connectsTo(sw, swP);
+    TrackElement.connectsTo(sensor, swP);
+    TrackElement.connectsTo(swP, sensor);
+    TrackElement.connectsTo(sw, sensor","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+   SwitchPosition.route(swP, route);
+    SwitchPosition.target(swP, sw);
+    Switch.positions(sw, swP);
+    Switch.currentPosition(sw, swP.position);
+    Sensor.monitors(sensor, sw);
+    Route.requires(route, sensor);
+}
+","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+   Route.follows(route, swP);
+    SwitchPosition.target(swP, sw);
+    Switch.positions(sw, swP);
+    Sensor.monitors(sensor, sw);
+    neg find Sensor.requires(sensor, route);
+}
+",False,2699,"[false, true, false, false, false]","[false, false, false, false, false]"
+agg,,Total length of segments.,pattern totalLength(length: java Integer){,"pattern totalLength(length: java Integer){
+    length == sum find segmentLength(_,#);
+}
+pattern segmentLength(segment: Segment, length: java Integer){
+    Segment.length(segment, length);
+}","pattern totalLength(length: java Integer){
+   cnt == count find segment(_);
+    length == sum find segment(_).length;
+}
+","pattern totalLength(length: java Integer){
+   cnt == count find segment(_);
+    length = cnt * length;
+}
+","pattern totalLength(length: java Integer){
+   cnt == count find segment(_);
+    sum(segment.length) == length;
+}
+","pattern totalLength(length: java Integer){
+   cnt == count find segment(_);
+    sum == sum (segment(s).length);
+    check(sum == length);
+}
+","pattern totalLength(length: java Integer){
+   cnt == count find segment(_);
+    length == sum(segment.length);
+}
+
+//Auxiliary pattern
+pattern segment(segment: Segment){
+    Segment(segment);
+}
+",False,612,"[false, false, false, false, false]","[false, false, false, false, false]"
+agg,,Track elements monitored by at lest two sensors.,pattern monitoredBy2Sensors(track: TrackElement){,"pattern monitoredBy2Sensors(track: TrackElement){
+    cnt == count find trackMonitoredBy(track, _);
+    check(cnt >= 2);
+}
+pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
+    TrackElement.monitoredBy(track, sensor);
+}","pattern monitoredBy2Sensors(track: TrackElement){
+   TrackElement.monitoredBy(track, _);
+    find countSensors(_, 2);
+}
+//auxiliary pattern
+pattern countSensors(track: TrackElement, cnt: java Integer){
+    cnt == count find sensors(track, _);
+}
+//auxiliary pattern
+pattern sensors(track: TrackElement, sensor: Sensor){
+    TrackElement.monitoredBy(track, sensor);
+}
+","pattern monitoredBy2Sensors(track: TrackElement){
+   TrackElement.monitoredBy(track, _);
+    count TrackElement.monitoredBy(track, _) >= 2;
+}
+","pattern monitoredBy2Sensors(track: TrackElement){
+   TrackElement.monitoredBy(track, _);
+    TrackElement.monitoredBy(track, _);
+}
+","pattern monitoredBy2Sensors(track: TrackElement){
+   TrackElement.monitoredBy(track,s1);
+    TrackElement.monitoredBy(track,s2);
+    find s1 != s2;
+}
+","pattern monitoredBy2Sensors(track: TrackElement){
+   TrackElement.monitoredBy(track,_);
+    find countMonitoredBy(track, current);
+    current >= 2;
+}
+
+//auxiliary pattern
+pattern countMonitoredBy(track: TrackElement, cnt: java Integer) {
+    cnt == count find monitoredByHelper(track, _);
+}
+
+//auxiliary pattern
+pattern monitoredByHelper(track: TrackElement, sensor: Sensor){
+    Sensor.monitors(sensor, track);
+}
+",False,4931,"[true, false, true, false, false]","[false, false, false, false, false]"
+type,,RailwayElements that are either Switches or SwitchPositions.,pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+    Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}","pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+   Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}
+","pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+   Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}
+","pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+   Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}
+","pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+   Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}
+","pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+   Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}
+",True,3118,"[true, true, true, true, true]","[true, true, true, true, true]"
+type,,Railway elements that are Switches.,pattern switchRailwayElements(railway: RailwayElement){,"pattern switchRailwayElements(railway: RailwayElement){
+    Switch(railway);
+}","pattern switchRailwayElements(railway: RailwayElement){
+   Switch(railway);
+}
+","pattern switchRailwayElements(railway: RailwayElement){
+   Switch(railway);
+}
+","pattern switchRailwayElements(railway: RailwayElement){
+   Switch(railway);
+}
+","pattern switchRailwayElements(railway: RailwayElement){
+   Switch(railway);
+}
+","pattern switchRailwayElements(railway: RailwayElement){
+   Switch(railway);
+}
+",True,1902,"[true, true, true, true, true]","[true, true, true, true, true]"
+normal,,Active routes with entry GO semaphore.,pattern goActiveRoute(route: Route){,"pattern goActiveRoute(route: Route){
+    Route.active(route,true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, Signal::GO);    
+}","pattern goActiveRoute(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+}
+","pattern goActiveRoute(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+}
+","pattern goActiveRoute(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+}
+","pattern goActiveRoute(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+}
+","pattern goActiveRoute(route: Route){
+   Route.active(route, true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+}
+",False,138,"[true, true, true, true, true]","[false, false, false, false, false]"
+normal,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,Retrieve all segments whose lengths are less or equal than zero.,pattern posLength(segment : Segment){,"pattern posLength(segment : Segment){
+    Segment.length(segment, length);
+    check(length <= 0);
+}","pattern posLength(segment : Segment){
+   Segment(segment);
+    segment.length <= 0;
+}
+","pattern posLength(segment : Segment){
+   Segment(segment);
+    segment.length <= 0;
+}
+","pattern posLength(segment : Segment){
+   Segment.length(segment,_);
+}
+","pattern posLength(segment : Segment){
+   Segment.length(segment,_);
+}
+","pattern posLength(segment : Segment){
+   Segment(segment);
+    segment.length <= 0;
+}
+",False,2576,"[false, false, true, true, false]","[false, false, false, false, false]"
+normal,,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,pattern misalignedSwitchPosition(swP : SwitchPosition){,"pattern misalignedSwitchPosition(swP : SwitchPosition){
+    SwitchPosition.target(swP, sw);
+    SwitchPosition.position(swP, swpPosition);
+    Switch.currentPosition(sw, swCurrentPosition);
+    swpPosition != swCurrentPosition;
+}","pattern misalignedSwitchPosition(swP : SwitchPosition){
+   SwitchPosition.position(swP, pos);
+    SwitchPosition.target(swP, sw);
+    Switch.currentPosition(sw, pos);
+    SwitchPosition.position(swP, pos);
+}
+","pattern misalignedSwitchPosition(swP : SwitchPosition){
+   SwitchPosition.position(swP, pos);
+    SwitchPosition.target(swP, target);
+    Switch.currentPosition(target, targetPos);
+    targetPos != pos;
+}
+","pattern misalignedSwitchPosition(swP : SwitchPosition){
+   SwitchPosition.position(swP, pos);
+    SwitchPosition.target(swP, target);
+    Switch.currentPosition(target, current);
+    pos != current;
+}
+","pattern misalignedSwitchPosition(swP : SwitchPosition){
+   SwitchPosition.position(swP, pos);
+    SwitchPosition.target(swP, target);
+    Switch.currentPosition(target, currentPosition);
+    currentPosition != pos;
+}
+","pattern misalignedSwitchPosition(swP : SwitchPosition){
+   SwitchPosition.position(swP, pos);
+    SwitchPosition.target(swP, target);
+    Switch.currentPosition(target, pos);
+}
+",True,773,"[true, true, true, true, true]","[false, true, true, true, false]"
+mix,,"Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.",pattern bigRegion(region: Region){,"pattern bigRegion(region: Region){
+    length == sum find trackLengthInRegion(region, _,#);
+    check(length >= 50);
+} or {
+    cnt == count find sensorInRegion(region, _);
+    check(cnt >= 10);
+}
+pattern trackLengthInRegion(region: Region, track: Segment, length: EInt){
+    Region.elements(region,track);
+    Segment.length(track,length);
+}
+pattern sensorInRegion(region:Region, sensor: Sensor){
+    Region.sensors(region,sensor);
+}","pattern bigRegion(region: Region){
+   sum(length) >= 50;
+    cnt == count find Region.sensors(region, _);
+    check(cnt>=10);
+}
+","pattern bigRegion(region: Region){
+   cnt == count find segment(_);
+    check(cnt>=50 or count Sensor(region) >= 10);
+}
+//Auxiliary pattern
+pattern segment(segment: Segment){
+    Segment(segment);
+}
+","pattern bigRegion(region: Region){
+   cnt == count find segment(region);
+    check(cnt>=50);
+} or {
+    cnt == count find sensor(region);
+    check(cnt>=10);
+}
+
+//Auxiliary pattern
+pattern segment(region: Region, segment: Segment) {
+    Region.elements(region, segment);
+    Segment(segment);
+}
+","pattern bigRegion(region: Region){
+   cnt == count find segment(region);
+    check(cnt>=50 or count(region.sensors)>=10);
+}
+
+//Auxiliary pattern
+pattern segment(region: Region, segment: Segment){
+    Region.elements(region, segment);
+}
+","pattern bigRegion(region: Region){
+   reference segment[0..*] segments;
+    Segment.connectsTo(segment, segment);
+    Segment.monitoredBy(segment, sensor);
+    Region.sensors(region, sensor);
+    count(segments) >= 10;
+    sum(Segment.length(segment)) >= 50;
+} or {
+    count(segments) >= 10;
+}
+",False,576,"[false, false, false, false, false]","[false, false, false, false, false]"
+mix,,Segments that are at least 7 units long or are switches.,pattern sevenSegmentOrSwitch(track: TrackElement){,"pattern sevenSegmentOrSwitch(track: TrackElement){
+    Switch(track);
+} or {
+    Segment.length(track, length);
+    check(length >= 7);
+}","pattern sevenSegmentOrSwitch(track: TrackElement){
+   Segment(track);
+    Segment.length(track, length);
+    check(length >= 7 or Switch(track));
+}
+","pattern sevenSegmentOrSwitch(track: TrackElement){
+   Segment(track);
+    check(track.length>=7 or Switch(track));
+}
+","pattern sevenSegmentOrSwitch(track: TrackElement){
+   Segment(track);
+    check(track.length>=7 or Switch(track));
+}
+","pattern sevenSegmentOrSwitch(track: TrackElement){
+   check(track.length>=7 or isSwitch(track));
+}
+
+//Auxiliary pattern
+pattern isSwitch(track: TrackElement){
+    Switch(track);
+}
+","pattern sevenSegmentOrSwitch(track: TrackElement){
+   check(track.length>=7 or track instanceof Switch);
+}
+",False,3160,"[false, false, false, false, false]","[false, false, false, false, false]"
+mix,,Active route whose entry is a GO semaphore but not monitored by any sensor.,pattern dangerousRoute(route: Route){,"pattern dangerousRoute(route: Route){
+        find activeRouteWithGO(route);
+        neg find routeMonitroedBy(route,_);
+}
+pattern routeMonitroedBy(route: Route, sensor: Sensor){
+    Route.requires(route, sensor);
+}
+pattern activeRouteWithGO(route: Route){
+    Route.active(route, true);
+    Route.entry(route, entry);
+    Semaphore.signal(entry, ::GO);
+}","pattern dangerousRoute(route: Route){
+   Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, GO);
+    Route.active(route, true);
+    cnt == count find entryNotMonitoredBySensor(route, _);
+    check(cnt>0);
+}
+
+//Auxiliary pattern
+pattern entryNotMonitoredBySensor(route: Route, sensor: Sensor){
+    Route.entry(route, semaphore);
+    Semaphore.monitoredBy(semaphore, sensor);
+}
+","pattern dangerousRoute(route: Route){
+	Route.active(route, active);
+	check(active);
+	Route.entry(route, entry);
+	Semaphore(entry);
+	check(entry.signal==GO);
+	Route.sensors(route, sensor);
+	check(sensor.size()==0);
+}
+","pattern dangerousRoute(route: Route){
+   Route.active(route, active);
+    check(active);
+    Route.entry(route, entry);
+    Semaphore(entry);
+    check(!exists sensor: Sensor | entry in sensor.monitors);
+}
+","pattern dangerousRoute(route: Route){
+   Route.active(route, active);
+    check(active);
+    Route.entry(route, entry);
+    Semaphore(entry);
+    check(!entry.monitoredBy.exists(sensor));
+}
+","pattern dangerousRoute(route: Route){
+   Route.entry(route, entry);
+    Semaphore(entry);
+    check(entry.signal==GO);
+    Route.sensors(route, sensor);
+    find sensorNotMonitoredByEntry(sensor);
+}
+//Auxiliary pattern
+pattern sensorNotMonitoredByEntry(sensor: Sensor){
+    Sensor.monitoredBy(sensor, monitor);
+    Semaphore(monitor);
+    check(monitor!=entry);
+}
+",False,49,"[false, false, false, false, false]","[false, false, false, false, false]"
+neg,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Two different routes where the exit semaphore of a route is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+       Route.exit(route1, semaphore);
+	Route.requires(route1, sensor1);
+	TrackElement.monitoredBy(te1, sensor1);
+	TrackElement.connectsTo(te1, te2);
+	TrackElement.monitoredBy(te2, sensor2);
+	Route.requires(route2, sensor2);
+	
+	neg find entrySemaphore(route2, semaphore);
+
+	route1 != route2;
+}
+
+pattern entrySemaphore(route: Route, semaphore: Semaphore)
+{
+	Route.entry(route, semaphore);
+}","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+   Route.exit(route1, semaphore1);
+    Route.entry(route2, semaphore2);
+    semaphore != semaphore1;
+    semaphore != semaphore2;
+    semaphore.signal == Signal.STOP;
+    semaphore1.signal == Signal.STOP;
+    semaphore2.signal == Signal.STOP;
+    Route.requires(route1, sensor1);
+    Route.requires(route2, sensor2);
+    Sensor.monitoredBy(sensor1, te1);
+    Sensor.monitoredBy(sensor2, te2);
+    te1.connectsTo(te2);
+    te2.connectsTo(te1);
+}
+","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+   Semaphore.exit(semaphore, exit);
+    Semaphore.entry(semaphore, entry);
+    Route.exit(route1, exit);
+    Route.entry(route2, entry);
+    Semaphore.signal(semaphore, signal);
+    check(semaphore != entry);
+    check(semaphore != exit);
+    check(signal != Signal.FAILURE);
+    check(signal != Signal.STOP);
+    check(signal != Signal.GO);
+    Route.requires(route1, sensor1);
+    Route.requires(route2, sensor2);
+    Sensor.monitors(sensor1, te1);
+    Sensor.monitors(sensor2, te2);
+    TrackElement.connectsTo(te1, te2);
+    TrackElement.connectsTo(te2, te1);
+}
+","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+   Semaphore.exit(semaphore, exit);
+    Semaphore.entry(semaphore, entry);
+    Route.exit(route1, exit);
+    Route.entry(route2, entry);
+    Route.requires(route1, sensor1);
+    Route.requires(route2, sensor2);
+    Sensor.monitors(sensor1, te1);
+    Sensor.monitors(sensor2, te2);
+    TrackElement.connectsTo(te1, te2);
+}
+","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+   Semaphore.signal(semaphore, _);
+    Semaphore.entry(semaphore, entry);
+    Semaphore.exit(semaphore, exit);
+    Route.exit(route1, entry);
+    Route.entry(route2, exit);
+    Sensor.monitors(sensor1, te1);
+    Sensor.monitors(sensor2, te2);
+    Sensor.requires(route1, sensor1);
+    Sensor.requires(route2, sensor2);
+    TrackElement.monitoredBy(te1, sensor1);
+    TrackElement.monitoredBy(te2, sensor2);
+}
+","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+   Route.exit(route1, semaphore);
+    Route.entry(route2, semaphore);
+    Route.requires(route1, sensor1);
+    Route.requires(route2, sensor2);
+    Sensor.monitors(sensor1, te1);
+    Sensor.monitors(sensor2, te2);
+    te1 != te2;
+}
+",False,6,"[false, false, false, false, true]","[false, false, false, false, false]"
