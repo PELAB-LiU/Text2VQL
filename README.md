@@ -61,12 +61,14 @@ OS models
 ```bash
 python test_model_railway.py --base_model deepseek-ai/deepseek-coder-6.7b-base --checkpoint models/deepseek-coder-mlength/checkpoint-921
 python test_model_railway.py --base_model codellama/CodeLlama-7b-hf --checkpoint models/codellama-7b/checkpoint-921
+python test_model_railway.py --base_model deepseek-ai/deepseek-coder-1.3b-base --checkpoint models/deepseek-coder-1.3b-mlength/checkpoint-921/
 ```
 
 OS models few shot
 ```bash
 python test_os_base.py --base_model deepseek-ai/deepseek-coder-6.7b-base --mode random
 python test_os_base.py --base_model codellama/CodeLlama-7b-hf --mode random
+python test_os_base.py --base_model deepseek-ai/deepseek-coder-1.3b-base --mode random
 ```
 
 ChatGPT few shot
