@@ -19,3 +19,6 @@ merge("codellama-CodeLlama-7b-hf_lora")
 merge("deepseek-ai-deepseek-coder-6.7b-base_fs")
 merge("deepseek-ai-deepseek-coder-6.7b-base_fs_random")
 merge("deepseek-ai-deepseek-coder-6.7b-base_lora")
+
+merge("deepseek-ai-deepseek-coder-1.3b-base_fs_random")
+merge("deepseek-ai-deepseek-coder-1.3b-base_lora")
