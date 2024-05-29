@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="railway">
+  <routes active="true"
+      entry="//@regions.0/@elements.0/@semaphores.2">
+    <follows
+        position="STRAIGHT"
+        target="//@regions.0/@elements.2"/>
+    <follows
+        position="DIVERGING"
+        target="//@regions.0/@elements.2"/>
+  </routes>
+  <routes entry="//@regions.0/@elements.0/@semaphores.2">
+    <follows
+        position="STRAIGHT"
+        target="//@regions.0/@elements.1"/>
+    <follows
+        position="DIVERGING"
+        target="//@regions.0/@elements.1"/>
+  </routes>
+  <regions>
+    <elements
+        xsi:type="Segment">
+      <semaphores/>
+      <semaphores
+          signal="STOP"/>
+      <semaphores
+          id="4"
+          signal="GO"/>
+    </elements>
+    <elements
+        xsi:type="Switch"
+        id="1"
+        currentPosition="DIVERGING"
+        positions="//@routes.1/@follows.1 //@routes.1/@follows.0"/>
+    <elements
+        xsi:type="Switch"
+        id="2"
+        currentPosition="DIVERGING"
+        positions="//@routes.0/@follows.0 //@routes.0/@follows.1"/>
+  </regions>
+</RailwayContainer>

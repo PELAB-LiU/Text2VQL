@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="railway">
+  <routes requires="//@regions.0/@sensors.1">
+    <follows
+        target="//@regions.0/@elements.0"/>
+  </routes>
+  <routes requires="//@regions.0/@sensors.0 //@regions.0/@sensors.1">
+    <follows
+        target="//@regions.0/@elements.0"/>
+  </routes>
+  <regions>
+    <sensors
+        monitors="//@regions.0/@elements.0"/>
+    <sensors
+        id="1"/>
+    <elements
+        xsi:type="Switch"
+        monitoredBy="//@regions.0/@sensors.0"
+        positions="//@routes.1/@follows.0 //@routes.0/@follows.0"/>
+  </regions>
+</RailwayContainer>

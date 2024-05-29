@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="railway">
+  <routes requires="//@regions.0/@sensors.0 //@regions.0/@sensors.2 //@regions.3/@sensors.1 //@regions.3/@sensors.0" entry="//@regions.0/@elements.2/@semaphores.0" exit="//@regions.0/@elements.2/@semaphores.0">
+    <follows target="//@regions.3/@elements.1"/>
+    <follows position="STRAIGHT" target="//@regions.3/@elements.4"/>
+  </routes>
+  <routes entry="//@regions.0/@elements.2/@semaphores.0" exit="//@regions.0/@elements.2/@semaphores.0">
+    <follows target="//@regions.3/@elements.4"/>
+  </routes>
+  <regions>
+    <sensors monitors="//@regions.3/@elements.0 //@regions.0/@elements.1 //@regions.0/@elements.0 //@regions.3/@elements.3 //@regions.3/@elements.4 //@regions.0/@elements.2 //@regions.0/@elements.3"/>
+    <sensors monitors="//@regions.0/@elements.3 //@regions.0/@elements.0 //@regions.0/@elements.1 //@regions.3/@elements.3 //@regions.3/@elements.2 //@regions.3/@elements.0"/>
+    <sensors monitors="//@regions.3/@elements.1 //@regions.3/@elements.4"/>
+    <sensors monitors="//@regions.0/@elements.2 //@regions.3/@elements.4 //@regions.3/@elements.0"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.1 //@regions.0/@sensors.0 //@regions.3/@sensors.1" connectsTo="//@regions.0/@elements.2 //@regions.3/@elements.1" length="76"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.1 //@regions.0/@sensors.0 //@regions.3/@sensors.1" connectsTo="//@regions.0/@elements.4 //@regions.0/@elements.2" length="-8"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.0 //@regions.0/@sensors.3" connectsTo="//@regions.0/@elements.3 //@regions.3/@elements.0" length="4">
+      <semaphores signal="STOP"/>
+    </elements>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.1 //@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.3/@sensors.0" connectsTo="//@regions.3/@elements.3 //@regions.3/@elements.2">
+      <semaphores signal="GO"/>
+    </elements>
+    <elements xsi:type="Switch" connectsTo="//@regions.0/@elements.3 //@regions.3/@elements.3 //@regions.0/@elements.0" currentPosition="STRAIGHT"/>
+  </regions>
+  <regions/>
+  <regions>
+    <elements xsi:type="Segment" length="-1"/>
+  </regions>
+  <regions>
+    <sensors monitors="//@regions.3/@elements.0 //@regions.3/@elements.5 //@regions.0/@elements.2 //@regions.0/@elements.3"/>
+    <sensors monitors="//@regions.0/@elements.3 //@regions.3/@elements.1 //@regions.0/@elements.1 //@regions.0/@elements.0 //@regions.3/@elements.2 //@regions.3/@elements.3"/>
+    <sensors monitors="//@regions.3/@elements.5"/>
+    <sensors monitors="//@regions.3/@elements.3"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.0 //@regions.0/@sensors.3 //@regions.0/@sensors.1" connectsTo="//@regions.3/@elements.2 //@regions.0/@elements.4"/>
+    <elements xsi:type="Switch" monitoredBy="//@regions.3/@sensors.1 //@regions.0/@sensors.2" connectsTo="//@regions.0/@elements.4 //@regions.0/@elements.3 //@regions.3/@elements.2" currentPosition="STRAIGHT" positions="//@routes.0/@follows.0"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.1 //@regions.3/@sensors.1" connectsTo="//@regions.0/@elements.4 //@regions.0/@elements.0">
+      <semaphores signal="GO"/>
+    </elements>
+    <elements xsi:type="Switch" monitoredBy="//@regions.0/@sensors.1 //@regions.0/@sensors.0 //@regions.3/@sensors.3 //@regions.3/@sensors.1" connectsTo="//@regions.0/@elements.4 //@regions.0/@elements.3 //@regions.3/@elements.4" currentPosition="STRAIGHT"/>
+    <elements xsi:type="Switch" monitoredBy="//@regions.0/@sensors.0 //@regions.0/@sensors.3 //@regions.0/@sensors.2" connectsTo="//@regions.3/@elements.1 //@regions.3/@elements.3 //@regions.0/@elements.4" currentPosition="DIVERGING" positions="//@routes.1/@follows.0 //@routes.0/@follows.1"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.3/@sensors.2 //@regions.3/@sensors.0" connectsTo="//@regions.0/@elements.4 //@regions.0/@elements.1"/>
+  </regions>
+  <regions>
+    <sensors/>
+  </regions>
+</RailwayContainer>

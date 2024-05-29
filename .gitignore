@@ -193,3 +193,7 @@ cython_debug/
 /train_file_status.json
 /val_file_status.json
 
+/dataset_construction/ecore555/
+/dataset_construction/repo-atlanmod/
+/dataset_construction/repo-ecore-all/
+/dataset_construction/dataset.db
