@@ -56,7 +56,8 @@ Filter invalid queries.
 export JDBC_URL=/home/antolin/projects/models2024/text2vql/dataset_construction/dataset.db
 export PROJECT_PATH=/home/antolin/projects/models2024/text2vql/dataset_construction/
 export OUTPUT=/home/antolin/projects/models2024/text2vql/dataset_construction/valid_ids.txt
-java -jar get_valid_queries.jar
+"java/text2vql/gradlew" -p java/text2vql run
+#java -jar get_valid_queries.jar
 ```
 
 Push the dataset to HF.
