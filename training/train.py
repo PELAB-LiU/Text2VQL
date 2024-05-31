@@ -101,7 +101,7 @@ class ModelArguments:
 
 @dataclass
 class DataArguments:
-    data_path: str = field(default="antolin/text2vql", metadata={"help": "Path to the training data."})
+    data_path: str = field(default="PELAB-LiU/Text2VQL", metadata={"help": "Path to the training data."})
     max_target_length: int = field(default=256)
     max_input_length: int = field(default=256)
 

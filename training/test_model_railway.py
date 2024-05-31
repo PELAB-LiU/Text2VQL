@@ -27,13 +27,10 @@ test_dataset = pd.read_csv('test_metamodel/test_queries.csv', sep=',')
 
 
 def main(args):
-    model = AutoModelForCausalLM.from_pretrained(args.base_model,
-                                                 trust_remote_code=True,
-                                                 torch_dtype=torch.float16,
-                                                 device_map="auto")
-
-    model = PeftModel.from_pretrained(model, args.checkpoint).eval()
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    base_model = AutoModelForCausalLM.from_pretrained(args.base_model, trust_remote_code=True,
+                                                      torch_dtype=torch.float16, device_map="auto")
+    model = PeftModel.from_pretrained(base_model, args.checkpoint).eval()
+    tokenizer = AutoTokenizer.from_pretrained(args.base_model)
 
     outputs = defaultdict(list)
 
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     parser.add_argument('--times', type=int, default=5)
     parser.add_argument('--temperature', type=float, default=0.4)
     parser.add_argument('--base_model', default="deepseek-ai/deepseek-coder-6.7b-base")
-    parser.add_argument('--checkpoint', default="models/deepseek-coder-mlength/checkpoint-921")
+    parser.add_argument('--checkpoint', default="PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA")
 
     args = parser.parse_args()
     main(args)
