@@ -51,7 +51,7 @@ export OPENAI_API_KEY=OPENAI_KEY
 python generate_dataset.py --sample 5
 ```
 
-Build and start docker build environemnt. The container contains an eclipse environment with the build dependencies.,
+Build and start docker environemnt. The container contains an eclipse environment with the build dependencies and necessary tools to compile the project. Furthermore, it creates a vnc server (web-based remote desktop) that allows the inspection and modification of the source code.
 ```bash
 docker build -t eclipse-vnc ../eclipse-rdp
 docker run -d \
@@ -74,11 +74,21 @@ wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.
 wget https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.44.0.0/sqlite-jdbc-3.44.0.0.jar \
     -O java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/sqlite-jdbc-3.44.0.0.jar
 docker exec -it \
-    -e JDBC_URL=config/dataset_construction/dataset.db \
-    -e PROJECT_PATH=config/dataset_construction/ \
-    -e OUTPUT=config/dataset_construction/valid_ids.txt \
+    -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck \
+    eclipse-vnc java -cp "/opt/eclipse/plugins/*" org.eclipse.xtend.core.compiler.batch.Main \
+    -d xtend-gen -useCurrentClassLoader src
+docker exec -it \
+    -e JDBC_URL=/config/dataset_construction/dataset.db \
+    -e PROJECT_PATH=/config/dataset_construction/ \
+    -e OUTPUT=/config/dataset_construction/valid_ids.txt \
     -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck \
     eclipse-vnc ant clean build EvaluateDatabase
+```
+
+(Optional) Stop and remove container.
+```bash
+docker container stop eclipse-vnc
+docker container rm eclipse-vnc
 ```
 
 Push the dataset to HF.

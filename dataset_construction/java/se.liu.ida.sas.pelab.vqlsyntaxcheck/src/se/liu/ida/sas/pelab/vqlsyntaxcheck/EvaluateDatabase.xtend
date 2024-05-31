@@ -50,7 +50,7 @@ class EvaluateDatabase {
 					list_ids.add(resultSet.getInt("id"));	
 				}
 			} catch(Exception e){
-					
+					e.printStackTrace
 			}
 			
 		}

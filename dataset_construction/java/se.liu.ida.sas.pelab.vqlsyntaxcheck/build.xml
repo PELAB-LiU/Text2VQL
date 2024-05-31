@@ -58,10 +58,14 @@
     <path id="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
         <pathelement location="bin"/>
+        <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
+        <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
     </path>
     <path id="run.EvaluateDatabase.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
         <path refid="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath"/>
+        <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
+        <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
