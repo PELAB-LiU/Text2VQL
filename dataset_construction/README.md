@@ -68,15 +68,17 @@ docker run -d \
 
 Filter invalid queries
 ```bash
-#export JDBC_URL=/home/antolin/projects/models2024/text2vql/dataset_construction/dataset.db
-#export PROJECT_PATH=/home/antolin/projects/models2024/text2vql/dataset_construction/
-#export OUTPUT=/home/antolin/projects/models2024/text2vql/dataset_construction/valid_ids.txt
 mkdir java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc
-wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar -O java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/slf4j-api-1.7.36.jar
-wget https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.44.0.0/sqlite-jdbc-3.44.0.0.jar -O java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/sqlite-jdbc-3.44.0.0.jar
-docker exec -it -e JDBC_URL=config/dataset_construction/dataset.db -e PROJECT_PATH=config/dataset_construction/ -e OUTPUT=config/dataset_construction/valid_ids.txt -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck eclipse-vnc ant clean build EvaluateDatabase
-#"java/text2vql/gradlew" -p java/text2vql run
-#java -jar get_valid_queries.jar
+wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar \
+    -O java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/slf4j-api-1.7.36.jar
+wget https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.44.0.0/sqlite-jdbc-3.44.0.0.jar \
+    -O java/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/sqlite-jdbc-3.44.0.0.jar
+docker exec -it \
+    -e JDBC_URL=config/dataset_construction/dataset.db \
+    -e PROJECT_PATH=config/dataset_construction/ \
+    -e OUTPUT=config/dataset_construction/valid_ids.txt \
+    -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck \
+    eclipse-vnc ant clean build EvaluateDatabase
 ```
 
 Push the dataset to HF.
