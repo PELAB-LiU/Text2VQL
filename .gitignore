@@ -197,3 +197,4 @@ cython_debug/
 /dataset_construction/repo-atlanmod/
 /dataset_construction/repo-ecore-all/
 /dataset_construction/dataset.db
+/dataset_construction/valid_ids.txt
