@@ -45,7 +45,7 @@ class EvaluateDatabase {
 			try {
 				val header = getPrefix(MAKE_ABSOLUTE + metamodel);
 				pattern = header + "import \"http://www.eclipse.org/emf/2002/Ecore\"\n" + pattern;
-			
+				println("=============================================\n"+pattern)
 				if (Evaluate.evaluate(MAKE_ABSOLUTE + metamodel, pattern)){
 					list_ids.add(resultSet.getInt("id"));	
 				}
@@ -68,7 +68,8 @@ class EvaluateDatabase {
                 writer.write(item.toString)
                 writer.newLine // Add a new line after each item
             }
-            
+        writer.flush
+        writer.close
     }
 	
 }

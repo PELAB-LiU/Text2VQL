@@ -54,18 +54,38 @@
         <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.emf.codegen_2.23.0.v20230211-1150.jar"/>
         <pathelement location="${ECLIPSE_HOME}plugins/org.objectweb.asm_9.6.0.jar"/>
         <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.collections_11.1.0.v20220705-1455.jar"/>
+        <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.viatra.query.runtime.localsearch_2.8.2.202405060803.jar"/>
+        <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.viatra.query.runtime.rete_2.8.2.202405060803.jar"/>
+        <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.viatra.query.runtime.rete.recipes_2.8.2.202405060803.jar"/>
+        <pathelement location="${ECLIPSE_HOME}plugins/org.eclipse.viatra.query.runtime.base.itc_2.8.2.202405060803.jar"/>
     </path>
     <path id="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
         <pathelement location="bin"/>
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
+        <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
     </path>
     <path id="run.EvaluateDatabase.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
         <path refid="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath"/>
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
+        <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+    </path>
+    <path id="run.ProfileMain.classpath">
+        <path refid="Plug-in Dependencies.libraryclasspath"/>
+        <path refid="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath"/>
+        <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
+        <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
+        <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+    </path>
+    <path id="run.CSVBasedEvaluation.classpath">
+        <path refid="Plug-in Dependencies.libraryclasspath"/>
+        <path refid="se.liu.ida.sas.pelab.vqlsyntaxcheck.classpath"/>
+        <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
+        <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
+        <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -113,6 +133,16 @@
     <target name="EvaluateDatabase">
         <java classname="se.liu.ida.sas.pelab.vqlsyntaxcheck.EvaluateDatabase" failonerror="true" fork="yes">
             <classpath refid="run.EvaluateDatabase.classpath"/>
+        </java>
+    </target>
+    <target name="ProfileMain">
+        <java classname="se.liu.ida.sas.pelab.profile.ProfileMain" failonerror="true" fork="yes">
+            <classpath refid="run.ProfileMain.classpath"/>
+        </java>
+    </target>
+    <target name="CSVBasedEvaluation">
+        <java classname="se.liu.ida.sas.pelab.querycomparison.CSVBasedEvaluation" failonerror="true" fork="yes">
+            <classpath refid="run.CSVBasedEvaluation.classpath"/>
         </java>
     </target>
 </project>
