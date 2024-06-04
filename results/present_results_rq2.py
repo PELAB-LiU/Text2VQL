@@ -32,7 +32,7 @@ def main(args):
 
 if __name__ == '__main__':
     # parse arguments
-    parser = argparse.ArgumentParser(description='Present results rq1')
+    parser = argparse.ArgumentParser(description='Present results rq2')
     parser.add_argument('--csv_results', default='profiles/profiles_raw.csv', type=str)
 
     args = parser.parse_args()

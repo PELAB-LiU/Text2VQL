@@ -23,7 +23,7 @@ def main(args):
 
 if __name__ == '__main__':
     # parse arguments
-    parser = argparse.ArgumentParser(description='Present results rq1')
+    parser = argparse.ArgumentParser(description='Present results rq3')
     parser.add_argument('--eval', default='eval/deepseek-ai-deepseek-coder-6.7b-base_lora_eval.csv', type=str)
     parser.add_argument('--profiles', default='profiles/profiles_truth.csv', type=str)
 
