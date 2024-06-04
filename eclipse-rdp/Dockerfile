@@ -1,3 +1,4 @@
+#FROM lscr.io/linuxserver/rdesktop:ubuntu-xfce
 FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 
 ENV PUID=1000 
@@ -6,6 +7,7 @@ ENV TZ=Etc/UTC
 
 EXPOSE 3000
 EXPOSE 3001
+#EXPOSE 3389
 
 RUN apt update
 RUN apt install git -y
@@ -31,7 +33,8 @@ Categories=Development\' > /usr/share/applications/eclipse.desktop
 
 RUN apt install ant -y
 
-ADD  eclipse-workspace /config/eclipse-workspace
+COPY  eclipse-workspace /config/eclipse-workspace
+
 RUN chown -R abc /config/eclipse-workspace
 
 
