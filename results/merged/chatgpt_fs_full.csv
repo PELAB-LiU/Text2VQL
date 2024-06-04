@@ -752,7 +752,7 @@ pattern sensorsInRegion(region: Region, sensor : Sensor){
         neg find routeMonitroedBy(route,_);
 }
 pattern routeMonitroedBy(route: Route, sensor: Sensor){
-    TrackElement.monitoredBy(route, sensor);
+    Route.requires(route, sensor);
 }
 pattern activeRouteWithGO(route: Route){
     Route.active(route, true);
@@ -808,7 +808,7 @@ pattern monitoredBySensor(semaphore: Semaphore, sensor: Sensor){
 pattern monitoredBySensor(route: Route){
     Route.requires(route, sensor);
     Sensor.monitors(sensor, _);
-}",False,138,"[false, false, false, false, false]","[false, false, false, false, false]"
+}",False,49,"[false, false, false, false, false]","[false, false, false, false, false]"
 16,neg,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Two different routes where the exit semaphore of a route is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
        Route.exit(route1, semaphore);
 	Route.requires(route1, sensor1);

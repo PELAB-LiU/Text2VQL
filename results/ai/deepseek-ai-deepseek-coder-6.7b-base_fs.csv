@@ -1041,7 +1041,7 @@ pattern sensorsInRegion(region: Region, sensor: Sensor){
         neg find routeMonitroedBy(route,_);
 }
 pattern routeMonitroedBy(route: Route, sensor: Sensor){
-    TrackElement.monitoredBy(route, sensor);
+    Route.requires(route, sensor);
 }
 pattern activeRouteWithGO(route: Route){
     Route.active(route, true);

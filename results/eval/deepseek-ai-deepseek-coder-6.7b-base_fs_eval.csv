@@ -14,5 +14,5 @@ id,has_correct,"#truth",syntax_ok,match_ok
 12,true,773,"[false, true, true, false, false]","[false, true, true, false, false]"
 13,false,576,"[false, false, false, false, false]","[false, false, false, false, false]"
 14,true,3160,"[false, true, true, true, false]","[false, true, true, true, false]"
-15,false,138,"[false, false, false, false, false]","[false, false, false, false, false]"
+15,false,49,"[false, false, false, false, false]","[false, false, false, false, false]"
 16,false,6,"[false, true, false, false, false]","[false, false, false, false, false]"
