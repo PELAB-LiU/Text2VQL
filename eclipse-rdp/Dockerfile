@@ -35,6 +35,6 @@ RUN apt install ant -y
 
 COPY  eclipse-workspace /config/eclipse-workspace
 
-RUN chown -R abc /config/eclipse-workspace
+RUN chmod -R o+rwx /config/eclipse-workspace
 
 
