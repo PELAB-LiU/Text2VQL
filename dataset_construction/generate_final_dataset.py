@@ -25,15 +25,20 @@ def main(args):
     df['metamodel_definition'] = contexts
     df = df[df['id'].isin(list_valid_ids)]
     dataset = Dataset.from_pandas(df)
-    dataset = dataset.train_test_split(test_size=0.2)
-    dataset.push_to_hub(args.hf_dataset, private=True)
+
+    dataset.to_json(args.output)
     print(dataset)
+
+    if args.hf_dataset:
+        dataset = dataset.train_test_split(test_size=0.2)
+        dataset.push_to_hub(args.hf_dataset, private=True)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--db', type=str, default='dataset.db', help='database file')
-    parser.add_argument('--hf_dataset', type=str, required=True)
+    parser.add_argument('--hf_dataset', type=str, required=False)
     parser.add_argument('--valid_ids', type=str, default='valid_ids.txt')
+    parser.add_argument('--output', type=str, default='final_dataset.jsonl')
     args = parser.parse_args()
     main(args)
