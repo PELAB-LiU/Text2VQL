@@ -1,0 +1,10 @@
+accelerate==0.24.1
+bitsandbytes==0.40.2
+datasets==2.14.6
+huggingface-hub==0.18.0
+peft==0.4.0
+pyecore==0.14.0
+tokenizers==0.13.3
+tqdm==4.66.1
+transformers==4.33.2
+openai==0.28.1
