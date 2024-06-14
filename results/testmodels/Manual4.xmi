@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="railway">
+  <regions>
+    <sensors
+        monitors="//@regions.0/@elements.3 //@regions.0/@elements.2"/>
+    <elements
+        xsi:type="Segment"/>
+    <elements
+        xsi:type="Switch"/>
+    <elements
+        xsi:type="Segment"
+        id="1"
+        monitoredBy="//@regions.0/@sensors.0"/>
+    <elements
+        xsi:type="Switch"
+        id="2"
+        monitoredBy="//@regions.0/@sensors.0"/>
+  </regions>
+</RailwayContainer>

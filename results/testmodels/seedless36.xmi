@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="railway">
+  <routes requires="//@regions.2/@sensors.0 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.1/@sensors.0 //@regions.0/@sensors.1 //@regions.0/@sensors.2 //@regions.2/@sensors.2 //@regions.0/@sensors.6 //@regions.2/@sensors.1 //@regions.0/@sensors.4 //@regions.1/@sensors.1 //@regions.0/@sensors.5" entry="//@regions.1/@elements.0/@semaphores.0" exit="//@regions.1/@elements.0/@semaphores.0">
+    <follows target="//@regions.1/@elements.2"/>
+  </routes>
+  <regions>
+    <sensors monitors="//@regions.0/@elements.1 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.0"/>
+    <sensors monitors="//@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.0/@elements.1 //@regions.2/@elements.0 //@regions.1/@elements.2"/>
+    <sensors monitors="//@regions.0/@elements.0 //@regions.1/@elements.1 //@regions.0/@elements.1 //@regions.1/@elements.2 //@regions.2/@elements.0 //@regions.1/@elements.0"/>
+    <sensors monitors="//@regions.1/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.0/@elements.1 //@regions.1/@elements.1 //@regions.0/@elements.0"/>
+    <sensors monitors="//@regions.1/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.0/@elements.0 //@regions.1/@elements.1 //@regions.0/@elements.1"/>
+    <sensors monitors="//@regions.0/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.1 //@regions.1/@elements.0 //@regions.1/@elements.2 //@regions.2/@elements.0"/>
+    <sensors monitors="//@regions.0/@elements.1 //@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.0 //@regions.1/@elements.2 //@regions.2/@elements.0"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.1 //@regions.2/@sensors.2 //@regions.0/@sensors.2 //@regions.1/@sensors.1 //@regions.1/@sensors.0 //@regions.1/@sensors.2 //@regions.0/@sensors.4 //@regions.2/@sensors.1 //@regions.0/@sensors.6 //@regions.2/@sensors.0" connectsTo="//@regions.2/@elements.0 //@regions.1/@elements.2" length="14"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.1 //@regions.0/@sensors.2 //@regions.1/@sensors.0 //@regions.1/@sensors.1 //@regions.1/@sensors.2 //@regions.0/@sensors.4 //@regions.2/@sensors.1 //@regions.2/@sensors.2 //@regions.0/@sensors.6 //@regions.2/@sensors.0" connectsTo="//@regions.0/@elements.0 //@regions.1/@elements.0" length="-5"/>
+  </regions>
+  <regions>
+    <sensors monitors="//@regions.1/@elements.2 //@regions.0/@elements.1 //@regions.1/@elements.1 //@regions.1/@elements.0 //@regions.2/@elements.0 //@regions.0/@elements.0"/>
+    <sensors monitors="//@regions.1/@elements.0 //@regions.1/@elements.2 //@regions.2/@elements.0 //@regions.0/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.1"/>
+    <sensors monitors="//@regions.0/@elements.0 //@regions.1/@elements.1 //@regions.0/@elements.1 //@regions.1/@elements.2 //@regions.2/@elements.0 //@regions.1/@elements.0"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.2 //@regions.1/@sensors.0 //@regions.1/@sensors.1 //@regions.0/@sensors.4 //@regions.2/@sensors.2 //@regions.2/@sensors.1 //@regions.2/@sensors.0 //@regions.1/@sensors.2 //@regions.0/@sensors.6" connectsTo="//@regions.1/@elements.2 //@regions.2/@elements.0" length="-10">
+      <semaphores signal="GO"/>
+    </elements>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.1 //@regions.2/@sensors.2 //@regions.0/@sensors.2 //@regions.1/@sensors.0 //@regions.1/@sensors.1 //@regions.1/@sensors.2 //@regions.0/@sensors.4 //@regions.2/@sensors.1 //@regions.0/@sensors.6 //@regions.2/@sensors.0" connectsTo="//@regions.2/@elements.0 //@regions.0/@elements.1" length="82"/>
+    <elements xsi:type="Switch" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.1 //@regions.0/@sensors.2 //@regions.1/@sensors.0 //@regions.1/@sensors.1 //@regions.0/@sensors.4 //@regions.2/@sensors.1 //@regions.2/@sensors.2 //@regions.2/@sensors.0 //@regions.1/@sensors.2 //@regions.0/@sensors.6" connectsTo="//@regions.1/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.1" currentPosition="STRAIGHT" positions="//@routes.0/@follows.0"/>
+  </regions>
+  <regions>
+    <sensors monitors="//@regions.1/@elements.0 //@regions.0/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.0/@elements.1 //@regions.1/@elements.1"/>
+    <sensors monitors="//@regions.0/@elements.1 //@regions.1/@elements.1 //@regions.1/@elements.2 //@regions.0/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.0"/>
+    <sensors monitors="//@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.0 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.0/@elements.1"/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.3/@sensors.1 //@regions.0/@sensors.3 //@regions.3/@sensors.0 //@regions.0/@sensors.5 //@regions.0/@sensors.1 //@regions.0/@sensors.2 //@regions.1/@sensors.0 //@regions.1/@sensors.1 //@regions.0/@sensors.4 //@regions.2/@sensors.2 //@regions.2/@sensors.1 //@regions.2/@sensors.0 //@regions.1/@sensors.2 //@regions.0/@sensors.6" connectsTo="//@regions.1/@elements.0 //@regions.1/@elements.2"/>
+  </regions>
+  <regions>
+    <sensors monitors="//@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.1/@elements.0 //@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.0/@elements.1"/>
+    <sensors monitors="//@regions.0/@elements.1 //@regions.2/@elements.0 //@regions.1/@elements.2 //@regions.1/@elements.1 //@regions.0/@elements.0 //@regions.1/@elements.0"/>
+  </regions>
+</RailwayContainer>
