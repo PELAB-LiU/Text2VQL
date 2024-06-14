@@ -86,6 +86,29 @@ docker exec -it \
     eclipse-vnc ant clean build EvaluateDatabase
 ```
 
+Generate the dataset to HF (optional, it can also be pushed to HuggingFace using option `--hf_dataset`).
+
+```bash
+python generate_final_dataset.py
+```
+
+## The dataset generated for the Text2VQL paper
+
+The final dataset used to train the models presented in the paper was uploaded to HuggingFace 
+and can be found [here](https://huggingface.co/datasets/PELAB-LiU/Text2VQL).
+
+
+# TODO find a place for this
+
+(Optional.) Generate instance models in the Railway domain for testing.
+Warining: This will replace the original models we used.
+```bash
+docker exec -it \
+    -w /config/refinery \
+    eclipse-vnc ./generate_models.sh /config/dataset_construction/models 
+cp -a models/. TODO/
+```
+
 Run query test
 ```bash
 docker exec -it \
@@ -118,26 +141,8 @@ docker exec -it \
     eclipse-vnc ant clean build ProfileMain
 ```
 
-Run testmodel generation
-```bash
-docker exec -it \
-    -w /config/refinery \
-    eclipse-vnc ./generate_models.sh /config/dataset_construction/models 
-```
-
 (Optional) Stop and remove container.
 ```bash
 docker container stop eclipse-vnc
 docker container rm eclipse-vnc
 ```
-
-Generate the dataset to HF (optional, it can also be pushed to HuggingFace using option `--hf_dataset`).
-
-```bash
-python generate_final_dataset.py
-```
-
-## The dataset generated for the Text2VQL paper
-
-The final dataset used to train the models presented in the paper was uploaded to HuggingFace 
-and can be found [here](https://huggingface.co/datasets/PELAB-LiU/Text2VQL).
