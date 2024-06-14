@@ -25,9 +25,13 @@ class Evaluate {
 			URI.createFileURI(new File(path).absolutePath), true
 		);
 		
-		
 		val pkg = resource.contents.get(0) as EPackage
-		EPackage.Registry.INSTANCE.put(pkg.nsURI, pkg)
+		if(pkg.nsURI===null){
+			EPackage.Registry.INSTANCE.put("http://example.org/", pkg)
+		} else {
+			EPackage.Registry.INSTANCE.put(pkg.nsURI, pkg)
+		}
+		
 			
 		EMFPatternLanguageStandaloneSetup.doSetup()
 

@@ -28,7 +28,12 @@ class EvaluateDatabase {
 		
 		
 		val pkg = resource.contents.get(0) as EPackage
-		return "import \"" + pkg.nsURI + "\"\n"
+		if(pkg.nsURI === null){
+			return "import \"http://example.org/\"\n"
+		} else {
+			return "import \"" + pkg.nsURI + "\"\n"
+		}
+		
 	}
 	
 	def static void main(String[] args) {
@@ -47,7 +52,13 @@ class EvaluateDatabase {
 				pattern = header + "import \"http://www.eclipse.org/emf/2002/Ecore\"\n" + pattern;
 				println("=============================================\n"+pattern)
 				if (Evaluate.evaluate(MAKE_ABSOLUTE + metamodel, pattern)){
+					println("====> CORRECT")
 					list_ids.add(resultSet.getInt("id"));	
+				} else {
+					println("====> FAULTY")
+				}
+				if(header.contains("import \"http://example.org/\"")){
+					Thread.sleep(5000)
 				}
 			} catch(Exception e){
 					e.printStackTrace

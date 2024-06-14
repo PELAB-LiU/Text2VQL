@@ -142,6 +142,7 @@
     </target>
     <target name="CSVBasedEvaluation">
         <java classname="se.liu.ida.sas.pelab.querycomparison.CSVBasedEvaluation" failonerror="true" fork="yes">
+            <arg line="meta=&#10;input=&#10;output=&#10;instancedir="/>
             <classpath refid="run.CSVBasedEvaluation.classpath"/>
         </java>
     </target>

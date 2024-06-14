@@ -29,7 +29,7 @@ Icon=/opt/eclipse/icon.xpm\n\
 Name=Modeling 2024-03\n\
 Exec=/opt/eclipse/eclipse\n\
 Name=Modeling 2024-03\n\
-Categories=Development\' > /usr/share/applications/eclipse.desktop
+Categories=Development\n\' > /usr/share/applications/eclipse.desktop
 
 RUN apt install ant -y
 
@@ -37,4 +37,28 @@ COPY  eclipse-workspace /config/eclipse-workspace
 
 RUN chmod -R o+rwx /config/eclipse-workspace
 
+RUN wget https://download-cdn.jetbrains.com/idea/ideaIC-2023.3.6.tar.gz
+RUN tar -xzf ideaIC-*.tar.gz -C /opt
+RUN rm ideaIC-2023.3.6.tar.gz
+
+RUN echo '[Desktop Entry]\n\
+Version=13.0\n\
+Type=Application\n\
+Terminal=false\n\
+Icon[en_US]=/opt/idea-IC-233.15026.9/bin/idea.png\n\
+Name[en_US]=IntelliJ\n\
+Exec=/opt/idea-IC-233.15026.9/bin/idea.sh\n\
+Name=IntelliJ\n\
+Categories=Development\n\
+Icon=/opt/idea-IC-233.15026.9/bin/idea.png' > /usr/share/applications/intellij.desktop
+
+RUN rm -rf /config/.cache
+
+#RUN chown -R abc /opt
+
+#RUN chmod 644 /usr/share/applications/intellij.desktop
+
+COPY refinery /config/refinery
+
+RUN chmod -R o+rwx /config/refinery
 

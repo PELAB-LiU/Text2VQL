@@ -119,6 +119,13 @@ docker exec -it \
     eclipse-vnc ant clean build ProfileMain
 ```
 
+Run testmodel generation
+```bash
+docker exec -it \
+    -w /config/refinery \
+    eclipse-vnc ./generate_models.sh /config/dataset_construction/models 
+```
+
 (Optional) Stop and remove container.
 ```bash
 docker container stop eclipse-vnc

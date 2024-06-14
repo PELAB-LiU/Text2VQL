@@ -5,8 +5,6 @@ import static java.lang.System.out;
 import java.io.File;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
@@ -30,20 +28,24 @@ import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParsingResults;
 
 import com.google.inject.Guice;
 
-import se.liu.ida.sas.pelab.vqlsyntaxcheck.Config;
-
 public class CSVBasedEvaluation {
 	private final ResourceSet resources;
 	private final Iterable<CSVRecord> input;
 	private final CSVHandler output;
 	private final ModelLoader models;
 	private final String aitemplate;
-
+	
+	static final String META_PATH = System.getenv("META");
+	static final String INPUT_CSV = System.getenv("INPUT");
+	static final String OUTPUT_CSV = System.getenv("OUTPUT");
+	static final String INSTANCERID = System.getenv("INSTANCEDIR");
+	static final String AI = System.getenv("AI");
+	
 	/**
 	 * Configure: meta=pathToMetamodel input=pathToInputCSV output=pathToOutputCSV
 	 */
 	public static void main(String[] args) {
-		if (args.length == 0) {
+		/*if (args.length == 0) {
 			out.println("Required arguments:");
 			out.println("\tmeta=path to Metamodel");
 			out.println("\tinput=path to input CSV");
@@ -51,11 +53,11 @@ public class CSVBasedEvaluation {
 			out.println("\tinstancedir=path to Instance Model directory");
 			return;
 		}
-		var cfg = new Config(args);
+		var cfg = new Config(args);*/
 		var rs = setup();
-		loadMetamodel(cfg.asString("meta"), rs);
+		loadMetamodel(META_PATH,rs);
 
-		var eval = new CSVBasedEvaluation(cfg, rs);
+		var eval = new CSVBasedEvaluation(rs);
 		eval.run();
 
 	}
@@ -132,20 +134,20 @@ public class CSVBasedEvaluation {
 		 */
 	}
 
-	public CSVBasedEvaluation(Config cfg, ResourceSet resources) {
+	public CSVBasedEvaluation(ResourceSet resources) {
 		this.resources = resources;
 		// this.models = new ModelLoader(resources /*new ResourceSetImpl()*/,
 		// cfg.asString("instancedir"));
-		this.models = new SeparateModelLoader(resources, cfg.asString("instancedir"));
-		this.input = CSVHandler.parse(cfg.asString("input"));
+		this.models = new SeparateModelLoader(resources, INSTANCERID);
+		this.input = CSVHandler.parse(INPUT_CSV);
 		CSVHandler csv;
 		try {
-			csv = new CSVHandler(cfg.asString("output"));
+			csv = new CSVHandler(OUTPUT_CSV);
 		} catch (Exception e) {
 			csv = new CSVHandler(null);
 		}
 		this.output = csv;
-		this.aitemplate = cfg.asString("ai");
+		this.aitemplate = AI;
 	}
 
 	private static ResourceSet setup() {

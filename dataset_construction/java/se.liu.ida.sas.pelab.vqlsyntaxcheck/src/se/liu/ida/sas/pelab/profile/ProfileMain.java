@@ -14,21 +14,28 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 import com.google.inject.Guice;
 
 import se.liu.ida.sas.pelab.querycomparison.CSVHandler;
-import se.liu.ida.sas.pelab.vqlsyntaxcheck.Config;
 
 public class ProfileMain {
-
+	static final String MODE = System.getenv("MODE");
+	static final String CSV = System.getenv("CSV");
+	static final String COL = System.getenv("COL");
+	static final String OUT = System.getenv("OUT");
+	
 	public static void main(String[] args) throws IOException {
-		var cfg = new Config(args);
-		if(cfg.isDefined("aggregate")) {
-			csv_aggregate_proofile(cfg);
-		} else {
-			csv_individual_proofile(cfg);
+		switch (MODE) {
+		case "IND": {
+			csv_individual_proofile();
+		}
+		case "AGG": {
+			csv_aggregate_proofile();
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + MODE);
 		}
 	}
 	
-	private static void csv_aggregate_proofile(Config cfg) {
-		var input = CSVHandler.parse(cfg.asString("csv"));
+	private static void csv_aggregate_proofile() {
+		var input = CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 
@@ -44,7 +51,7 @@ public class ProfileMain {
 	    String line = "id,"+QueryProfile.header();
 
 		input.forEach(entry ->{
-			var pattern = entry.get(cfg.asString("col"));
+			var pattern = entry.get(COL);
 			
 			var parsed = PatternParserBuilder.instance().parse(""
 					+ "import \"http://www.eclipse.org/emf/2002/Ecore\"\r\n"
@@ -57,8 +64,8 @@ public class ProfileMain {
 
 		System.out.println(profiler);
 	}
-	private static void csv_individual_proofile(Config cfg) throws IOException {
-		var input = CSVHandler.parse(cfg.asString("csv"));
+	private static void csv_individual_proofile() throws IOException {
+		var input = CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 
@@ -69,7 +76,7 @@ public class ProfileMain {
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
 			"ecore", new EcoreResourceFactoryImpl());
 		
-	    PrintWriter printWriter = new PrintWriter(new FileWriter(cfg.asString("out")));
+	    PrintWriter printWriter = new PrintWriter(new FileWriter(OUT));
 		
 		
 		//var profiler = new QueryProfile();
@@ -77,7 +84,7 @@ public class ProfileMain {
 		System.out.println(line);
 		printWriter.println(line);
 		input.forEach(entry ->{
-			var pattern = entry.get(cfg.asString("col"));
+			var pattern = entry.get(COL);
 			
 			var parsed = PatternParserBuilder.instance().parse(""
 					+ "import \"http://www.eclipse.org/emf/2002/Ecore\"\r\n"
