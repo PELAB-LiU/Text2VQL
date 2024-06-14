@@ -12,7 +12,7 @@ from text2vql.metamodel import MetaModel
 
 from transformers.trainer_utils import set_seed
 
-set_seed(1234)
+set_seed(123)
 
 PROMPT_WITH_HEADER_CODE = """{metamodel}
 //{nl}
@@ -27,9 +27,12 @@ test_dataset = pd.read_csv('test_metamodel/test_queries.csv', sep=',')
 
 
 def main(args):
-    base_model = AutoModelForCausalLM.from_pretrained(args.base_model, trust_remote_code=True,
-                                                      torch_dtype=torch.float16, device_map="auto")
-    model = PeftModel.from_pretrained(base_model, args.checkpoint).eval()
+    model = AutoModelForCausalLM.from_pretrained(args.base_model,
+                                                 trust_remote_code=True,
+                                                 torch_dtype=torch.float16,
+                                                 device_map="auto")
+
+    model = PeftModel.from_pretrained(model, args.checkpoint).eval()
     tokenizer = AutoTokenizer.from_pretrained(args.base_model)
 
     outputs = defaultdict(list)
