@@ -99,8 +99,8 @@ def main(args):
 
     for k, v in outputs.items():
         test_dataset[f'{k}_output'] = outputs[k]
-    test_dataset.to_csv(f'{args.base_model.replace("/", "-")}_fs_{args.mode}.csv', index=False)
-    print(f'Saved {args.base_model.replace("/", "-")}_fs_{args.mode}.csv')
+    test_dataset.to_csv(f'../results/ai/{args.base_model.replace("/", "-")}_fs_{args.mode}.csv', index=False)
+    print(f'Saved ../results/ai/{args.base_model.replace("/", "-")}_fs_{args.mode}.csv')
 
 
 if __name__ == '__main__':
