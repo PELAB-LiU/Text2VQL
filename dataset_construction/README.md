@@ -85,8 +85,11 @@ Finally, you can generate the final dataset (optional, it can also be pushed to 
 
 ```bash
 python generate_final_dataset.py
-# todo: csv file in results profiles final_dataset.csv
 ```
+
+Two files will be generated: `final_dataset.jsonl` (dataset in a jsonl format) and 
+`../results/profiles/final_dataset.csv` (dataset in a csv format). The csv will be used in the results phase.
+
 
 ## The dataset generated for the Text2VQL paper
 

@@ -27,6 +27,7 @@ def main(args):
     dataset = Dataset.from_pandas(df)
 
     dataset.to_json(args.output)
+    dataset.to_csv(args.output_csv)
     print(dataset)
 
     if args.hf_dataset:
@@ -40,5 +41,6 @@ if __name__ == '__main__':
     parser.add_argument('--hf_dataset', type=str, required=False)
     parser.add_argument('--valid_ids', type=str, default='valid_ids.txt')
     parser.add_argument('--output', type=str, default='final_dataset.jsonl')
+    parser.add_argument('--output_csv', type=str, default='../results/profiles/final_dataset.csv')
     args = parser.parse_args()
     main(args)
