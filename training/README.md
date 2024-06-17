@@ -9,9 +9,9 @@ cd training
 
 ## Hardware and libraries
 
-All the experiments were run in an Ubuntu machine that has an NVIDIA A5000 GPU (24Gb). The fine-tuning procedure
-filled almost all the GPU capacity. Therefore, for fine-tuning, you need a GPU with at least 24Gb of memory.
-On the other hand, the evaluation/inference took less memory and we believe that having 12Gbs should be enough.
+All the experiments were run in an Ubuntu machine that has an NVIDIA A5000 GPU (24GB). The fine-tuning procedure
+filled almost all the GPU capacity. Therefore, for fine-tuning, you need a GPU with at least 24GB of memory.
+On the other hand, the evaluation/inference took less memory and we believe that having 12GBs may be enough.
 
 The fast way to install all the libraries is to load the environment using [conda](https://docs.anaconda.com/free/miniconda/).
 
@@ -36,7 +36,9 @@ pip install -r requirements.txt
 To fine-tune the models using our Text2VQL dataset, `train.py` is your script. The script assumes that the dataset is 
 in a HF repository. Note also that `train.py` contains a lot of arguments representing the hyperparameters of the
 training phase. In the paper, we run the fine-tuning with the following arguments (`CUDA_VISIBLE_DEVICES=0` is to restrict 
-the training to just the GPU 0):
+the training to just the GPU 0): 
+
+#todo command to load the dataset from disk
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir adapter-deepseek-coder-6.7b-base --max_input_length 512 --max_target_length 256
@@ -97,7 +99,7 @@ whose format is the same as the previous script.
 
 Finally, to run ChatGPT over our test meta-model with an in-context learning approach, we used the following command: 
 ```bash
-export OPENAI_API_KEY="KEY"
+export OPENAI_API_KEY=<KEY>
 python test_railway_openai.py --prompt_type fs --mode random
 ```
 The output of this script is a `csv`:

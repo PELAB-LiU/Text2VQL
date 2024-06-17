@@ -1,12 +1,12 @@
-Parts implemented in java are warapped in the docker container defined here.
+Parts implemented in java are wrapped in the docker container defined here.
 The container contains an eclipse environment with the build dependencies and necessary tools to compile the project. Furthermore, it creates a vnc server (web-based remote desktop) that allows the inspection and modification of the source code.
 
-Note that the imeage is set up to use a copy of *refinery* (in /config/refinery) and *eclipse-based code* (in /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck).
-However, the text2vql folder from the host is mounted to /confic/text2vql.
+Note that the image is set up to use a copy of *refinery* (in /config/refinery) and *eclipse-based code* (in /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck).
+However, the text2vql folder from the host is mounted to /config/text2vql.
 
-Build and start docker environemnt. 
+Build and start docker environment. 
 ```bash
-docker build -t eclipse-vnc ../eclipse-rdp
+docker build -t eclipse-vnc .
 docker run -d \
   --name=eclipse-vnc \
   --security-opt seccomp=unconfined \

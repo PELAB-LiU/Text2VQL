@@ -60,7 +60,7 @@ when generating the queries. In the original paper, this parameter was set to 50
 testing purposes, we set it to 10.
 
 ```bash
-export OPENAI_API_KEY=OPENAI_KEY
+export OPENAI_API_KEY=<OPENAI_KEY>
 python generate_dataset.py --sample 10
 ```
 
@@ -85,6 +85,7 @@ Finally, you can generate the final dataset (optional, it can also be pushed to 
 
 ```bash
 python generate_final_dataset.py
+# todo: csv file in results profiles final_dataset.csv
 ```
 
 ## The dataset generated for the Text2VQL paper

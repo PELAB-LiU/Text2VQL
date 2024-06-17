@@ -15,7 +15,12 @@ of the paper.
 
 ## Running everything
 To reproduce the full paper, the order is the following:
-1. Run the scripts of `dataset_construction`.
-2. Run the scripts of `training`.
-3. Run the scripts of `results`.
+1. Run the scripts of `eclipse-rdp` to build the docker image.
+2. Run the scripts of `dataset_construction`.
+3. Run the scripts of `training`.
+4. Run the scripts of `results`.
+
+For each phase/folder, you have to move the working directory to the associated folder (e.g., `cd eclipse-rdp`).
 Each phase/folder has its own `README.md` explaining all the requirements and steps.
+We assume that you are using Ubuntu.
+todo: mention replace stuff

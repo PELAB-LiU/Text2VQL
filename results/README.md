@@ -1,9 +1,9 @@
 # Results reported in the Text2VQL paper
 
 ## Dependencies
-
+todo
 ## Results structure
-
+todo
 
 ## RQ1: Quality of the generated queries
 
@@ -52,7 +52,7 @@ python present_results_rq2.py
 
 (Optional.) Generate instance models in the Railway domain for testing.
 This will generate 300 models will a seed model, and an additional 300 random model. 
-Warining: This may replace the original models we used. Expected runtime is around 3-6 hours.
+Warning: This may replace the original models we used. Expected runtime is around 3-6 hours.
 
 ```bash
 docker exec -it \
