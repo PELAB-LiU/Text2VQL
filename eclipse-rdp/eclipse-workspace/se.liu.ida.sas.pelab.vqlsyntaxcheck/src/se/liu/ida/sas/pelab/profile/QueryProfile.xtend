@@ -26,6 +26,8 @@ import org.eclipse.viatra.query.patternlanguage.emf.vql.ParameterRef
 import javax.tools.JavaCompiler.CompilationTask
 import org.eclipse.viatra.query.patternlanguage.emf.vql.Variable
 import org.eclipse.viatra.query.patternlanguage.emf.vql.PatternCall
+import org.eclipse.viatra.query.patternlanguage.emf.vql.ExecutionType
+import org.eclipse.viatra.query.patternlanguage.emf.vql.ClosureType
 
 class QueryProfile {
 	
@@ -35,6 +37,7 @@ class QueryProfile {
 	var int main = 0;
 	var int patterns = 0;
 	var int or = 0;
+	var int mods = 0;
 	def int aux(){patterns-main}
 	def void processParsed(PatternParsingResults parsed){
 		main++
@@ -43,6 +46,9 @@ class QueryProfile {
 	def void processPattern(Pattern pattern){
 		patterns++
 		or-- //as every pattern contains at least one body
+		if(pattern.modifiers.private!==false || pattern.modifiers.execution!==ExecutionType.UNSPECIFIED){
+			mods++
+		}
 		pattern.bodies.forEach[it.processBody]
 		pattern.parameters.forEach[it.processVariable]
 	}
@@ -55,6 +61,7 @@ class QueryProfile {
 	#patterns=«patterns»
 		#main=«main»
 		#auxiliary=«aux»
+		#non-deault modifiers=«mods»
 	#or=«or»
 	'''
 	/**
@@ -73,6 +80,7 @@ class QueryProfile {
 	var int path = 0;
 	var int type = 0;
 	var int classifier = 0;
+	
 	def dispatch void processConstraint(CompareConstraint constraint){
 		switch(constraint.feature) {
 			case CompareFeature.EQUALITY:
@@ -117,6 +125,7 @@ class QueryProfile {
 		constraint.type //TODO ?
 		constraint.^var.processValue
 	}
+	
 	private def printConstraints()'''
 	#contraints=«constraints»
 		#comapre=«compare»
@@ -124,6 +133,10 @@ class QueryProfile {
 			#notequal=«compare_neq»
 		#check=«check»
 		#composition=«composition»
+			closures
+				#original=«composition-tra-reftra»
+				#transitive=«tra»
+				#refleive transitive=«reftra»
 			#positive=«patterncomposition_pos»
 				 #patterncall=«patternpos»
 			#negative=«patterncomposition_neg»
@@ -142,25 +155,38 @@ class QueryProfile {
 	var int patterncall = 0;
 	var int typecall = 0;
 	var int classifiercall = 0;
+	var int reftra = 0;
+	var int tra = 0;
 	def dispatch void processCompositionCall(PathExpressionConstraint call){
 		pathcall++
 		path-- //To correct for double counting as call is indirect constraint
 		call.processConstraint
+		call.transitive.processClosure
 	}
 	def dispatch void processCompositionCall(PatternCall call){
 		patterncall++
 		//To correct for double counting as call is indirect constraint
 		call.parameters.forEach[it.processValue]
+		call.transitive.processClosure
 	}
 	def dispatch void processCompositionCall(TypeCheckConstraint call){
 		typecall++
 		type-- //To correct for double counting as call is indirect constraint
 		call.processConstraint
+		call.transitive.processClosure
 	}
 	def dispatch void processCompositionCall(EClassifierConstraint call){
 		classifiercall++
 		classifier-- //To correct for double counting as call is indirect constraint
 		call.processConstraint
+		call.transitive.processClosure
+	}
+	def processClosure(ClosureType closure){
+		if(closure===ClosureType.REFLEXIVE_TRANSITIVE){
+			reftra++
+		} else if (closure===ClosureType.TRANSITIVE){
+			tra++;
+		}
 	}
 	
 	/**
@@ -201,7 +227,7 @@ class QueryProfile {
 		value.call.processCallAgg
 	}
 	def dispatch void processValue(StringValue value){
-		stringvalue++
+		stringvalue++ 
 	}
 	def dispatch void processValue(NumberValue value){
 		numvalue++

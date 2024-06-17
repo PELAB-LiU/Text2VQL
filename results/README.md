@@ -13,7 +13,11 @@ python present_results_rq1.py
 
 ## RQ2: Complexity and VQL coverage 
 
-Log language elements encountered in the dataset.
+To check which language elements were encountered in the dataset run the following commands.
+The first command compiles the Xtend source files. You may skip it, **if** it was compiled in a previous step, and no changes were made to the code.
+The second command executes the profiler in aggregate mode and prints the results to the standard output.
+Interpret the output as a tree, e.g., `#contraints=39556 \n\t #comapre=3482` is the number of compare constraints.
+
 ```bash
 docker exec -it \
     -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
@@ -27,7 +31,8 @@ docker exec -it \
     eclipse-vnc ant clean build ProfileMain
 ```
 
-Evaluate query complexity in the dataset.
+The next commands create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
+You may skip the first `docker exec` if no changes were made to the code.
 ```bash
 docker exec -it \
     -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
@@ -43,6 +48,8 @@ docker exec -it \
 
 python merge-profile.py
 ```
+
+Run the following command to create the diagrams for query complexity.
 
 ```bash
 python present_results_rq2.py
