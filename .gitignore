@@ -199,3 +199,5 @@ cython_debug/
 /dataset_construction/dataset.db
 /dataset_construction/valid_ids.txt
 /dataset_construction/final_dataset.jsonl
+/dataset_construction/test.jsonl
+/dataset_construction/train.jsonl

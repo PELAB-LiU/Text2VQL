@@ -104,6 +104,11 @@ class DataArguments:
     data_path: str = field(default="PELAB-LiU/Text2VQL", metadata={"help": "Path to the training data."})
     max_target_length: int = field(default=256)
     max_input_length: int = field(default=256)
+    where_data: str = field(default="hf", metadata={"help": "Only hf or disk."})
+    data_path_local_train: str = field(default="../dataset_construction/train.jsonl",
+                                       metadata={"help": "Path to the training data."})
+    data_path_local_test: str = field(default="../dataset_construction/test.jsonl",
+                                      metadata={"help": "Path to the training data."})
 
 
 @dataclass
@@ -161,7 +166,16 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length,
 
 
 def train(model_args, data_args, training_args):
-    dataset = load_dataset(data_args.data_path)
+    if data_args.where_data == "hf":
+        dataset = load_dataset(data_args.data_path)
+    elif data_args.where_data == "disk":
+        # data is in disk
+        data_files = {"train": data_args.data_path_local_train,
+                      "test": data_args.data_path_local_test}
+        dataset = load_dataset("json", data_files=data_files)
+    else:
+        raise ValueError(f"{data_args.where_data} not supported")
+
     print(dataset)
     model, tokenizer = load_model_and_tokenizer(model_args)
 

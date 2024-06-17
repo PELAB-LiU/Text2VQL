@@ -1,4 +1,3 @@
-
 # Text2VQL: Training and running the models
 
 After establishing a syntactically valid NL-VQL dataset, the next step involves training smaller open-source LLMs.
@@ -33,12 +32,9 @@ pip install -r requirements.txt
 
 ## Fine-tuning OS models
 
-To fine-tune the models using our Text2VQL dataset, `train.py` is your script. The script assumes that the dataset is 
-in a HF repository. Note also that `train.py` contains a lot of arguments representing the hyperparameters of the
-training phase. In the paper, we run the fine-tuning with the following arguments (`CUDA_VISIBLE_DEVICES=0` is to restrict 
-the training to just the GPU 0): 
-
-#todo command to load the dataset from disk
+To fine-tune the models using our Text2VQL dataset, `train.py` is your script. If you want to fine-tune using 
+the dataset in the HF repository (i.e., the dataset that we used in the paper) you can just simply run 
+(`CUDA_VISIBLE_DEVICES=0` is to restrict the training to just the GPU 0):
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir adapter-deepseek-coder-6.7b-base --max_input_length 512 --max_target_length 256
@@ -46,8 +42,18 @@ CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek
 CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path codellama/CodeLlama-7b-hf --output_dir adapter-CodeLlama-7b-hf --max_input_length 512 --max_target_length 256
 ```
 
-The fine-tuned models will be stored in the `--output_dir` path. We have released the models that we trained
-(only for research purposes):
+If you want to fine-tune using the local dataset generated in the dataset construction phase (i.e., `train.jsonl` and `test.jsonl` files),
+you have to add the argument `--where_data disk` to the script:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-6.7b-base --output_dir adapter-deepseek-coder-6.7b-base --max_input_length 512 --max_target_length 256 --where_data disk
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path deepseek-ai/deepseek-coder-1.3b-base --output_dir adapter-deepseek-coder-1.3b-base --max_input_length 1024 --max_target_length 256 --where_data disk
+CUDA_VISIBLE_DEVICES=0 python train.py --model_name_or_path codellama/CodeLlama-7b-hf --output_dir adapter-CodeLlama-7b-hf --max_input_length 512 --max_target_length 256 --where_data disk
+```
+
+The fine-tuned models will be stored in the `--output_dir` path. 
+
+We have released the models that we trained (only for research purposes):
 
 * [PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA](https://huggingface.co/PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA)
 * [PELAB-LiU/deepseek-coder-1.3b-base-Text2VQL-LoRA](https://huggingface.co/PELAB-LiU/deepseek-coder-1.3b-base-Text2VQL-LoRA)
@@ -59,8 +65,8 @@ HF.
 ## Generation
 
 Once the models have been trained, you can evaluate them. To do so, you can use the `test_model_railway.py` script.
-The argument `--checkpoint` could indicate either a HF repo or a local folder (best checkpoint of the `--output_dir` 
-of the previous script). 
+The argument `--checkpoint` could indicate either a HF repo (e.g., `PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA`) 
+or a local folder (best checkpoint of the `--output_dir` of the previous script; e.g., `adapter-deepseek-coder-6.7b-base/checkpoint-1113`). 
 
 ```bash
 CUDA_VISIBLE_DEVICES=0 python test_model_railway.py --base_model deepseek-ai/deepseek-coder-6.7b-base --checkpoint PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA

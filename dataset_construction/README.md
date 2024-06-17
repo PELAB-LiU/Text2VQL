@@ -87,8 +87,10 @@ Finally, you can generate the final dataset (optional, it can also be pushed to 
 python generate_final_dataset.py
 ```
 
-Two files will be generated: `final_dataset.jsonl` (dataset in a jsonl format) and 
-`../results/profiles/final_dataset.csv` (dataset in a csv format). The csv will be used in the results phase.
+Four files will be generated: `final_dataset.jsonl` (full dataset in a jsonl format), 
+`../results/profiles/final_dataset.csv` (dataset in a csv format), `train.jsonl` (training split in jsonl format), 
+and `test.jsonl` (training split in jsonl format). The csv will be used in the results phase. 
+The training and testing splits can be used in the fine-tuning step.
 
 
 ## The dataset generated for the Text2VQL paper

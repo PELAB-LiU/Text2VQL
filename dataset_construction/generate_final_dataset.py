@@ -30,9 +30,12 @@ def main(args):
     dataset.to_csv(args.output_csv)
     print(dataset)
 
+    dataset = dataset.train_test_split(test_size=0.2, seed=123)
     if args.hf_dataset:
-        dataset = dataset.train_test_split(test_size=0.2)
         dataset.push_to_hub(args.hf_dataset, private=True)
+
+    dataset["train"].to_json('train.jsonl')
+    dataset["test"].to_json('test.jsonl')
 
 
 if __name__ == '__main__':
