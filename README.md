@@ -23,4 +23,6 @@ To reproduce the full paper, the order is the following:
 For each phase/folder, you have to move the working directory to the associated folder (e.g., `cd eclipse-rdp`).
 Each phase/folder has its own `README.md` explaining all the requirements and steps.
 We assume that you are using Ubuntu.
-todo: mention replace stuff
+The `results` folder contains not only the scripts used to answer all the RQs but also
+the data associated to the paper. Therefore, if you start running all the scripts from the very first phase,
+you will overwrite eventually all this data.

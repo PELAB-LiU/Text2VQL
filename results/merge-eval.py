@@ -1,7 +1,7 @@
+import os
+
 import pandas as pd
 
-import os
-import argparse
 
 def merge(basename):
     ai = pd.read_csv("ai/{bn}.csv".format(bn=basename)).set_index('id')

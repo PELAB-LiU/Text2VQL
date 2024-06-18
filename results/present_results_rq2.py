@@ -1,10 +1,7 @@
 import argparse
 
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
 from plotnine import *
-from sklearn.metrics import cohen_kappa_score
 
 
 def main(args):
