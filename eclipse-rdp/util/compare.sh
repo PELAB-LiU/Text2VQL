@@ -3,7 +3,7 @@
 
 cd /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck
 java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main -d xtend-gen -useCurrentClassLoader src
-eclipse-vnc ant clean build
+ant clean build
 
 for file in $INDIR/*.csv; do
 	shortname=$(basename -- $file)
