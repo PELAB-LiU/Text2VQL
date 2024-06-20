@@ -52,11 +52,11 @@ The second command executes the profiler in aggregate mode and prints the result
 Interpret the output as a tree, e.g., `#contraints=39556 \n\t #comapre=3482` is the number of compare constraints.
 
 ```bash
-docker exec -it \
+docker exec -it -u abc \
     -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
     eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
     -d xtend-gen -useCurrentClassLoader src
-docker exec -it \
+docker exec -it -u abc \
     -e MODE=AGG \
     -e CSV=/config/text2vql/results/profiles/final_dataset.csv \
     -e COL=pattern \
@@ -67,11 +67,11 @@ docker exec -it \
 The next commands create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
 You may skip the first `docker exec` if no changes were made to the code.
 ```bash
-docker exec -it \
+docker exec -it -u abc \
     -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
     eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
     -d xtend-gen -useCurrentClassLoader src
-docker exec -it \
+docker exec -it -u abc \
     -e MODE=IND \
     -e CSV=/config/text2vql/results/profiles/final_dataset.csv \
     -e COL=pattern \
@@ -96,35 +96,25 @@ This will generate 300 models will a seed model, and an additional 300 random mo
 Warning: This may replace the original models we used. Expected runtime is around 3-6 hours.
 
 ```bash
-docker exec -it \
+docker exec -it -u abc \
     -w /config/refinery \
-    eclipse-vnc ./generate_models.sh /config/text2vql/results/models 
+    eclipse-vnc ./generate_models.sh /config/text2vql/results/testmodels 
 ```
 
-Run query test
+To execute the query comparison test, use the followind docker commands. 
+This will run the match set comaprison for all csvs in the `ai` directory.
+The expected time of the evaluation is 30-60 minutes.
+Results will be saved to the `eval` and `merged` directories.
 ```bash
-docker exec -it \
-    -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
-    -d xtend-gen -useCurrentClassLoader src
-# docker exec -it \
-#    -e METAPATH=foo.ecore \
-#    -e INPUT=ai_out.csv \
-#    -e OUTPUT=ai_out_eval.csv \
-#    -e INSTANCEDIR=models612 \
-#    -e AI=<idx>_output \
-#    -w /config/dataset_construction/java/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-#    eclipse-vnc ant clean build CSVBasedEvaluation
-docker exec -it \
+docker exec -it -u abc \
     -e INSTANCEDIR=/config/text2vql/results/testmodels \
-    -e META_PATH=/config/text2vql/results/railway.ecore \
+    -e META=/config/text2vql/dataset_construction/test_metamodel/railway.ecore \
     -e INDIR=/config/text2vql/results/ai/ \
     -e OUTDIR=/config/text2vql/results/eval/ \
     -w /config/util \
-    compare.sh
+    eclipse-vnc ./compare.sh
 
 python merge-eval.py
-#TODO uploaad test.sh (Script for full eval)
 ```
 
 Once the generated queries have been evaluated, we can compute the Pass@5 score reported in the paper for each LLM.

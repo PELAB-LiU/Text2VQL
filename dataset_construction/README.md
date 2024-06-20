@@ -69,11 +69,11 @@ If not, follow the instructions [here](../eclipse-rdp/README.md). To this end, a
 of the VQL grammar in Python. As a result, this script will generate `valid_ids.txt` which contains the ids of queries that are syntactically valid.
 
 ```bash
-docker exec -it \
+docker exec -it -u abc \
     -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
     eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
     -d xtend-gen -useCurrentClassLoader src
-docker exec -it \
+docker exec -it -u abc \
     -e JDBC_URL=/config/text2vql/dataset_construction/dataset.db \
     -e PROJECT_PATH=/config/text2vql/dataset_construction/ \
     -e OUTPUT=/config/text2vql/dataset_construction/valid_ids.txt \
