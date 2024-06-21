@@ -22,7 +22,23 @@ To reproduce the full paper, the order is the following:
 
 For each phase/folder, you have to move the working directory to the associated folder (e.g., `cd eclipse-rdp`).
 Each phase/folder has its own `README.md` explaining all the requirements and steps.
-We assume that you are using Ubuntu.
+
 The `results` folder contains not only the scripts used to answer all the RQs but also
 the data associated to the paper. Therefore, if you start running all the scripts from the very first phase,
 you will overwrite eventually all this data.
+
+## Requirements
+
+The hardware and software requirements are the following.
+
+* One NVIDIA RTX A5000 GPU for training and running the open-source models.
+* Ubuntu OS.
+* [Conda](https://docs.anaconda.com/free/miniconda/).
+* [Docker engine](https://docs.docker.com/engine/install/ubuntu/).
+* All the phases have one `environment.yml` indicating the Python version and the list of Python libraries.
+
+## Licenses
+
+The code of this repository is under the MIT LICENSE (`LICENSE-CODE`). The models and dataset associated to the paper 
+(uploaded to [HuggingFace](https://huggingface.co/PELAB-LiU)) are under a research-only LICENSE (`LICENSE-MODEL-DATA`).
+The rationale of this license is that the dataset was built using OpenAI models.

@@ -1,0 +1,56 @@
+Research-Only License for Text2VQL Large Language Model and Text2VQL Dataset
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this model and associated dataset (the "Software"), to use the Software
+solely for non-commercial research purposes, including the rights to use, copy,
+modify, merge, publish, and distribute the Software, subject to the following
+conditions:
+
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+2. The Software shall be used for non-commercial research purposes only.
+   Non-commercial research includes academic research, internal research at
+   non-profit organizations, and personal educational use. Any use of the Software
+   for commercial purposes, including but not limited to, offering the Software as
+   a service, integrating it into commercial products, or using it for commercial
+   research and development, is strictly prohibited.
+
+3. Any publications, presentations, or other disclosures of results obtained
+   through the use of the Software must cite the original authors and the repository
+   where the Software was obtained.
+
+4. Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+- Redistributions must comply with this license and include the above copyright
+  notice, this list of conditions, and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions, and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+- The Software must not be used in a manner that is detrimental to its original
+  authors or to the public, including but not limited to, harmful, unethical,
+  or malicious purposes.
+
+5. The Software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose, and noninfringement. In no event shall the
+authors or copyright holders be liable for any claim, damages, or other
+liability, whether in an action of contract, tort, or otherwise, arising from,
+out of, or in connection with the Software or the use or other dealings in the
+Software.
+
+6. Users of the Software are encouraged to contribute improvements and bug fixes
+back to the community, either through the original repository or by creating
+their own forks and submitting pull requests.
+
+7. Any changes or modifications to the Software must be documented, and the original
+authors should be notified of such changes.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
