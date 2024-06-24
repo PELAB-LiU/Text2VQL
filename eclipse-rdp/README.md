@@ -19,6 +19,13 @@ To build an image, run the following command. This will create the `eclipse-vnc`
 docker build -t eclipse-vnc .
 ```
 
+Future commands will be executed as user `abc` from the container to avoid permission conflicts with the remote environment.
+Make sure that this does not conflict with host permissions for the `text2vql` directory, otherwise commands may fail to save their outputs.
+The most basic solution is to execute the following command.
+```bash
+chmod -R o+rw ..
+```
+
 To create a container run the following command. This will start the container, including the VNC server. 
 ```bash
 docker run -d \
@@ -42,5 +49,5 @@ Click the links for further documentation regarding [webtop](https://docs.linuxs
 
 Notes: 
 * If downloading eclipse in `RUN wget 'https://www.eclipse.org/downloads/...` is proceeding slowly, then kill and restart the build. It has a good chance to help.
-* When connecting to the container via VNC, it may exhibit a clipboard permission error. This error does not affect the operation of the container, and is an [open issue](https://github.com/kasmtech/KasmVNC/issues/219).
+* When connecting to the container via VNC, it may exhibit a clipboard permission error. You may close the error message, as this error does not affect the operation of the container. This is an [open issue](https://github.com/kasmtech/KasmVNC/issues/219).
 * Default user is *abc* with password *abc*. Home directory of abc is `/config`.

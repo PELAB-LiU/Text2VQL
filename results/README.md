@@ -134,6 +134,23 @@ python present_results_rq3_1.py --csv_results merged/chatgpt_fs_random_full.csv
 Finally, to support our claim of the fact that the trained LLMs struggle with complex queries, the following split produces
 a boxplot that compares the effective lines of the group of correct and incorrect queries 
 (considering, by default, `deepseek-ai-deepseek-coder-6.7b-base`).
+
+```bash
+docker exec -it -u abc \
+    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
+    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
+    -d xtend-gen -useCurrentClassLoader src
+docker exec -it -u abc \
+    -e MODE=IND \
+    -e CSV=/config/text2vql/dataset_construction/test_metamodel/test_queries.csv \
+    -e COL=truth \
+    -e OUT=/config/text2vql/results/profiles/profiles_truth_raw.csv \
+    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
+    eclipse-vnc ant clean build ProfileMain
+
+python merge-truth.py
+```
+
 ```bash
 python present_results_rq3_2.py
 ```
