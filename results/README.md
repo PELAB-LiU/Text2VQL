@@ -81,7 +81,7 @@ docker exec -it -u abc \
 
 python merge-profile.py
 ```
-
+As refinery is a fairly large piece of software, we direct your attention to the `generator-cli` subproject, as that contains the domain specific parts. The resources directory (it contains the problem specifications, that the synthesis task will use), the `Text2VQLTestGenerator` class (responsible for running the test genration), and the Problem2RAilway java file, that is responsible for attributes and mapping the solution to EMF.
 
 Once the profiles/counts are generated, the following scripts plots the distribution of effective lines (reported in the paper)
 and counts by number of constructs (also reported in the paper).
