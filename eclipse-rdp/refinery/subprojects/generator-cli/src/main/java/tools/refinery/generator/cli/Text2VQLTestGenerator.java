@@ -25,7 +25,7 @@ public class Text2VQLTestGenerator {
 		runner.run();
 	}
 	private void run() throws IOException, URISyntaxException {
-		var mapper = new Problem2RAilway();
+		var mapper = new Problem2Railway();
 		var problem = loader.loadFile(new File(getClass()
 				.getClassLoader().getResource("railway.problem").toURI()));
 

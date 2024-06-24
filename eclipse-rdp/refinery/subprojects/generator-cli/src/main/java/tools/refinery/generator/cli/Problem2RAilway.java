@@ -22,13 +22,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
 
-public class Problem2RAilway {
+public class Problem2Railway {
 	//private ProblemTrace trace;
 	private final EPackage railway;
 	private final EFactory factory;
 	private final ResourceSet resourceSet;
 	private Map<Integer,Object> trace = new HashMap();
-	public Problem2RAilway() throws URISyntaxException {
+	public Problem2Railway() throws URISyntaxException {
 
 		EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 		resourceSet = new ResourceSetImpl();

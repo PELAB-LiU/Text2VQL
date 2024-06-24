@@ -131,7 +131,7 @@ python present_results_rq3_1.py --csv_results merged/codellama-CodeLlama-7b-hf_l
 python present_results_rq3_1.py --csv_results merged/chatgpt_fs_random_full.csv
 ```
 
-Finally, to support our claim of the fact that the trained LLMs struggle with complex queries, the following split produces
+Finally, to support our claim of the fact that the trained LLMs struggle with complex queries, the first command gnerates the complexity profile of the ground truth queriess, and the following split produces
 a boxplot that compares the effective lines of the group of correct and incorrect queries 
 (considering, by default, `deepseek-ai-deepseek-coder-6.7b-base`).
 
