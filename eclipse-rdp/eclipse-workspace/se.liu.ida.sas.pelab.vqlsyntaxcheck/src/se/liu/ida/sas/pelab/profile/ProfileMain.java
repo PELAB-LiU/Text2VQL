@@ -25,9 +25,11 @@ public class ProfileMain {
 		switch (MODE) {
 		case "IND": {
 			csv_individual_proofile();
+			break;
 		}
 		case "AGG": {
 			csv_aggregate_proofile();
+			break;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + MODE);

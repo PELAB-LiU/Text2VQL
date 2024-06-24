@@ -42,4 +42,5 @@ Click the links for further documentation regarding [webtop](https://docs.linuxs
 
 Notes: 
 * If downloading eclipse in `RUN wget 'https://www.eclipse.org/downloads/...` is proceeding slowly, then kill and restart the build. It has a good chance to help.
+* When connecting to the container via VNC, it may exhibit a clipboard permission error. This error does not affect the operation of the container, and is an [open issue](https://github.com/kasmtech/KasmVNC/issues/219).
 * Default user is *abc* with password *abc*. Home directory of abc is `/config`.

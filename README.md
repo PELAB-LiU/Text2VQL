@@ -42,3 +42,5 @@ The hardware and software requirements are the following.
 The code of this repository is under the MIT LICENSE (`LICENSE-CODE`). The models and dataset associated to the paper 
 (uploaded to [HuggingFace](https://huggingface.co/PELAB-LiU)) are under a research-only LICENSE (`LICENSE-MODEL-DATA`).
 The rationale of this license is that the dataset was built using OpenAI models.
+
+The repository includes a modified copy of [refinery](https://github.com/graphs4value/refinery) under `eclipse-rdp/refinery` which is provided under `Eclipse Public License - v 2.0`.

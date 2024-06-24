@@ -13,9 +13,9 @@ import java.io.BufferedWriter
 import java.io.FileWriter
 
 class EvaluateDatabase {
-	private static final String JDBC_URL = "jdbc:sqlite:" + System.getenv("JDBC_URL"); //"jdbc:sqlite:/home/antolin/projects/text2vql/dataset.db";
-	private static final String MAKE_ABSOLUTE = System.getenv("PROJECT_PATH"); // "/home/antolin/projects/text2vql/";
-	private static final String OUTPUT = System.getenv("OUTPUT"); //"/home/antolin/projects/text2vql/valid_ids.txt";
+	private static final String JDBC_URL = "jdbc:sqlite:" + System.getenv("JDBC_URL");
+	private static final String MAKE_ABSOLUTE = System.getenv("PROJECT_PATH");
+	private static final String OUTPUT = System.getenv("OUTPUT");
 	
 	def static getPrefix(String metamodel){
 		val ResourceSet resourceSet = new ResourceSetImpl();
@@ -28,11 +28,7 @@ class EvaluateDatabase {
 		
 		
 		val pkg = resource.contents.get(0) as EPackage
-		if(pkg.nsURI === null){
-			return "import \"http://example.org/\"\n"
-		} else {
-			return "import \"" + pkg.nsURI + "\"\n"
-		}
+		return "import \"" + pkg.nsURI + "\"\n"
 		
 	}
 	

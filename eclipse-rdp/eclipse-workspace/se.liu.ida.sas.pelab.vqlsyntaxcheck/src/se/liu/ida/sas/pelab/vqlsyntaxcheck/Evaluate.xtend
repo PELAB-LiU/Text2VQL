@@ -26,12 +26,8 @@ class Evaluate {
 		);
 		
 		val pkg = resource.contents.get(0) as EPackage
-		if(pkg.nsURI===null){
-			EPackage.Registry.INSTANCE.put("http://example.org/", pkg)
-		} else {
-			EPackage.Registry.INSTANCE.put(pkg.nsURI, pkg)
-		}
-		
+		EPackage.Registry.INSTANCE.put(pkg.nsURI, pkg)
+
 			
 		EMFPatternLanguageStandaloneSetup.doSetup()
 
