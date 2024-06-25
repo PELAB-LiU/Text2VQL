@@ -2,7 +2,7 @@
 
 The objective of this phase is to create a valid dataset consisting of pairs comprising a VQL 
 query and its corresponding natural language description, 
-including the target meta-model over which  the query is defined.
+including the target meta-model over which the query is defined.
 ```bash
 cd dataset_construction
 ```
@@ -10,7 +10,8 @@ cd dataset_construction
 ## Installation
 
 To run all these dataset construction scripts, Python 3.8 is needed together with several libraries.
-To install everything, we will use [conda](https://docs.anaconda.com/free/miniconda/).
+To install everything, we will use [conda](https://docs.anaconda.com/free/miniconda/). The following lines create and
+activate the environment.
 ```bash
 conda env create -f environment_dataset_construction.yml
 conda activate text2vql-dataset-creation
@@ -25,15 +26,15 @@ public sources (Atlanmod, GitHub, and a [publicly available dataset](https://zen
 ./download_datasets.sh
 ```
 
-Create empty SQLite database. The generated queries as well as the meta-models will be indexed in such database.
+Create an empty SQLite database. The generated queries as well as the meta-models will be indexed in such database.
 
 ```bash
 sqlite3 dataset.db < schema.sql
 ```
 
-Parse datasets and the test (railway) meta-model and insert into database. In the original paper, 
+Parse the datasets and the test (railway) meta-model, and insert them into database. In the original paper, 
 the three datasets and the test_metamodel were parsed and stored. For testing purposes, we recommend parsing just one 
-dataset (e.g., just ecore555, the first line).
+dataset (e.g., just ecore555, the first command).
 
 ```bash
 python parse_dataset.py --metamodels_dataset ecore555
@@ -42,20 +43,21 @@ python parse_dataset.py --metamodels_dataset repo-ecore-all
 python parse_dataset.py --metamodels_dataset test_metamodel
 ```
 
-Compute similar metamodels. The idea of this step is to identify which meta-models are duplicated.
+Compute similar meta-models. The idea of this step is to identify which meta-models are duplicated by generating a graph
+where two meta-models are connected if they are duplicated.
 
 ```bash
 python compute_similarities.py
 ```
 
-Select representative meta-models. For each cluster of duplicates, select one meta-model. Thus, we obtain
-a deduplicated dataset of meta-models.
+Select representative meta-models. For each cluster of duplicates (connected component of the graph), 
+select one meta-model. Thus, we obtain a deduplicated dataset of meta-models.
 
 ```bash
 python select_representative_metamodels.py
 ```
 
-Run script to generate pairs (nl, vql). The `sample` argument indicates how many meta-models are considered
+Run the script to generate pairs (nl, vql). The `sample` argument indicates how many meta-models are considered
 when generating the queries. In the original paper, this parameter was set to 500. However, to speed up the process and for
 testing purposes, we set it to 10.
 
@@ -65,8 +67,9 @@ python generate_dataset.py --sample 10
 ```
 
 Before filtering the invalid generated queries, make sure that the eclipse-vnc docker container is running. 
-If not, follow the instructions [here](../eclipse-rdp/README.md). To this end, a java script is used as there is no implementation
-of the VQL grammar in Python. As a result, this script will generate `valid_ids.txt` which contains the ids of queries that are syntactically valid.
+If not, follow the instructions [here](../eclipse-rdp/README.md). To this end, a Java script is used as there is no implementation
+of the VQL grammar in Python. As a result, this script will generate `valid_ids.txt` which contains the ids of queries 
+that are syntactically valid and meta-model compilant.
 
 ```bash
 docker exec -it -u abc \

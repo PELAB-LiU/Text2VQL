@@ -10,7 +10,7 @@ cd training
 
 All the experiments were run in an Ubuntu machine that has an NVIDIA A5000 GPU (24GB). The fine-tuning procedure
 filled almost all the GPU capacity. Therefore, for fine-tuning, you need a GPU with at least 24GB of memory.
-On the other hand, the evaluation/inference took less memory and we believe that having 12GBs may be enough.
+On the other hand, the evaluation/inference took less memory and we believe that having 12-16GBs may be enough.
 
 The fast way to install all the libraries is to load the environment using [conda](https://docs.anaconda.com/free/miniconda/).
 
@@ -59,12 +59,14 @@ We have released the models that we trained (only for research purposes):
 * [PELAB-LiU/deepseek-coder-1.3b-base-Text2VQL-LoRA](https://huggingface.co/PELAB-LiU/deepseek-coder-1.3b-base-Text2VQL-LoRA)
 * [PELAB-LiU/CodeLlama-7b-hf-Text2VQL-LoRA](https://huggingface.co/PELAB-LiU/CodeLlama-7b-hf-Text2VQL-LoRA)
 
-Therefore, to run the next section, you do not need to perform the fine-tuning phase as the models will be loaded from
+Therefore, to run the next section, you do not need to perform the fine-tuning phase as the models can be loaded from
 HF.
 
 ## Generation
 
 Once the models have been trained, you can evaluate them. To do so, you can use the `test_model_railway.py` script.
+The script will access to the test meta-model (`test_metamodel/railway.ecore`) and prompt the fine-tuned models with the 
+test queries (`test_metamodel/test_queries.csv`).
 The argument `--checkpoint` could indicate either a HF repo (e.g., `PELAB-LiU/deepseek-coder-6.7b-base-Text2VQL-LoRA`) 
 or a local folder (best checkpoint of the `--output_dir` of the previous script; e.g., `adapter-deepseek-coder-6.7b-base/checkpoint-1113`). 
 
