@@ -1,6 +1,6 @@
 
 We apply and deserve the following badges:
-* Artifacts Available. A release of the GitHub repository is published in Zenodo at [https://dio.org/10.5281/zenodo.12516753](https://dio.org/10.5281/zenodo.12516753).
+* Artifacts Available. A release of the GitHub repository is published in Zenodo at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12516753.svg)](https://doi.org/10.5281/zenodo.12516753).
 * Artifact Evaluated − Functional. 
     * If the requirements are met (e.g., GPU constraints), everything is runnable. Furthermore, everything is documented in the READMEs.
     * Artifact contains the source code, build scripts, execution sripts, and post processing scripts which if executed, produces results, including figures and logs, that support our claims in the paper. 
