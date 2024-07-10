@@ -34,6 +34,7 @@ The hardware and software requirements are the following.
 * Ubuntu OS.
 * [Conda](https://docs.anaconda.com/free/miniconda/).
 * [Docker engine](https://docs.docker.com/engine/install/ubuntu/).
+  * Ensure that you can run docker as a non-root user. See [post-installation guide](https://docs.docker.com/engine/install/linux-postinstall/).
 * All the phases have one `environment.yml` specifying the Python version and the required Python libraries.
 
 ## Licenses
