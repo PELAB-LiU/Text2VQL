@@ -8,8 +8,8 @@ cd training
 
 ## Hardware and libraries
 
-All the experiments were run in an Ubuntu machine that has an NVIDIA A5000 GPU (24GB). The fine-tuning procedure
-filled almost all the GPU capacity. Therefore, for fine-tuning, you need a GPU with at least 24GB of memory.
+All the experiments were run in an Ubuntu machine that has an NVIDIA A5000 GPU (24GB) with CUDA 12.4. The fine-tuning procedure
+filled almost all the GPU capacity. Therefore, for fine-tuning, you need a GPU with at least 24GB of memory (with CUDA version>=12.1).
 On the other hand, the evaluation/inference took less memory and we believe that having 12-16GBs may be enough.
 
 The fast way to install all the libraries is to load the environment using [conda](https://docs.anaconda.com/free/miniconda/).
@@ -21,7 +21,7 @@ pip install openai==0.28.1
 ```
 
 However, we are not sure that this will work for all machines. Therefore, you may need to install each dependency
-separately. Particularly, you will need to install pytorch (we used 2.1.0) + cuda (we used 12.1) together with several pip libraries.
+separately. Particularly, you will need to install pytorch+cuda (we used 2.1.0+cu12.1) together with several pip libraries.
 
 ```bash
 conda create --name text2vql-training python=3.8
