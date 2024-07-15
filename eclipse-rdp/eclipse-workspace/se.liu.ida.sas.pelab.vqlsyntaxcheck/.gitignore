@@ -1,3 +1,3 @@
 bin/
-xtend-gen/**._trace
-xtend-gen/**.xtendbin
+xtend-gen/**/*._trace
+xtend-gen/**/*.xtendbin
