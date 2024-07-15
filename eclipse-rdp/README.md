@@ -14,10 +14,24 @@ However, the Text2VQL folder from the host is mounted to /config/text2vql. To ma
 
 ## Build, Run, and Stop.
 
+Change directory to eclipse-rdp.
+```bash
+cd eclipse-rdp
+```
+
+### Build your own image
 To build an image, run the following command. This will create the `eclipse-vnc` image.
 ```bash
 docker build -t eclipse-vnc .
 ```
+
+### Import image
+Alternatively, you can import the docker image provided on [Zenodo](https://doi.org/10.5281/zenodo.12742459).
+```bash
+docker image load -i <path to the file>
+```
+
+### Run container
 
 Future commands will be executed as user `abc` from the container to avoid permission conflicts with the remote environment.
 Make sure that this does not conflict with host permissions for the `Text2VQL` directory, otherwise commands may fail to save their outputs.
