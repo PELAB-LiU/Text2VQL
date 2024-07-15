@@ -12,7 +12,8 @@ We apply and deserve the following badges:
     * The artifact includes tips for possible non-deterministic, external issues.
 
 Change log (from kick-the-tires to review):
+* Updated Zenodo link (review version) 
 * Clarified instructions for setup and configuration requirements
 * Modified compilation instruction for Java components
-* Docker image is now available on Zenodo
+* Docker image is now available on Zenodotea
 * Top-level README in now available on Zenodo, outside of the zip file

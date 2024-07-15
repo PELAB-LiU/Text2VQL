@@ -90,7 +90,7 @@ where:
 * `train_benchmark` whether it belongs to the train benchmark.
 * `nl` is the natural description of the query.
 * `truth` is the actual VQL query.
-* `i_output` are the five suggested queries.
+* `[0-4]_output` are the five suggested queries.
 
 To run the baselines of the paper (i.e., in-context learning model) and get the results, you can employ the `test_os_base.py` script.
 ```bash

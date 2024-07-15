@@ -46,10 +46,9 @@ python present_results_rq1.py
 
 ## RQ2: Complexity and VQL coverage 
 
-To check which language elements were encountered in the dataset run the following commands.
-The first command compiles the Xtend source files. You may skip it, **if** it was compiled in a previous step, and no changes were made to the code.
-The second command executes the profiler in aggregate mode and prints the results to the standard output.
-Interpret the output as a tree, e.g., `#contraints=39556 \n\t #comapre=3482` is the number of compare constraints.
+To check which language elements were encountered in the dataset run the following command.
+It executes the profiler in aggregate mode and prints the results to the standard output.
+Interpret the output as a tree, e.g., `#constraints=39556 \n\t #comapre=3482` is the number of compare constraints.
 
 ```bash
 docker exec -it -u abc \
@@ -60,7 +59,7 @@ docker exec -it -u abc \
     eclipse-vnc ant clean build ProfileMain
 ```
 
-The next commands create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
+The next command create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
 ```bash
 docker exec -it -u abc \
     -e MODE=IND \
@@ -72,7 +71,6 @@ docker exec -it -u abc \
 
 python merge-profile.py
 ```
-As refinery is a fairly large piece of software, we direct your attention to the `generator-cli` subproject, as that contains the domain specific parts. The resources directory (it contains the problem specifications, that the synthesis task will use), the `Text2VQLTestGenerator` class (responsible for running the test genration), and the Problem2RAilway java file, that is responsible for attributes and mapping the solution to EMF.
 
 Once the profiles/counts are generated, the following scripts plots the distribution of effective lines (reported in the paper)
 and counts by number of constructs (also reported in the paper).
@@ -92,7 +90,9 @@ docker exec -it -u abc \
     eclipse-vnc ./generate_models.sh /config/text2vql/results/testmodels 
 ```
 
-To execute the query comparison test, use the following docker commands. 
+As refinery is a fairly large piece of software, we direct your attention to the `generator-cli` subproject, as that contains the domain specific parts. The resources directory contains the problem specifications, that the synthesis task will use, the `Text2VQLTestGenerator` class  is responsible for running the test genration, and the Problem2RAilway java file is responsible for generating attributes and mapping the solution to EMF models.
+
+To execute the query comparison test, use the following docker command. 
 This will run the match set comparison for all csvs in the `ai` directory.
 The expected time of the evaluation is 30-60 minutes.
 Results will be saved to the `eval` and `merged` directories.

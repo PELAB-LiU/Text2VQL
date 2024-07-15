@@ -30,8 +30,8 @@ you will eventually overwrite all this data.
 
 The hardware and software requirements are the following.
 
-* One GPU similar or superior to NVIDIA RTX A5000 GPU for training and running the open-source models.
-* CUDA version >= 12.1.
+* One GPU similar or superior to [NVIDIA RTX A5000](https://nvdam.widen.net/s/wrqrqt75vh/nvidia-rtx-a5000-datasheet) GPU for training and running the open-source models.
+  * CUDA version >= 12.1.
 * Ubuntu OS.
 * Conda.
   * [Linux installation guide](https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html).
