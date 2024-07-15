@@ -1,6 +1,6 @@
 
 We apply and deserve the following badges:
-* Artifacts Available. A release of the GitHub repository is published in Zenodo at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12516753.svg)](https://doi.org/10.5281/zenodo.12516753).
+* Artifacts Available. A release of the GitHub repository is published in Zenodo at [https://doi.org/10.5281/zenodo.12742459](https://doi.org/10.5281/zenodo.12742459)
 * Artifact Evaluated − Functional. 
     * If the requirements are met (e.g., GPU constraints), everything is runnable. Furthermore, everything is documented in the READMEs.
     * Artifact contains the source code, build scripts, execution sripts, and post processing scripts which if executed, produces results, including figures and logs, that support our claims in the paper. 
@@ -10,3 +10,9 @@ We apply and deserve the following badges:
     * Project structure is built to isolate parts of the project. 
     * Setting up build environments are made easy by (i) providing setup scripts for the python environment, and (ii) a dedicated docker container for the java/eclipse components. 
     * The artifact includes tips for possible non-deterministic, external issues.
+
+Change log (from kick-the-tires to review):
+* Clarified instructions for setup and configuration requirements
+* Modified compilation instruction for Java components
+* Docker image is now available on Zenodo
+* Top-level README in now available on Zenodo, outside of the zip file

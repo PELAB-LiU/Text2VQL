@@ -62,6 +62,8 @@ If for any reason, you prefer to use RDP instead of VNC, you can change the base
 Click the links for further documentation regarding [webtop](https://docs.linuxserver.io/images/docker-webtop/) or [rdesktop](https://docs.linuxserver.io/images/docker-rdesktop/).
 
 Notes: 
+* Changes made to *xtend* files are ignored in the docker commands, as the java code generation is not automated. You can use the provided Eclipse IDE to make changes, and on save, it will compile the xtend files and update the generated java files.
+* Changes to run configuration may require changes in the ant build script. (build.xml)
 * If downloading eclipse in `RUN wget 'https://www.eclipse.org/downloads/...` is proceeding slowly, then kill and restart the build. It has a good chance to help.
 * When connecting to the container via VNC, it may exhibit a clipboard permission error. You may close the error message, as this error does not affect the operation of the container. This is an [open issue](https://github.com/kasmtech/KasmVNC/issues/219).
 * Default user is *abc* with password *abc*. Home directory of abc is `/config`.

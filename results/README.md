@@ -53,10 +53,6 @@ Interpret the output as a tree, e.g., `#contraints=39556 \n\t #comapre=3482` is 
 
 ```bash
 docker exec -it -u abc \
-    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
-    -d xtend-gen -useCurrentClassLoader src
-docker exec -it -u abc \
     -e MODE=AGG \
     -e CSV=/config/text2vql/results/profiles/final_dataset.csv \
     -e COL=pattern \
@@ -65,12 +61,7 @@ docker exec -it -u abc \
 ```
 
 The next commands create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
-You may skip the first `docker exec` if no changes were made to the code.
 ```bash
-docker exec -it -u abc \
-    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
-    -d xtend-gen -useCurrentClassLoader src
 docker exec -it -u abc \
     -e MODE=IND \
     -e CSV=/config/text2vql/results/profiles/final_dataset.csv \
@@ -137,10 +128,6 @@ a boxplot that compares the effective lines of the group of correct and incorrec
 (considering, by default, `deepseek-ai-deepseek-coder-6.7b-base`).
 
 ```bash
-docker exec -it -u abc \
-    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
-    -d xtend-gen -useCurrentClassLoader src
 docker exec -it -u abc \
     -e MODE=IND \
     -e CSV=/config/text2vql/dataset_construction/test_metamodel/test_queries.csv \

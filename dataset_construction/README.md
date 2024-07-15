@@ -73,10 +73,6 @@ that are syntactically valid and meta-model compilant.
 
 ```bash
 docker exec -it -u abc \
-    -w /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck \
-    eclipse-vnc java -cp "/opt/eclipse/plugins/*:jdbc/*" org.eclipse.xtend.core.compiler.batch.Main \
-    -d xtend-gen -useCurrentClassLoader src
-docker exec -it -u abc \
     -e JDBC_URL=/config/text2vql/dataset_construction/dataset.db \
     -e PROJECT_PATH=/config/text2vql/dataset_construction/ \
     -e OUTPUT=/config/text2vql/dataset_construction/valid_ids.txt \
