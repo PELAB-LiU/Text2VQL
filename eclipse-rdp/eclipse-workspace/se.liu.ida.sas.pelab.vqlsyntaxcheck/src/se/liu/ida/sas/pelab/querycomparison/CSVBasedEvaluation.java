@@ -139,7 +139,7 @@ public class CSVBasedEvaluation {
 		// this.models = new ModelLoader(resources /*new ResourceSetImpl()*/,
 		// cfg.asString("instancedir"));
 		this.models = new SeparateModelLoader(resources, INSTANCERID);
-		this.input = CSVHandler.parse(INPUT_CSV);
+		this.input = (Iterable<CSVRecord>) CSVHandler.parse(INPUT_CSV);
 		CSVHandler csv;
 		try {
 			csv = new CSVHandler(OUTPUT_CSV);

@@ -17,3 +17,5 @@ Change log (from kick-the-tires to review):
 * Modified compilation instruction for Java components
 * Docker image is now available on Zenodotea
 * Top-level README in now available on Zenodo, outside of the zip file
+* Updated to include slf4j-simple in Dockerfile, build.xml, and .classpath
+* Script added to help setting up syntax check dependencies for host-side project

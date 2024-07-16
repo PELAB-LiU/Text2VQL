@@ -3,6 +3,8 @@ package se.liu.ida.sas.pelab.profile;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import org.apache.commons.csv.CSVRecord;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -37,7 +39,7 @@ public class ProfileMain {
 	}
 	
 	private static void csv_aggregate_proofile() {
-		var input = CSVHandler.parse(CSV);
+		var input = (Iterable<CSVRecord>) CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 
@@ -67,7 +69,7 @@ public class ProfileMain {
 		System.out.println(profiler);
 	}
 	private static void csv_individual_proofile() throws IOException {
-		var input = CSVHandler.parse(CSV);
+		var input = (Iterable<CSVRecord>) CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 

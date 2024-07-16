@@ -65,6 +65,7 @@
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
         <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+        <pathelement location="jdbc/slf4j-simple-1.7.36.jar"/> 
     </path>
     <path id="run.EvaluateDatabase.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
@@ -72,6 +73,7 @@
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
         <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+        <pathelement location="jdbc/slf4j-simple-1.7.36.jar"/>
     </path>
     <path id="run.ProfileMain.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
@@ -79,6 +81,7 @@
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
         <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+        <pathelement location="jdbc/slf4j-simple-1.7.36.jar"/>
     </path>
     <path id="run.CSVBasedEvaluation.classpath">
         <path refid="Plug-in Dependencies.libraryclasspath"/>
@@ -86,6 +89,7 @@
         <pathelement location="jdbc/slf4j-api-1.7.36.jar"/>
         <pathelement location="jdbc/sqlite-jdbc-3.44.0.0.jar"/>
         <pathelement location="jdbc/commons-csv-1.10.0.jar"/>
+        <pathelement location="jdbc/slf4j-simple-1.7.36.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>

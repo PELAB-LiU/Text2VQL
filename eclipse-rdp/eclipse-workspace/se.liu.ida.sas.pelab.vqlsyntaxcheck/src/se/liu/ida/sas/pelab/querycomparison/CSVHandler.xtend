@@ -14,6 +14,7 @@ class CSVHandler {
 	public static val OUT_BASEMATCHCOUNT = "#truth"
 	public static val OUT_SYNT = "syntax_ok"
 	public static val OUT_MATCH = "match_ok"
+	
 	static def Iterable<CSVRecord> parse(String file){
 		val Iterable<CSVRecord> records = CSVFormat.RFC4180
 			.withDelimiter(',')
