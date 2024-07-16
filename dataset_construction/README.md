@@ -69,7 +69,7 @@ python generate_dataset.py --sample 10
 Before filtering the invalid generated queries, make sure that the eclipse-vnc docker container is running. 
 If not, follow the instructions [here](../eclipse-rdp/README.md). To this end, a Java script is used as there is no implementation
 of the VQL grammar in Python. As a result, this script will generate `valid_ids.txt` which contains the ids of queries 
-that are syntactically valid and meta-model compilant.
+that are syntactically valid and meta-model compliant.
 
 ```bash
 docker exec -it -u abc \

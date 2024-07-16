@@ -59,7 +59,7 @@ docker exec -it -u abc \
     eclipse-vnc ant clean build ProfileMain
 ```
 
-The next command create the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
+The next command creates the csv files containing the non-aggregated properties of the queries, used in the query complexity evaluation.
 ```bash
 docker exec -it -u abc \
     -e MODE=IND \
@@ -90,7 +90,7 @@ docker exec -it -u abc \
     eclipse-vnc ./generate_models.sh /config/text2vql/results/testmodels 
 ```
 
-As refinery is a fairly large piece of software, we direct your attention to the `generator-cli` subproject, as that contains the domain specific parts. The resources directory contains the problem specifications, that the synthesis task will use, the `Text2VQLTestGenerator` class  is responsible for running the test genration, and the Problem2RAilway java file is responsible for generating attributes and mapping the solution to EMF models.
+As Refinery is a fairly large piece of software, we direct your attention to the `generator-cli` subproject, as that contains the domain specific parts. The resources directory contains the problem specifications, that the synthesis task will use, the `Text2VQLTestGenerator` class is responsible for running the test generation, and the Problem2RAilway java file is responsible for generating attributes and mapping the solution to EMF models.
 
 To execute the query comparison test, use the following docker command. 
 This will run the match set comparison for all csvs in the `ai` directory.
