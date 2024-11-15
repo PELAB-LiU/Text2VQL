@@ -1,0 +1,7 @@
+"Hello EPL!".println();
+
+pattern LongSegment
+    segment: Segment {
+
+    match: segment.length > 0
+}

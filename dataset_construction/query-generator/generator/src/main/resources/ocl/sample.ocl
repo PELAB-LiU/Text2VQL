@@ -1,0 +1,10 @@
+package railway
+
+
+context Segment
+def: getLong() : Set(Segment) = Segment.allInstances()->select(seg | seg.length > 0)
+
+context Segment
+inv positive_length: self.length > 0
+
+endpackage
