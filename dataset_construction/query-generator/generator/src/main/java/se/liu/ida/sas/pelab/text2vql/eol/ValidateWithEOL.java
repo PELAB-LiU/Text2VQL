@@ -3,6 +3,8 @@ package se.liu.ida.sas.pelab.text2vql.eol;
 import org.eclipse.epsilon.emc.emf.InMemoryEmfModel;
 import org.eclipse.epsilon.eol.EolModule;
 import org.eclipse.epsilon.epl.EplModule;
+import org.eclipse.epsilon.epl.execute.PatternMatch;
+import org.eclipse.epsilon.epl.execute.model.PatternMatchModel;
 import se.liu.ida.sas.pelab.text2vql.ResourcesHelper;
 import se.liu.ida.sas.pelab.text2vql.helpers.RailwayLoader;
 
@@ -16,6 +18,10 @@ public class ValidateWithEOL {
 
         InMemoryEmfModel model = new InMemoryEmfModel(RailwayLoader.loadRailway());
         module.getContext().getModelRepository().addModel(model);
-        System.out.println(module.execute());
+        PatternMatchModel resultModel = (PatternMatchModel) module.execute();
+        for (PatternMatch match : resultModel.getMatches()) {
+            System.out.println("Matched: " + match.toString());
+        }
+        System.out.println(resultModel.getClass());
     }
 }

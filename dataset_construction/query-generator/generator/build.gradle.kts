@@ -26,6 +26,10 @@ dependencies {
     implementation("org.eclipse.epsilon:org.eclipse.epsilon.eol.engine:2.5.0")
     implementation("org.eclipse.epsilon:org.eclipse.epsilon.epl.engine:2.5.0")
     implementation("org.eclipse.epsilon:org.eclipse.epsilon.emc.emf:2.5.0")
+    implementation("org.apache.commons:commons-csv:1.10.0")
+    implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime:2.9.1")
+    implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.rete:2.9.1")
+    implementation("org.xerial:sqlite-jdbc:3.44.0.0")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -47,6 +51,43 @@ tasks{
         standardInput = System.`in`
         group = "text2vql"
         description = "Generate queries"
+    }
+
+    register<JavaExec>("profileQueries"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.testing.profile.ProfileMain")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Run profiler. Expect environment variables: MODE,CSV,COL,OUT"
+    }
+    register<JavaExec>("databaseSyntaxCheck"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.testing.syntax.EvaluateDatabase")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Run profiler. Expect environment variables: JDBC_URL,PROJECT_PATH,OUTPUT"
+    }
+    register<JavaExec>("generateRailwayInstanceModels"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.testing.models.Text2VQLTestGenerator")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Generate 300 seeded and 300 seedless instance models from Railway domain."
+    }
+    register<JavaExec>("compareQueryMatchSets"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.testing.matchset.CSVBasedEvaluation")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Compare match sets of queries from CSV. Expect environment variables: META,INPUT,OUTPUT,INSTANCEDIR,AI"
     }
 }
 tasks.test {

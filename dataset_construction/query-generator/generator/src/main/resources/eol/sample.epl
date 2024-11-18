@@ -1,7 +1,10 @@
 "Hello EPL!".println();
 
 pattern LongSegment
-    segment: Segment {
+    segment: SegmentTTTT {
 
-    match: segment.length > 0
+    match: segment.getLength > 0
+    do {
+        "SHall not pass".println();
+      }
 }

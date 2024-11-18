@@ -1,9 +1,9 @@
 docker run -d ^
-  --name=eclipse-vnc ^
-  --device=/dev/dri:/dev/dri ^
+  -v \\wsl$\Ubuntu\tmp\.X11-unix:/tmp/.X11-unix ^
+  -v \\wsl$\Ubuntu\mnt\wslg:/mnt/wslg ^
+  --name=text2vql ^
   --security-opt seccomp=unconfined ^
-  -p 3000:3000 ^
-  -p 3001:3001 ^
+  -p 4050:3389 ^
   --shm-size="1gb" ^
   -v %cd%/../dataset_construction:/config/dataset_construction ^
-  eclipse-vnc
+  text2vql

@@ -1,0 +1,186 @@
+% Metamodel
+abstract class RailwayElement{}
+
+class RailwayContainer {
+    contains Route[0..*] routes
+    contains Region[0..*] regions
+}
+
+class Route extends RailwayElement{
+    Boolean[1..1] active
+    Sensor[0..*] requires
+    contains SwitchPosition[0..*] follows opposite route
+    Semaphore[1..1] entry
+    Semaphore[1..1] exit
+}
+class Sensor extends RailwayElement{
+    TrackElement[0..*] monitors opposite monitoredBy
+}
+class Region extends RailwayElement{
+    contains Sensor[0..*] sensors
+    contains TrackElement[0..*] elements
+}
+abstract class TrackElement extends RailwayElement{
+    TrackElement[0..3] connectsTo
+    Sensor[0..*] monitoredBy opposite monitors
+}
+class SwitchPosition extends RailwayElement{
+    Position[1..1] position
+    Switch[1..1] target opposite positions
+    Route route opposite follows
+}
+class Switch extends TrackElement{
+    Position[1..1] currentPosition
+    SwitchPosition[0..*] positions opposite target
+}
+class Segment extends TrackElement{
+    Integer[1..1] length
+    contains Semaphore[0..*] semaphores
+}
+class Semaphore extends RailwayElement{
+    Signal[1..1] signal
+}
+
+enum Integer{
+    POSITIVE,
+    NEGATIVE,
+    ZERO
+}
+enum Signal{
+    FAILURE,
+    STOP,
+    GO
+}
+enum Position{
+    FAILURE,
+    STRAIGHT,
+    DIVERGING
+}
+
+enum Boolean {
+    TRUE,
+    FALSE
+}
+
+/**
+  * Diversity-based conditions
+  *     - Condition 1 (Six segments monitored by with the same sensor. Each segment is connected to the next one.)
+  *     - Condition 2 (Semaphores with STOP or GO signals.)
+  *     - Condition 3 (TrackElements that are either connected or monitored by the same sensor.)
+  *     ? Condition 4 (Switches not monitored by a sensor.)
+  *     - Condition 6 (Total length of segments.)
+  *     - Condition 7 (Track elements monitored by at lest two sensors.)
+  *     - Condition 8 (RailwayElements that are either Switches or SwitchPositions.)
+  *     - Condition 9 (Railway elements that are Switches.)
+  *     - Condition 11 (Retrieve all segments whose lengths are less or equal than zero.)
+  *     - Condition 13 (Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.)
+  *     - Condition 14 (Segments that are at least 7 units long or are switches.)
+ */
+
+/**
+  * Complex condition
+  *     - Condition 0 (Active route with GO entry semaphore and misaligned switch position.)
+  *     - Condition 5 (Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.)
+  *     - Condition 10 (Active routes with entry GO semaphore.)
+  *     - Condition 12 (SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.)
+  *     - Condition 15 (Active route whose entry is a GO semaphore but not monitored by any sensor.)
+  *     - Condition 16 (Two different routes where the exit semaphore of a route is not the entry semaphore of the other.)
+ */
+
+//Assist Condition 4 (Switches not monitored by a sensor.)
+pred condition4(Switch sw) <-> !monitoredBy(sw,_).
+
+// Seed model
+routes(root, rou1).
+follows(rou1, swp1_1).
+follows(rou1, swp1_2).
+routes(root, rou2).
+follows(rou2, swp2_1).
+
+
+regions(root, reg1).
+sensors(reg1, sen1_1).
+sensors(reg1, sen1_2).
+Segment(seg1_1).
+elements(reg1, seg1_1).
+semaphores(seg1_1, sem1).
+!monitors(*,sw1).
+Switch(sw1).
+elements(reg1, sw1).
+elements(reg1, te1).
+
+regions(root, reg2).
+sensors(reg2, sen2_1).
+sensors(reg2, sen2_2).
+Segment(seg2_1).
+elements(reg2, seg2_1).
+semaphores(seg2_1, sem2).
+Switch(sw2).
+elements(reg2, sw2).
+elements(reg2, te2).
+
+atom rou2.
+!requires(rou2,*).
+
+error fewSensor(Route route) <->
+    route!=rou2,
+    !has2Sensor(route).
+
+pred has2Sensor(Route route) <->
+    requires(route, s1),
+    requires(route, s2),
+    s1!=s2.
+
+error selfconnect(TrackElement track) <-> connectsTo(track, track).
+error segmentconnections(Segment segment) <-> Segment(segment),connectsTo(segment, other1),connectsTo(segment, other2),connectsTo(segment, other3),other1!=other2, other1!=other3, other2!=other3.
+RailwayContainer(root).
+
+% Scope
+
+scope node = 20..50, RailwayContainer=1,
+      Region+=0..4,
+      Semaphore+=1..5,
+      Route+=0..2,
+      SwitchPosition+=0..5,
+      Segment+=5..10,
+      Switch+=1..5,
+      Sensor+=5..15.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

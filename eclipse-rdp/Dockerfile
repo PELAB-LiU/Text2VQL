@@ -1,13 +1,13 @@
-#FROM lscr.io/linuxserver/rdesktop:ubuntu-xfce
-FROM lscr.io/linuxserver/webtop:ubuntu-xfce
+FROM lscr.io/linuxserver/rdesktop:ubuntu-xfce
+#FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 
 ENV PUID=1000 
 ENV PGID=1000
 ENV TZ=Etc/UTC 
 
-EXPOSE 3000
-EXPOSE 3001
-#EXPOSE 3389
+#EXPOSE 3000
+#EXPOSE 3001
+EXPOSE 3389
 
 RUN apt update
 RUN apt install git -y
@@ -33,19 +33,6 @@ Categories=Development\n\' > /usr/share/applications/eclipse.desktop
 
 RUN apt install ant -y
 
-COPY eclipse-workspace /config/eclipse-workspace
-
-RUN chmod -R 777 /config/eclipse-workspace
-
-RUN wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar \
-    -O /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/slf4j-api-1.7.36.jar
-RUN wget https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar \
-    -O /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/slf4j-simple-1.7.36.jar
-RUN wget https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.44.0.0/sqlite-jdbc-3.44.0.0.jar \
-    -O /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/sqlite-jdbc-3.44.0.0.jar
-RUN wget https://repo1.maven.org/maven2/org/apache/commons/commons-csv/1.10.0/commons-csv-1.10.0.jar \
-    -O /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/commons-csv-1.10.0.jar
-
 RUN wget https://download-cdn.jetbrains.com/idea/ideaIC-2023.3.6.tar.gz
 RUN tar -xzf ideaIC-*.tar.gz -C /opt
 RUN rm ideaIC-2023.3.6.tar.gz
@@ -61,16 +48,5 @@ Name=IntelliJ\n\
 Categories=Development\n\
 Icon=/opt/idea-IC-233.15026.9/bin/idea.png' > /usr/share/applications/intellij.desktop
 
+USER root
 RUN rm -rf /config/.cache
-
-#RUN chown -R abc /opt
-
-#RUN chmod 644 /usr/share/applications/intellij.desktop
-
-COPY refinery /config/refinery
-
-RUN chmod -R 777 /config/refinery
-
-COPY util/ /config/util
-
-RUN chmod -R 777 /config/util

@@ -1,20 +1,16 @@
-package se.liu.ida.sas.pelab.text2vql.testing;
+package se.liu.ida.sas.pelab.text2vql.testing.models;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.xtext.generator.IGenerator;
+import se.liu.ida.sas.pelab.text2vql.ResourcesHelper;
 import tools.refinery.generator.ModelGenerator;
-import tools.refinery.language.semantics.ProblemTrace;
+import tools.refinery.logic.term.truthvalue.TruthValue;
 import tools.refinery.store.map.Cursor;
-import tools.refinery.store.model.Model;
-import tools.refinery.store.reasoning.ReasoningAdapter;
-import tools.refinery.store.representation.TruthValue;
 import tools.refinery.store.tuple.Tuple;
 
 import java.io.File;
@@ -28,17 +24,14 @@ public class Problem2Railway {
 	private final EFactory factory;
 	private final ResourceSet resourceSet;
 	private Map<Integer,Object> trace = new HashMap();
-	public Problem2Railway() throws URISyntaxException {
+	public Problem2Railway() {
 
 		EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
 		resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
 				"ecore", new EcoreResourceFactoryImpl());
 
-		Resource meta = resourceSet.getResource(
-				URI.createFileURI(new File(getClass()
-						.getClassLoader().getResource("railway.ecore").toURI()).getAbsolutePath()), true
-		);
+		Resource meta = resourceSet.getResource(ResourcesHelper.emfURI("railway/railway.ecore"), true);
 
 		railway = (EPackage) meta.getContents().get(0);
 		factory = railway.getEFactoryInstance();
