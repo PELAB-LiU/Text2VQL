@@ -1,0 +1,160 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% VQL metamodel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+class PatternModel{
+    contains Pattern[1..*] patterns
+}
+class Pattern{
+%    contains Parameter[0..*] parameters
+    contains PatternBody[1..*] bodies
+
+}
+class PatternBody{
+%    contains BodyVariable[0..*] variables
+    contains Constraint[1..*] constraints
+}
+abstract class Constraint.
+%class CompareConstraint extends Constraint{
+%    CompareFeature[1] equality
+%    contains ValueReference[1] rhs
+%    contains ValueReference[1] lhs
+%}
+%enum CompareFeature{EQ,NEQ}
+%class CheckConstraint extends Constraint{
+%    contains CheckExpression[1] expression
+%    % TODO list referrable variables
+%}
+%class PatternCompositionConstraint extends Constraint{
+%    VQLBoolean[1] negative
+%    contains CallableRelation[1] call
+%}
+%enum VQLBoolean{
+%    TRUE,FALSE
+%}
+abstract class CallableRelation.
+%class PatternCall extends CallableRelation{
+%    Pattern[1] patternRef
+%    %TODO parameters
+%}
+class PathExpressionConstraint extends CallableRelation, Constraint{
+    EClass[1] sourceType
+    contains FeatureChain[1] edge
+    % TODO source varaible
+    % TODO target variable
+}
+class FeatureChain{
+    contains FeatureChain next
+    EStructuralFeature [1] feature
+}
+
+
+pred featureChainEndType(FeatureChain node, EClassifier type) <->
+    FeatureChain::feature(node, feature),
+    EAttribute::eAttributeType(feature, type)
+;
+    FeatureChain::feature(node, feature),
+    EReference::eReferenceType(feature, type).
+propagation rule inconsistentNextType(FeatureChain node, EStructuralFeature feature)<->
+    FeatureChain::next(prev, node),
+    may FeatureChain::feature(node, feature),
+    featureChainEndType(prev, type),
+    !allStructuralFeatures(type, feature)
+    ==>
+    !FeatureChain::feature(node, feature).
+propagation rule inconsistentEdgeType(FeatureChain node, EStructuralFeature feature)<->
+    PathExpressionConstraint::edge(const, node),
+    PathExpressionConstraint::sourceType(const, stype),
+    may FeatureChain::feature(node, feature),
+    !allStructuralFeatures(stype, feature)
+    ==>
+    !FeatureChain::feature(node, feature).
+error inconsistentTypeChain(FeatureChain node)<->
+    PathExpressionConstraint::edge(constraint, node),
+    PathExpressionConstraint::sourceType(constraint, stype),
+    FeatureChain::feature(node,feature),
+    !allStructuralFeatures(stype, feature).
+error inconsistentFeatureChain(FeatureChain node)<->
+    FeatureChain::next(prev,node),
+    featureChainEndType(prev,etype),
+    FeatureChain::feature(node,feature),
+    !structuralFeatures(etype,feature).
+
+propagation rule noAttributeInChain(FeatureChain chain, EAttribute feature)<->
+    FeatureChain::next(chain, _),
+    may FeatureChain::feature(chain, feature),
+    EAttribute(feature)
+     ==>
+    !FeatureChain::feature(chain, feature).
+propagation rule terminateChain(FeatureChain chain, FeatureChain next)<->
+    FeatureChain::feature(chain, feature),
+    EAttribute(feature),
+    may FeatureChain::next(chain, next) ==>
+    !FeatureChain::next(chain, next).
+error nonTerminalAttribute(FeatureChain chain) <->
+    FeatureChain::feature(chain, feature),
+    EAttribute(feature),
+    FeatureChain::next(feature,_).
+
+%class TypeCheckConstraint extends CallableRelation, Constraint{
+%    EClassifier[1] type % TODO check this
+%    % TODO source variable
+%}
+%class ClassifierConstraint extends CallableRelation, Constraint{
+%    EClass[1] type % TODO check this
+%    % TODO source variable
+%}
+
+%abstract class Variable{
+%    contains Name[1] name
+%}
+%class Parameter extends Variable{
+%    Direction[1] direction
+%}
+%abstract class BodyVariable extends VariableReference.
+%
+%class LocalVariable extends BodyVariable.
+%class ParameterRef extends BodyVariable{
+%    Parameter[1] referredParameter
+%}
+%abstract class ValueReference.
+%class EnumValue extends ValueReference.
+%class VariableReference extends ValueReference{
+%    Variable[1] variable
+%}
+%abstract class ComputationValue extends ValueReference.
+%class FunctionValue extends ComputationValue{
+%    contains ValueExpression[1] expression
+%}
+%class AggregatedValue extends ValueExpression{
+%    Aggregator[1] aggregator
+%    CallableRelation[1] call
+%}
+%enum Aggregator{
+%    COUNT,
+%    SUM,
+%    MIN,
+%    MAX,
+%    AVG
+%}
+
+%abstract class LiteralValue.
+%class StringLiteral extends LiteralValue.
+%class NumberLiteral extends LiteralValue{
+%    %Boolean[1] negative %TODO chat GPT
+%}
+%class BooleanLiteral extends LiteralValue.
+%class ListValue extends LiteralValue{
+%    contains LiteralValue[1..*] values
+%}
+
+PatternModel(root).
+!PatternModel(PatternModel::new).
+
+%class Name.
+%class CheckExpression.
+%class ValueExpression.
+%enum Direction{
+%    IN,
+%    OUT,
+%    INOUT
+%}
