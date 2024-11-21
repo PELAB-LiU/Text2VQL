@@ -31,6 +31,15 @@ tasks{
         group = "text2vql"
         description = "Generate 300 seeded and 300 seedless instance models from Railway domain."
     }
+    register<JavaExec>("generateAndPrintQueries"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.refinery.GeneratorMain")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Generate a VQL query over the Railway domain."
+    }
 }
 tasks.test {
     useJUnitPlatform()

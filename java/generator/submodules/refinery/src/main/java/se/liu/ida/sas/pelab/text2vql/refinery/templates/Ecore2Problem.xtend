@@ -13,12 +13,15 @@ import java.nio.file.Paths
 class Ecore2Problem{
     def static String map2VQLProblem(EPackage epackage){
             return '''
+                «Files.readString(Paths.get(Ecore2Problem.getClassLoader().getResource("templates/vql.problem").toURI()))»
                 «Files.readString(Paths.get(Ecore2Problem.getClassLoader().getResource("templates/emf.problem").toURI()))»
 
                 %%%%%%%%%%
                 % Domain %
                 %%%%%%%%%%
                 «map(epackage)»
+
+                scope PathExpressionConstraint+=1, PatternCompositionConstraint+=1.
             '''
         }
     def static String map(EPackage epackage){

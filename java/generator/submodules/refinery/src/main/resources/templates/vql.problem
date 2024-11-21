@@ -24,13 +24,46 @@ abstract class Constraint.
 %    contains CheckExpression[1] expression
 %    % TODO list referrable variables
 %}
-%class PatternCompositionConstraint extends Constraint{
-%    VQLBoolean[1] negative
-%    contains CallableRelation[1] call
-%}
-%enum VQLBoolean{
-%    TRUE,FALSE
-%}
+class PatternCompositionConstraint extends Constraint{
+    VQLBoolean[1] negative
+%    Closure[1] closure
+    contains CallableRelation[1] call
+}
+enum Closure{
+    NONE,
+    TRANSITIVE, % +
+    REFLEXIVE_TRANSITIVE % *
+}
+enum VQLBoolean{
+    TRUE,FALSE
+}
+%propagation rule lockPositive(PatternCompositionConstraint constraint, CallableRelation call)<->
+%    PatternCompositionConstraint::negative(constraint, VQLBoolean::FALSE),
+%    may PatternCompositionConstraint::call(constraint, call),
+%    !PatternCall(call)
+%==>
+%    !PatternCompositionConstraint::call(constraint, call).
+propagation rule lockNegative(PatternCompositionConstraint constraint)<->
+    may PatternCompositionConstraint::negative(constraint, _),
+    PatternCompositionConstraint::call(constraint,call),
+    PathExpressionConstraint(call)
+;
+    may PatternCompositionConstraint::negative(constraint, _),
+    PatternCompositionConstraint::call(constraint,call),
+    ClassifierConstraint(call)
+==>
+    PatternCompositionConstraint::negative(constraint, VQLBoolean::TRUE).
+
+error wrongPositiveCall(PatternCompositionConstraint constraint) <->
+    PatternCompositionConstraint::negative(constraint, VQLBoolean::FALSE),
+    PatternCompositionConstraint::call(constraint,call),
+    PathExpressionConstraint(call)
+;
+    PatternCompositionConstraint::negative(constraint, VQLBoolean::FALSE),
+    PatternCompositionConstraint::call(constraint,call),
+    ClassifierConstraint(call).
+% TODO Block type constraint
+
 abstract class CallableRelation.
 %class PatternCall extends CallableRelation{
 %    Pattern[1] patternRef
@@ -96,13 +129,13 @@ error nonTerminalAttribute(FeatureChain chain) <->
     FeatureChain::next(feature,_).
 
 %class TypeCheckConstraint extends CallableRelation, Constraint{
-%    EClassifier[1] type % TODO check this
+%    Java tytpe[1] type % TODO check this
 %    % TODO source variable
 %}
-%class ClassifierConstraint extends CallableRelation, Constraint{
-%    EClass[1] type % TODO check this
-%    % TODO source variable
-%}
+class ClassifierConstraint extends CallableRelation, Constraint{
+    EClassifier[1] type % TODO check this
+    % TODO source variable
+}
 
 %abstract class Variable{
 %    contains Name[1] name
