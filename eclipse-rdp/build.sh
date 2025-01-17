@@ -1,1 +1,1 @@
-docker build -t eclipse-vnc .
+docker build -t text2vql .

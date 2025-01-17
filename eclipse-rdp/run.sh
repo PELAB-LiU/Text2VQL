@@ -1,11 +1,9 @@
 #!/bin/bash
 
 docker run -d \
-  --name=eclipse-vnc \
-  --device=/dev/dri:/dev/dri \
+  --name=text2vql \
   --security-opt seccomp=unconfined \
-  -p 3000:3000 \
-  -p 3001:3001 \
+  -p 4100:3389 \
   --shm-size="1gb" \
-  -v $(pwd)/../dataset_construction:/config/dataset_construction \
-  eclipse-vnc
+  -v $(pwd)/..:/config/text2vql \
+  text2vql
