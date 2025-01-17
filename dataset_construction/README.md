@@ -57,7 +57,13 @@ select one meta-model. Thus, we obtain a deduplicated dataset of meta-models.
 python select_representative_metamodels.py
 ```
 
-Run the script to generate pairs (nl, vql). The `sample` argument indicates how many meta-models are considered
+Run the script to generate pairs (nl, vql) using OpenAI ChatGPT. Berfore that, 
+you must set your OpenAI API key in the OPENAI_API_KEY environment variable. Here's how you can get your key:
+
+1. Create an account on OpenAI: [Sign Up](https://platform.openai.com/signup)
+2. Generate an API key: [Create API Key](https://platform.openai.com/api-keys)
+
+The `sample` argument indicates how many meta-models are considered
 when generating the queries. In the original paper, this parameter was set to 500. However, to speed up the process and for
 testing purposes, we set it to 10.
 
