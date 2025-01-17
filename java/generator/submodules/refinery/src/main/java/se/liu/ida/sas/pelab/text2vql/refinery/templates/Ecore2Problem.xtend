@@ -21,7 +21,7 @@ class Ecore2Problem{
                 %%%%%%%%%%
                 «map(epackage)»
 
-                scope PathExpressionConstraint+=1, PatternCompositionConstraint+=1.
+                scope PathExpressionConstraint+=1, PatternCompositionConstraint+=3, Pattern+=3, PatternCall+=2.
             '''
         }
     def static String map(EPackage epackage){
@@ -88,6 +88,7 @@ class Ecore2Problem{
             EDataType(«datatype.toName»).
             EPackage::eClassifiers(EMFECore,«datatype.toName»).
             EClassifier::ePackage(«datatype.toName»,EMFECore).
+            !EEnum(«datatype.toName»).
             «ENDFOR»
         '''
     }

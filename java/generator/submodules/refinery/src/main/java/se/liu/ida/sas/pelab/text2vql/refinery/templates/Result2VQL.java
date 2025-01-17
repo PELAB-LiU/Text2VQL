@@ -103,8 +103,23 @@ public class Result2VQL {
             Tuple call = getFirstDestination("PatternCompositionConstraint::call",current.get(0));
             builder.append(pathExpressionConstraint(call.get(0)));
             builder.append(classifierConstraint(call.get(0)));
-            //builder.append(patterncall(call.get(0)));
+            builder.append(patternCall(call.get(0)));
             //builder.append(typeCheckConstraint(call.get(0)));
+        }
+        return builder.toString();
+    }
+    private String patternCall(int id){
+        Cursor<Tuple, TruthValue> cursor = get("PatternCall", id);
+        StringBuilder builder = new StringBuilder();
+        while (cursor.move()){
+            Tuple current = cursor.getKey();
+
+            Tuple dst = getFirstDestination("PatternCall::patternRef",current.get(0));
+
+            builder.append("find pattern_");
+            builder.append(dst.get(0));
+            builder.append("(TODO)");
+            builder.append(System.lineSeparator());
         }
         return builder.toString();
     }

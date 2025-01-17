@@ -65,10 +65,16 @@ error wrongPositiveCall(PatternCompositionConstraint constraint) <->
 % TODO Block type constraint
 
 abstract class CallableRelation.
-%class PatternCall extends CallableRelation{
-%    Pattern[1] patternRef
-%    %TODO parameters
-%}
+class PatternCall extends CallableRelation{
+    Pattern[1] patternRef
+    %TODO parameters
+}
+error selfloop(PatternCall call)<->
+    Pattern::bodies(pattern,body),
+    PatternBody::constraints(body,constraint),
+    PatternCompositionConstraint::call(constraint,call),
+    PatternCall::patternRef(call,pattern).
+
 class PathExpressionConstraint extends CallableRelation, Constraint{
     EClass[1] sourceType
     contains FeatureChain[1] edge
@@ -191,3 +197,14 @@ PatternModel(root).
 %    OUT,
 %    INOUT
 %}
+
+pred connectedPatterns(Pattern from, Pattern to)<->
+    Pattern::bodies(from, body),
+    PatternBody::constraints(body,constraint),
+    PatternCompositionConstraint::call(constraint,call),
+    PatternCall::patternRef(call,to).
+
+error disjointPatterns(Pattern a, Pattern b)<->
+    !connectedPatterns(_, a),
+    !connectedPatterns(_, b),
+    a!=b.
