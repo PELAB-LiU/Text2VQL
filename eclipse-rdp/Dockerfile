@@ -36,6 +36,10 @@ RUN apt install ant -y
 USER abc
 COPY eclipse-workspace /config/eclipse-workspace
 
+USER root
+RUN chown -R abc /config/eclipse-workspace/
+
+USER abc
 RUN wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar \
     -O /config/eclipse-workspace/se.liu.ida.sas.pelab.vqlsyntaxcheck/jdbc/slf4j-api-1.7.36.jar
 RUN wget https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.36/slf4j-simple-1.7.36.jar \
