@@ -11,6 +11,7 @@ import org.eclipse.ocl.OCLInput;
 import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.ecore.Constraint;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
+import se.liu.ida.sas.pelab.text2vql.utilities.RailwayLoader;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 import java.util.HashSet;
@@ -18,7 +19,6 @@ import java.util.List;
 
 public class ValidateWithOCL {
     public static void main(String[] args) throws ParserException {
-        System.out.println("Hello OCL!");
         /*
           Load Ecore
          */
@@ -38,18 +38,17 @@ public class ValidateWithOCL {
         /*
          * Load railway model
          */
-        EObject railway_container = resourceSet.getResource(
-                ResourcesHelper.emfURI("railway/railway.xmi"), true).getContents().getFirst();
+        EObject railway_container = RailwayLoader.loadRailway().getContents().getFirst();
         /*
           Load OCL
          */
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
-        List<Constraint> constraints = ocl.parse(new OCLInput(ResourcesHelper.inputStream("ocl/sample.ocl")));
+        List<Constraint> constraints = ocl.parse(new OCLInput(ResourcesHelper.inputStream("sample.ocl")));
         for(Constraint constraint : constraints){
-            System.out.println(constraint.getName() +" is "+constraint.getSpecification().getBodyExpression());
+            System.out.print("Matches of "+constraint.getName());
             Object result = ocl.evaluate(railway_container, constraint.getSpecification().getBodyExpression());
-            System.out.println(result);
+            System.out.println(" is " + result);
             if (result instanceof HashSet<?>){
                 ((HashSet<?>) result).forEach(System.out::println);
             }

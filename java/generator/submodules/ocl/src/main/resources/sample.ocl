@@ -1,9 +1,10 @@
 package railway
 
-
 context Segment
-def: getLong() : Set(Segment) = Segment.allInstances()->select(seg | seg.length > 0)
+def foo: getLong() : Set(Segment) = Segment.allInstances()->select(seg | seg.length > 0)
 
+--Invariants are evaluated over the whole model, yielding a single result.
+--Queries and functions may be a bit more suited for testing.
 context Segment
 inv positive_length: self.length > 0
 
