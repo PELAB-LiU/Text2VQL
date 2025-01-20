@@ -22,3 +22,17 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
+tasks{
+    register<JavaExec>("validateEOL"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        //workingDir("../../results")
+        //environment("KEY","VALUE")
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.epsilon.ValidateWithEOL")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Get matches for Epsilon Query"
+    }
+}

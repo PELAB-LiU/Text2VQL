@@ -9,17 +9,15 @@ import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 public class ValidateWithEOL {
     public static void main(String[] args) throws Exception {
-        //var module = new EolModule();
-        //module.parse(ResourcesHelper.javaURI("eol/sample.eol"));
-        //module.execute();
         EplModule module = new EplModule();
-        module.parse(ResourcesHelper.javaURI("eol/sample.epl"));
+        module.parse(ResourcesHelper.javaURI("sample.epl"));
 
         InMemoryEmfModel model = new InMemoryEmfModel(RailwayLoader.loadRailway());
         module.getContext().getModelRepository().addModel(model);
         PatternMatchModel resultModel = (PatternMatchModel) module.execute();
+        System.out.println("Matches:");
         for (PatternMatch match : resultModel.getMatches()) {
-            System.out.println("Matched: " + match.toString());
+            System.out.println("\t" + match.toString());
         }
         System.out.println(resultModel.getClass());
     }
