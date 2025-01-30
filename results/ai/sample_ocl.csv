@@ -1,0 +1,75 @@
+id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_1
+0,,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"Sensor.allInstances()->collect(
+	sensor | sensor.monitors->select(oclIsKindOf(Segment))->
+		collect(segment1 | segment1.connectsTo->select(oclIsKindOf(Segment))->
+			select(segment2 | segment2.monitoredBy->includes(sensor))->
+			collect(segment2 | segment2.connectsTo->select(oclIsKindOf(Segment))->
+				select(segment3 | segment3.monitoredBy->includes(sensor))->
+				collect(segment3 | segment3.connectsTo->select(oclIsKindOf(Segment))->
+					select(segment4 | segment4.monitoredBy->includes(sensor))->
+					collect(segment4 | segment4.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment5 | segment5.monitoredBy->includes(sensor))->
+						collect(segment5 | segment5.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment6 | segment6.monitoredBy->includes(sensor))->collect(
+							segment6 | Tuple{sensor = sensor, segment1 = segment1, segment2 = segment2, segment3 = segment3, segment4 = segment4, segment5 = segment5, segment6 = segment6}
+						)
+					)
+				)
+			)
+		)
+	)
+)","Sensor.allInstances()->collect(
+	sensor | sensor.monitors->select(oclIsKindOf(Segment))->
+		collect(segment1 | segment1.connectsTo->select(oclIsKindOf(Segment))->
+			select(segment2 | segment2.monitoredBy->includes(sensor))->
+			collect(segment2 | segment2.connectsTo->select(oclIsKindOf(Segment))->
+				select(segment3 | segment3.monitoredBy->includes(sensor))->
+				collect(segment3 | segment3.connectsTo->select(oclIsKindOf(Segment))->
+					select(segment4 | segment4.monitoredBy->includes(sensor))->
+					collect(segment4 | segment4.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment5 | segment5.monitoredBy->includes(sensor))->
+						collect(segment5 | segment5.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment6 | segment6.monitoredBy->includes(sensor))->collect(
+							segment6 | Tuple{sensor = sensor, segment1 = segment1, segment2 = segment2, segment3 = segment3, segment4 = segment4, segment5 = segment5, segment6 = segment6}
+						)
+					)
+				)
+			)
+		)
+	)
+)","Sensor.allInstances()->collect(
+	sensor | sensor.monitors->select(oclIsKindOf(Segment))->
+		collect(segment1 | segment1.connectsTo->select(oclIsKindOf(Segment))->
+			select(segment2 | segment2.monitoredBy->includes(sensor))->
+			collect(segment2 | segment2.connectsTo->select(oclIsKindOf(Segment))->
+				select(segment3 | segment3.monitoredBy->includes(sensor))->
+				collect(segment3 | segment3.connectsTo->select(oclIsKindOf(Segment))->
+					select(segment4 | segment4.monitoredBy->includes(sensor))->
+					collect(segment4 | segment4.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment5 | segment5.monitoredBy->includes(sensor))->
+						collect(segment5 | segment5.connectsTo->select(oclIsKindOf(Segment))->
+						select(segment6 | segment6.monitoredBy->includes(sensor))->collect(
+							segment6 | Tuple{sensor = sensor, segment1 = segment1, segment2 = segment2, segment3 = segment3, segment4 = segment4, segment5 = segment5, segment6 = segment6}
+						)
+					)
+				)
+			)
+		)
+	)
+)"
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,

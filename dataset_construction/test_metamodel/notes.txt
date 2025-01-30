@@ -1,0 +1,8 @@
+https://github.com/eclipse-epsilon/epsilon/blob/main/examples/org.eclipse.epsilon.examples.epl/trainBenchmarkPatterns.epl
+
+Epsilon queries for railway domain. (Use as ground truth.)
+* EPL railway, id 1: Faulty query (Checks for sensor to monitor more than 5 segments. Thus does not ensure that the monitored segments are from connected. Example 1: 2 segment loop with the same sensor -> will not match for EPL. Example 2: 2 pcs of 3 segment loop with the same sensor -> will match)
+* id 17: Only half of the problem?
+
+OCL gound truth: https://link.springer.com/article/10.1007/s10270-017-0606-9
+* id 1 ignores the 'active' requirement

@@ -1,0 +1,15 @@
+package railway
+  context Sensor
+  def connectedSegments: Bag(TrackElement) = Sensor.allInstance()-> collect(sensor|
+    sensor.monitors -> select(oclIsTypeOf(Segment)) -> collect(segment1 |
+      segment1.connectsTo->select(oclIsTypeOf(Segment))->collect(segment2 |
+        segment2.monitoredBy->includes(sensor))->collect(segment2 |
+        segment2.connectsTo->select(oclIsTypeOf(Segment))->select(segment3 |
+          segment3.monitoredBy->includes(sensor))->collect(segment3 |
+          segment3.connectsTo->select(oclIsTypeOf(Segment))->select(segment4 |
+            segment4.monitoredBy->includes(sensor))->collect(segment4 |
+            segment4.connectsTo->select(oclIsTypeOf(Segment))->select(segment5 |
+              segment5.monitoredBy->includes(sensor))->collect(segment5 |
+              segment5.connectsTo->select(oclIsTypeOf(Segment))->select(segment6 |
+                segment6.monitoredBy->includes(sensor))))))))
+endpackage
