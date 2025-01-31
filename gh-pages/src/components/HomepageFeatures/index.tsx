@@ -11,7 +11,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "Teaching VIATRA Qeury Language",
+    title: "Teaching VIATRA Query Language",
     Png: require('@site/static/img/viatra-logo.png').default,
     description: ("")
   }

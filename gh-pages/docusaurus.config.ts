@@ -40,7 +40,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/PELAB-LiU/Text2VQL/blob/main/gh-pages',
+            'https://github.com/PELAB-LiU/Text2VQL/blob/pages/gh-pages',
         },
         /*blog: {
           // Please change this to your repo.
