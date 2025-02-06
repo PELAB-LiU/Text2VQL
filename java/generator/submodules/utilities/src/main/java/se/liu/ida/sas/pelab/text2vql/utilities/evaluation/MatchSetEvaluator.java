@@ -6,6 +6,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import se.liu.ida.sas.pelab.text2vql.utilities.csv.CSVHandler;
 
 import java.io.File;
@@ -27,22 +28,20 @@ public abstract class MatchSetEvaluator<Query, Result> {
     protected final String regex;
     private final List<File> models;
     private final Iterable<CSVRecord> csv;
-    public MatchSetEvaluator(String truth, String regex, File csv, File modelsir) throws IOException {
+    public MatchSetEvaluator(String truth, String regex, File csv, File modelsDir) throws IOException {
         this.truth = truth;
         this.regex = regex;
-        System.err.println(modelsir.getAbsolutePath());
-        models = Arrays.stream(modelsir.listFiles(f -> f.getName().endsWith(".xmi"))).toList();
-        if(csv.isDirectory()){
-
+        if(modelsDir.isDirectory()){
+            models = Arrays.stream(modelsDir.listFiles(f -> f.getName().endsWith(".xmi"))).toList();
         } else {
-
+            models = Arrays.asList(modelsDir);
         }
+
         this.csv = CSVHandler.loadCSV(csv);
     }
     public void run(){
         csv.forEach(line -> {
             int id = Integer.parseInt(line.get("id"));
-            System.out.println("[CSV ROW ID "+id+" ]");
             Query truth = parse(line.get(this.truth));
             List<AbstractMap.SimpleEntry<String,Query>> queries = line.toMap().entrySet().stream()
                     .filter(entry -> entry.getKey().matches(regex))
@@ -53,8 +52,11 @@ public abstract class MatchSetEvaluator<Query, Result> {
             ComparisonResult result = new ComparisonResult(line.get("id"), queries.size());
             AbortFlag[] flags = AbortFlag.of(queries.size());
             ResourceSet resourceSet = new ResourceSetImpl();
+
+            //XMIResourceFactory generates identical IDs when loading the same model.
             resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                    "xmi", new EcoreResourceFactoryImpl());
+                    "xmi", new XMIResourceFactoryImpl());
+
             models.forEach(model -> {
                 System.out.println("[CSV ROW ID="+id+" MODEL="+model.getName()+"]");
                 EObject root = resourceSet.getResource(URI.createFileURI(model.getPath()),true).getContents().getFirst();

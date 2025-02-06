@@ -20,11 +20,17 @@ import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
     private static EPackage railway;
+    private static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
     public ValidateWithOCL(File csv, File models) throws IOException {
         super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models);
     }
@@ -34,20 +40,47 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
             EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
             OCL ocl = OCL.newInstanceAbstract(environmentFactory);
             OCLHelper helper = ocl.createOCLHelper();
-            helper.setContext(railway.getEClassifier("RailwayContainer"));//TODO check?
+            helper.setContext(railway.getEClassifier("RailwayContainer"));
             final OCLExpression expression = helper.createQuery(query);
             Query queryEvaluator = ocl.createQuery(expression);
-            final Bag<Tuple<?, ?>> bag = (Bag<Tuple<?, ?>>) queryEvaluator.evaluate(model);
-            bag.forEach(t -> {
-                System.out.println("\t"+t.toString());
-            });
-            return null;
+
+            Object result = queryEvaluator.evaluate(model);
+            return processContainer(result);
         } catch (ParserException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        } catch (ContainerException | DataException e){
+            e.printStackTrace();
+            return null;
         }
     }
+    private List<String> processContainer(Object container){
+        final List<String> data = new ArrayList<>();
+        if(container instanceof Bag<?> bag){
+            System.out.println("#Bag: "+bag.size());
+            bag.forEach(t -> {
+                String result = processData(t);
+                data.add(result);
+            });
+            return data;
+        } else {
+            throw new ContainerException(container);
+        }
+    }
+    private String processData(Object data){
+        if(data instanceof Tuple<?,?> tuple){
+            StringBuilder builder = new StringBuilder();
 
+            Matcher m = regex_object.matcher(tuple.toString());
+            while (m.find()) {
+                builder.append(m.group().replaceAll("DynamicEObjectImpl",""));
+            }
+            System.out.println("\t"+builder.toString());
+            return builder.toString();
+        } else {
+            throw new DataException(data);
+        }
+    }
     @Override
     protected boolean compare(String truth, String got) {
         return false;
@@ -71,7 +104,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
             						select(segment5 | segment5.monitoredBy->includes(sensor))->
             						collect(segment5 | segment5.connectsTo->select(oclIsKindOf(Segment))->
             						select(segment6 | segment6.monitoredBy->includes(sensor))->collect(
-            							segment6 | Tuple{sensor = sensor, segment1 = segment1, segment2 = segment2, segment3 = segment3, segment4 = segment4, segment5 = segment5, segment6 = segment6}
+            							segment6 | no{sensor = sensor, segment1 = segment1, segment2 = segment2, segment3 = segment3, segment4 = segment4, segment5 = segment5, segment6 = segment6}
             						)
             					)
             				)
@@ -104,7 +137,6 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
         /*
          * Load railway model
          */
-        EObject railway_container = RailwayLoader.loadRailway().getContents().getFirst();
         ValidateWithOCL validator = new ValidateWithOCL(new File(csv), new File(models));
         validator.run();
     }

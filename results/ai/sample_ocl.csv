@@ -1,4 +1,4 @@
-id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_1
+id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_2
 0,,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"Sensor.allInstances()->collect(
 	sensor | sensor.monitors->select(oclIsKindOf(Segment))->
 		collect(segment1 | segment1.connectsTo->select(oclIsKindOf(Segment))->
@@ -57,19 +57,4 @@ id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_1
 		)
 	)
 )"
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
+1,,random,no nl,TODO,Segment.allInstances(),,
