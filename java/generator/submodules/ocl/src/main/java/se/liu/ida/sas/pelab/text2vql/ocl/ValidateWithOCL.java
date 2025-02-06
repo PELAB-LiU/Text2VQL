@@ -20,10 +20,7 @@ import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -31,8 +28,8 @@ import java.util.regex.Matcher;
 public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
     private static EPackage railway;
     private static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
-    public ValidateWithOCL(File csv, File models) throws IOException {
-        super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models);
+    public ValidateWithOCL(File csv, File models, File output) throws IOException {
+        super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models, output);
     }
     @Override
     protected List<String> evaluate(String query, EObject model) {
@@ -82,8 +79,8 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
         }
     }
     @Override
-    protected boolean compare(String truth, String got) {
-        return false;
+    protected boolean compare(List<String> truth, List<String> got) {
+        return isEqual(truth, got);
     }
 
     @Override
@@ -119,6 +116,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
          */
         String models = Arrays.stream(args).filter(arg -> arg.startsWith("models=")).map(arg -> arg.replaceFirst("models=","")).findFirst().orElseGet(()->"/config/text2vql/results/testmodels/");
         String csv = Arrays.stream(args).filter(arg -> arg.startsWith("csv=")).map(arg -> arg.replaceFirst("csv=","")).findFirst().orElseGet(()->"/config/text2vql/results/ai/sample_ocl.csv");
+        File out = Arrays.stream(args).filter(arg -> arg.startsWith("out=")).map(arg -> arg.replaceFirst("out=","")).map(File::new).findFirst().orElseGet(()->null);
         /*
           Load Ecore
          */
@@ -137,7 +135,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
         /*
          * Load railway model
          */
-        ValidateWithOCL validator = new ValidateWithOCL(new File(csv), new File(models));
+        ValidateWithOCL validator = new ValidateWithOCL(new File(csv), new File(models), out);
         validator.run();
     }
 }
