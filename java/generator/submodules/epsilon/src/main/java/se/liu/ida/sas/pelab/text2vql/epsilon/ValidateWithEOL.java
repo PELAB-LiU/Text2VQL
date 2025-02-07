@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class ValidateWithEOL {
+public class ValidateWithEOL extends MatchSetEvaluator<String,String>{
     public static void main(String[] args) throws Exception {
         EplModule module = new EplModule();
         module.parse(ResourcesHelper.javaURI("sample.epl"));
@@ -28,4 +28,18 @@ public class ValidateWithEOL {
         System.out.println(resultModel.getClass());
     }
 
+    @Override
+    protected List<String> evaluate(String s, EObject model) {
+        return null;
+    }
+
+    @Override
+    protected boolean compare(List<String> truth, List<String> got) {
+        return false;
+    }
+
+    @Override
+    protected String parse(String query) {
+        return null;
+    }
 }

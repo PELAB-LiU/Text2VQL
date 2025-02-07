@@ -97,7 +97,8 @@ public abstract class MatchSetEvaluator<Query, Result> {
 
                             List<Result> matches = evaluate(query, root);
 
-                            boolean equal = compare(baseline, matches);
+                            boolean equal = matches!=null && compare(baseline, matches);
+                            
                             if(!equal){
                                 result.different(idx);
                                 flags[idx].abort();

@@ -3,6 +3,7 @@ package se.liu.ida.sas.pelab.text2vql.ocl;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -25,27 +26,31 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 
-public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
+public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
     private static EPackage railway;
     private static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
     public ValidateWithOCL(File csv, File models, File output) throws IOException {
         super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models, output);
     }
     @Override
-    protected List<String> evaluate(String query, EObject model) {
+    protected Query<?,?,?> parse(String query) {
         try {
             EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
             OCL ocl = OCL.newInstanceAbstract(environmentFactory);
             OCLHelper helper = ocl.createOCLHelper();
             helper.setContext(railway.getEClassifier("RailwayContainer"));
-            final OCLExpression expression = helper.createQuery(query);
-            Query queryEvaluator = ocl.createQuery(expression);
-
-            Object result = queryEvaluator.evaluate(model);
-            return processContainer(result);
+            OCLExpression expression = helper.createQuery(query);
+            return ocl.createQuery(expression);
         } catch (ParserException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return null;
+        }
+    }
+    @Override
+    protected List<String> evaluate(Query<?,?,?> query, EObject model) {
+        try {
+            Object result = query.evaluate(model);
+            return processContainer(result);
         } catch (ContainerException | DataException e){
             e.printStackTrace();
             return null;
@@ -56,6 +61,13 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
         if(container instanceof Bag<?> bag){
             System.out.println("#Bag: "+bag.size());
             bag.forEach(t -> {
+                String result = processData(t);
+                data.add(result);
+            });
+            return data;
+        } else if (container instanceof Set<?> set) {
+            System.out.println("#Set: "+set.size());
+            set.forEach(t -> {
                 String result = processData(t);
                 data.add(result);
             });
@@ -74,7 +86,18 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
             }
             System.out.println("\t"+builder.toString());
             return builder.toString();
-        } else {
+        } else if (data instanceof DynamicEObjectImpl eobject){
+            StringBuilder builder = new StringBuilder();
+            Matcher m = regex_object.matcher(eobject.toString());
+            while (m.find()) {
+                builder.append(m.group().replaceAll("DynamicEObjectImpl",""));
+            }
+            System.out.println("\t"+builder.toString());
+            return builder.toString();
+        } else if (data instanceof Boolean bool){
+            System.out.println("\t"+bool.toString());
+            return bool.toString();
+        }{
             throw new DataException(data);
         }
     }
@@ -83,10 +106,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<String,String> {
         return isEqual(truth, got);
     }
 
-    @Override
-    protected String parse(String query) {
-        return query;
-    }
+
 
     public static String query = """
             Sensor.allInstances()->collect(
