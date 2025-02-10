@@ -1,5 +1,5 @@
-id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_2
-0,,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,pattern goRouteMisalignedSwitch(route: Route){,"Sensor.allInstances()->collect(
+id,construct,train_benchmark,nl,name,header,truth_ocl,ocl_query_1,ocl_query_2,truth_epl,epl_query_1,epl_query_2,truth_vql,vql_query_1,vql_query_2
+0,,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,connectedSegments6,pattern goRouteMisalignedSwitch(route: Route){,"Sensor.allInstances()->collect(
 	sensor | sensor.monitors->select(oclIsKindOf(Segment))->
 		collect(segment1 | segment1.connectsTo->select(oclIsKindOf(Segment))->
 			select(segment2 | segment2.monitoredBy->includes(sensor))->
@@ -56,5 +56,39 @@ id,construct,train_benchmark,nl,header,truth_ocl,ocl_query_1,ocl_query_2
 			)
 		)
 	)
-)"
-1,,random,no nl,TODO,Segment.allInstances(),,
+)","pattern PosLength
+  segment : Segment in: Segment.all.select(s|s.length <= 0) {}","pattern PosLength
+  segment : Segment in: Segment.all.select(s|s.length <= 0) {
+
+}","pattern PosLength
+  segment : Segments in: Segment.all.selecst(s|s.length <= 0) {
+
+  do {
+    segment.println('PosLength: ');
+  }
+}","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+    find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
+    find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
+    find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
+    find connectedSegmentWithSameMonitor(segment4, segment5, sensor);
+    find connectedSegmentWithSameMonitor(segment5, segment6, sensor);
+
+}
+pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, sensor: Sensor){
+    Segment.connectsTo(segment1,segment2);
+    Segment.monitoredBy(segment1,sensor);
+    Segment.monitoredBy(segment2,sensor);
+}","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+    find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
+    find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
+    find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
+    find connectedSegmentWithSameMonitor(segment4, segment5, sensor);
+    find connectedSegmentWithSameMonitor(segment5, segment6, sensor);
+
+}
+pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, sensor: Sensor){
+    Segment.connectsTo(segment1,segment2);
+    Segment.monitoredBy(segment1,sensor);
+    Segment.monitoredBy(segment2,sensor);
+}",err
+,,random,no nl,,TODO,Segment.allInstances(),,,,,,,,

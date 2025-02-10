@@ -28,12 +28,11 @@ import java.util.regex.Matcher;
 
 public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
     private static EPackage railway;
-    private static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
     public ValidateWithOCL(File csv, File models, File output) throws IOException {
         super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models, output);
     }
     @Override
-    protected Query<?,?,?> parse(String query) {
+    protected Query<?,?,?> parse(String query, String top) {
         try {
             EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
             OCL ocl = OCL.newInstanceAbstract(environmentFactory);
@@ -47,9 +46,9 @@ public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
         }
     }
     @Override
-    protected List<String> evaluate(Query<?,?,?> query, EObject model) {
+    protected List<String> evaluate(Query<?,?,?> query, Resource resource) {
         try {
-            Object result = query.evaluate(model);
+            Object result = query.evaluate(resource.getContents().getFirst());
             return processContainer(result);
         } catch (ContainerException | DataException e){
             e.printStackTrace();
@@ -135,7 +134,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
          * Process command line arguments
          */
         String models = Arrays.stream(args).filter(arg -> arg.startsWith("models=")).map(arg -> arg.replaceFirst("models=","")).findFirst().orElseGet(()->"/config/text2vql/results/testmodels/");
-        String csv = Arrays.stream(args).filter(arg -> arg.startsWith("csv=")).map(arg -> arg.replaceFirst("csv=","")).findFirst().orElseGet(()->"/config/text2vql/results/ai/sample_ocl.csv");
+        String csv = Arrays.stream(args).filter(arg -> arg.startsWith("csv=")).map(arg -> arg.replaceFirst("csv=","")).findFirst().orElseGet(()->"/config/text2vql/results/ai/sample.csv");
         File out = Arrays.stream(args).filter(arg -> arg.startsWith("out=")).map(arg -> arg.replaceFirst("out=","")).map(File::new).findFirst().orElseGet(()->null);
         /*
           Load Ecore

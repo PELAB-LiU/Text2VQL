@@ -1,0 +1,29 @@
+# Comparison framework
+
+## Input API
+
+```bash
+./gradlew validateOCL csv=<PATH TO CSV> models=<PATH TO INSTANCE MODELS> out=<PATH TO OUTPUT CSV>
+```
+:::danger
+Call is not tested.
+:::
+Parameters:
+* models: Folder for instance models (all children with `.xmi` format) or single `.xmi` model. Railway domain is expected. Default value is `/config/text2vql/results/testmodels/`.
+* csv: CSV file prodiced by AI. Default is `/config/text2vql/results/ai/sample.csv`.
+    * Expected column `id`: Id of the pass test. Row is skipped if id cannot be parsed as integer.
+    * Ground truth column `truth_[epl|ocl|vql]`: Query that produces the reference match set. Must not fail tom parse or evaluate on any input model. Result set may be empty.
+    * Query columns: any column that matches the `^[epl|ocl|vql]_query_([0-9]+)$` regex.
+    * Expected column `name`: name of the top level query. (Note: only viatra uses it, refactor needed for multiple patterns in EPL, OCL)
+* out: Optional, if not defined, then standard output. 
+
+## Output API
+
+Standatd output is logs from the run. It contains progress, trace and debug information.
+
+Output csv contains the relevant data.
+* Column `id` is equal to the `id` from the input csv. It can be used to merge this csv with the input csv.
+* Column `parse` is an array of booleans indicating which test queries were parsed successfully. (Ordered according to the input csv?)
+* Column `compare` is an array of booleans indicating which test queries were evaluated successfully. Note that if a query failed to parse, this data will contain a `true` value, as no errors were found during evaluation. (Ordered according to the input csv?)
+* Column `pass` is a boolean. True if at least one query were parsed successfully and produced equal result to the ground truth.
+* Column `match_count` is the number of ground truth matches across all test instance models.

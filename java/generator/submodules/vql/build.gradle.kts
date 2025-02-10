@@ -31,6 +31,9 @@ dependencies {
     implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.localsearch:2.9.0")
     implementation("org.apache.commons:commons-csv:1.10.0")
     implementation("org.eclipse.xtext:org.eclipse.xtext.xbase:2.36.0")
+    runtimeOnly("org.slf4j:log4j-over-slf4j:2.0.16")
+    //implementation("log4j:log4j:1.2.17")
+    //implementation("org.slf4j:slf4j-simple:1.7.36")
 }
 
 tasks.test {
@@ -69,6 +72,19 @@ tasks{
         standardInput = System.`in`
         group = "text2vql"
         description = "Compare match sets of queries from CSV. Expect environment variables: META,INPUT,OUTPUT,INSTANCEDIR,AI"
+    }
+
+
+    register<JavaExec>("validateVQL"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        //workingDir("../../results")
+        //environment("KEY","VALUE")
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.vql.ValidateWithVQL")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Get matches for VIATRA Query Language"
     }
 }
 

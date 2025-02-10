@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Text2VQL',
-  tagline: 'Teaching a Model Query Language to Open-Source Language Models with ChatGPT',
+  tagline: 'Teaching a Model Query Language to Open-Source Language Models with ChatGPT. [This site is work in progress.]',
 
   // Set the production url of your site here
   url: 'https://pelab-liu.github.io',

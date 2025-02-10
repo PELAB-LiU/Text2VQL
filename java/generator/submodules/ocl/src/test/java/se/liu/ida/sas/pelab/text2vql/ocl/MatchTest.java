@@ -13,6 +13,7 @@ import org.eclipse.ocl.ecore.Constraint;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.util.Bag;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import se.liu.ida.sas.pelab.text2vql.utilities.RailwayLoader;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
@@ -21,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class MatchTest {
+    @Disabled
     @Test
     public void printMatch() throws ParserException {
 

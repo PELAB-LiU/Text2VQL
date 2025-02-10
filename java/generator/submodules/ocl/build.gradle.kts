@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":utilities"))
     implementation("org.eclipse.emf:org.eclipse.emf.codegen.ecore:2.39.0")
     implementation("lpg.runtime:java:2.0.17-v201004271640")
-
 }
 
 tasks.test {
