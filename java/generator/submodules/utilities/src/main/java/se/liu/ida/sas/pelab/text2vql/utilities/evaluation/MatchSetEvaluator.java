@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * @param <Query>
  */
 public abstract class MatchSetEvaluator<Query, Result> {
-    protected static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
+    public final static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
     private static final String id = "id";
     private static final String parse = "parse";
     private static final String compare = "compare";

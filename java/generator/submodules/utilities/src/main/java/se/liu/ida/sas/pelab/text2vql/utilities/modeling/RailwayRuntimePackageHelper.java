@@ -2,6 +2,10 @@ package se.liu.ida.sas.pelab.text2vql.utilities.modeling;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 public class RailwayRuntimePackageHelper  extends PackageHelper{
     public final EPackage railway;
@@ -23,5 +27,15 @@ public class RailwayRuntimePackageHelper  extends PackageHelper{
         regions = RailwayContainer.getEStructuralFeature("regions");
         elements = Region.getEStructuralFeature("elements");
         length = Segment.getEStructuralFeature("length");
+    }
+    public  RailwayRuntimePackageHelper(){
+        this(getEPackage());
+    }
+    private static EPackage getEPackage(){
+        var resourceSet = new ResourceSetImpl();
+        resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
+                "ecore", new EcoreResourceFactoryImpl());
+        Resource meta = resourceSet.getResource(ResourcesHelper.emfURI("railway/railway.ecore"),true);
+        return (EPackage) meta.getContents().getFirst();
     }
 }

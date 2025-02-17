@@ -18,7 +18,8 @@ import java.util.HashSet;
 public class SyntaxCheckOCL extends SyntaxChecker {
     @Override
     public boolean test(String query, File metamodel) {
-        try {
+        return false;
+        /*try {
             EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
             OCL ocl = OCL.newInstanceAbstract(environmentFactory);
             OCLHelper helper = ocl.createOCLHelper();
@@ -29,7 +30,7 @@ public class SyntaxCheckOCL extends SyntaxChecker {
         } catch (ParserException e) {
             e.printStackTrace();
             return false;
-        }
+        }*/
     }
 
     public SyntaxCheckOCL(String dbURL, String queryColumn, String metamodels, File output) throws SQLException, IOException {

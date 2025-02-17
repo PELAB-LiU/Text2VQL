@@ -14,6 +14,7 @@ import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.helper.OCLHelper;
 import org.eclipse.ocl.util.Bag;
 import org.eclipse.ocl.util.Tuple;
+import se.liu.ida.sas.pelab.text2vql.ocl.helper.MatchProcessor;
 import se.liu.ida.sas.pelab.text2vql.utilities.RailwayLoader;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import org.eclipse.ocl.expressions.OCLExpression;
@@ -28,8 +29,10 @@ import java.util.regex.Matcher;
 
 public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
     private static EPackage railway;
+    private final MatchProcessor matchProcessor;
     public ValidateWithOCL(File csv, File models, File output) throws IOException {
         super("truth_ocl", "^ocl_query_([0-9]+)$", csv, models, output);
+        this.matchProcessor = new MatchProcessor(regex_object);
     }
     @Override
     protected Query<?,?,?> parse(String query, String top) {
@@ -49,13 +52,13 @@ public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
     protected List<String> evaluate(Query<?,?,?> query, Resource resource) {
         try {
             Object result = query.evaluate(resource.getContents().getFirst());
-            return processContainer(result);
+            return matchProcessor.processContainer(result);
         } catch (ContainerException | DataException e){
             e.printStackTrace();
             return null;
         }
     }
-    private List<String> processContainer(Object container){
+    /*private List<String> processContainer(Object container){
         final List<String> data = new ArrayList<>();
         if(container instanceof Bag<?> bag){
             System.out.println("#Bag: "+bag.size());
@@ -99,7 +102,7 @@ public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
         }{
             throw new DataException(data);
         }
-    }
+    }*/
     @Override
     protected boolean compare(List<String> truth, List<String> got) {
         return isEqual(truth, got);
