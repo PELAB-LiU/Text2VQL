@@ -29,6 +29,8 @@ dependencies {
     implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime:2.9.0")
     implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.rete:2.9.0")
     implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.localsearch:2.9.0")
+    //implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.base:2.8.2")
+    //implementation("org.eclipse.viatra:org.eclipse.viatra.query.runtime.matchers:2.8.2")
     implementation("org.apache.commons:commons-csv:1.10.0")
     implementation("org.eclipse.xtext:org.eclipse.xtext.xbase:2.36.0")
     runtimeOnly("org.slf4j:log4j-over-slf4j:2.0.16")
@@ -49,15 +51,7 @@ tasks{
         group = "text2vql"
         description = "Run profiler. Expect environment variables: MODE,CSV,COL,OUT"
     }
-    register<JavaExec>("databaseSyntaxCheck"){
-        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
-        dependsOn(mainRuntimeClasspath)
-        classpath(mainRuntimeClasspath)
-        mainClass.set("se.liu.ida.sas.pelab.text2vql.testing.syntax.EvaluateDatabase")
-        standardInput = System.`in`
-        group = "text2vql"
-        description = "Run profiler. Expect environment variables: JDBC_URL,PROJECT_PATH,OUTPUT"
-    }
+
     register<JavaExec>("compareQueryMatchSets"){
         val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
         dependsOn(mainRuntimeClasspath)
@@ -74,13 +68,19 @@ tasks{
         description = "Compare match sets of queries from CSV. Expect environment variables: META,INPUT,OUTPUT,INSTANCEDIR,AI"
     }
 
-
+    register<JavaExec>("syntaxCheckVQL"){
+        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
+        dependsOn(mainRuntimeClasspath)
+        classpath(mainRuntimeClasspath)
+        mainClass.set("se.liu.ida.sas.pelab.text2vql.vql.SyntaxCheckVQL")
+        standardInput = System.`in`
+        group = "text2vql"
+        description = "Run syntax check on a database containing VQL queries"
+    }
     register<JavaExec>("validateVQL"){
         val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
         dependsOn(mainRuntimeClasspath)
         classpath(mainRuntimeClasspath)
-        //workingDir("../../results")
-        //environment("KEY","VALUE")
         mainClass.set("se.liu.ida.sas.pelab.text2vql.vql.ValidateWithVQL")
         standardInput = System.`in`
         group = "text2vql"

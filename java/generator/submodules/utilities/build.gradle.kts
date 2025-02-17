@@ -14,6 +14,7 @@ dependencies {
     compileOnly("org.eclipse.xtext:org.eclipse.xtext:2.36.0")
     implementation("org.eclipse.emf:org.eclipse.emf.codegen.ecore:2.39.0")
     implementation("org.apache.commons:commons-csv:1.13.0")
+    implementation("org.xerial:sqlite-jdbc:3.49.0.0")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

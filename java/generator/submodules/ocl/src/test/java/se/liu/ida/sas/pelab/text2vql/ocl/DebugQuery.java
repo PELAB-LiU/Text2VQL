@@ -5,14 +5,19 @@ import org.eclipse.ocl.OCL;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class DebugQuery {
     @Test
     public void debug(){
-        /*String query = """
+        String query = """
                 Segment.allInstances()->collect(segment | segment.length>0)
                 """;
+/*
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();

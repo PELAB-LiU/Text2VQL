@@ -1,0 +1,8 @@
+# Output of download_dataset.sh
+text2vql_metamodels.tar.gz
+ecore555/
+repo-atlanmod/
+repo-ecore-all/
+
+# Generated queries
+dataset.db

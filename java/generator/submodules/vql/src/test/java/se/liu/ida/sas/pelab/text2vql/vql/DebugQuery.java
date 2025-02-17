@@ -2,7 +2,6 @@ package se.liu.ida.sas.pelab.text2vql.vql;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -19,10 +18,8 @@ import org.eclipse.viatra.query.runtime.localsearch.matcher.integration.LocalSea
 import org.eclipse.viatra.query.runtime.rete.matcher.ReteBackendFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import se.liu.ida.sas.pelab.text2vql.utilities.RailwayLoader;
-import se.liu.ida.sas.pelab.text2vql.utilities.RailwayRuntimePackageHelper;
+import se.liu.ida.sas.pelab.text2vql.utilities.modeling.RailwayRuntimePackageHelper;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 public class DebugQuery {
@@ -68,7 +65,7 @@ public class DebugQuery {
         var segment1 = railway.make("Segment");
         var segment2 = railway.make("Segment");
 
-        railway.set(container, "regions", region);
+        railway.add(container, "regions", region);
         railway.add(region, "elements", segment1);
         railway.add(region, "elements", segment2);
 
