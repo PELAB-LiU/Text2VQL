@@ -16,6 +16,28 @@ public class PackageHelper {
         EClass cls = (EClass) epackage.getEClassifier(eClass);
         return factory.create(cls);
     }
+
+    public EObject make(EObject parent, String relation, String eClass){
+        EClass cls = (EClass) epackage.getEClassifier(eClass);
+        EObject instance = factory.create(cls);
+        link(parent, relation, instance);
+        return instance;
+    }
+
+    public Object makeEnum(String eEnum){
+        String[] data = eEnum.split("::", 2);
+        EEnum etype = (EEnum) epackage.getEClassifier(data[0]);
+        return factory.createFromString(etype, data[1]);
+    }
+
+    public Object makeEnum(EObject parent, String relation, String eEnum){
+        String[] data = eEnum.split("::", 2);
+        EEnum etype = (EEnum) epackage.getEClassifier(data[0]);
+        Object value = factory.createFromString(etype, data[1]);
+        link(parent, relation, value);
+        return value;
+    }
+
     public <T> void link(EObject object, String feature, T value){
         EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
         if(object.eGet(relation) instanceof EList list){

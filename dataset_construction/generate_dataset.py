@@ -7,7 +7,7 @@ import openai
 import pandas as pd
 from tqdm import tqdm
 
-from seed_metamodels.seed_sample_yakindu import SEED_METAMODEL, OR_PAIRS, NORMAL_PAIRS, FIND_PAIRS, TYPE_PAIRS, \
+from seed.seed_sample_yakindu import SEED_METAMODEL, OR_PAIRS, NORMAL_PAIRS, FIND_PAIRS, TYPE_PAIRS, \
     NOT_PAIRS, AGG_PAIRS
 from text2vql.postprocessor import postprocess_nl_queries
 from text2vql.template import get_formatted_nl_query, get_instruction_nl_queries
