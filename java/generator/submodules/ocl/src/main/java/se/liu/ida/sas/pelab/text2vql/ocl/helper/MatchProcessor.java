@@ -41,7 +41,12 @@ public class MatchProcessor {
             });
             return data;
         } else {
-            throw new ContainerException(container);
+            /**
+             * Try to resolve container as a single value.
+             */
+            System.out.println("Single value (Default resolution)");
+            data.add(processData(container));
+            return data;
         }
     }
     public String processData(Object data){
@@ -65,7 +70,10 @@ public class MatchProcessor {
         } else if (data instanceof Boolean bool){
             System.out.println("\t"+bool.toString());
             return bool.toString();
-        }{
+        } else if (data instanceof Integer integer) {
+            System.out.println("\t"+integer.toString());
+            return integer.toString();
+        } else {
             throw new DataException(data);
         }
     }
