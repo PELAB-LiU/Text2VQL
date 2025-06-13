@@ -29,6 +29,7 @@ public class MatchProcessor {
         if(container instanceof Bag<?> bag){
             System.out.println("#Bag: "+bag.size());
             bag.forEach(t -> {
+                System.out.print("\t-->"+t);
                 String result = processData(t);
                 data.add(result);
             });
@@ -40,11 +41,18 @@ public class MatchProcessor {
                 data.add(result);
             });
             return data;
+        } else if (container instanceof ArrayList<?> list) {
+            System.out.println("#Set: "+list.size());
+            list.forEach(t -> {
+                String result = processData(t);
+                data.add(result);
+            });
+            return data;
         } else {
             /**
              * Try to resolve container as a single value.
              */
-            System.out.println("Single value (Default resolution)");
+            System.out.println("Single value (Default resolution) for type "+data.getClass().getSimpleName());
             data.add(processData(container));
             return data;
         }

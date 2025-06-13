@@ -1,4 +1,4 @@
-id,train_benchmark,nl,construct_vql,header_vql,truth_vql,construct_epl,header_epl,truth_epl,construct_ocl,header_ocl,truth_ocl,
+id,train_benchmark,nl,construct_vql,header_vql,truth_vql,construct_epl,header_epl,truth_epl,construct_ocl,header_ocl,truth_ocl,notes
 0,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,find,pattern goRouteMisalignedSwitch(route: Route){,"pattern goRouteMisalignedSwitch(route: Route){
  find goRoute(route);
  Route.follows(route, swP);
@@ -81,7 +81,7 @@ pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, se
     Semaphore.signal(semaphore, Signal::GO);
 } or {
     Semaphore.signal(semaphore, Signal::STOP);
-}",,,,,Tuple(semaphore: Semaphore),Semaphore.allInstances() -> select(semaphore | semaphore.signal = Signal::GO or semaphore.signal = Signal::STOP),
+}",,,,,,Semaphore.allInstances() -> select(semaphore | semaphore.signal = Signal::GO or semaphore.signal = Signal::STOP),
 3,,TrackElements that are either connected or monitored by the same sensor.,or,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
     TrackElement.monitoredBy(track1, sensor);
     TrackElement.monitoredBy(track2, sensor);
@@ -107,10 +107,8 @@ pattern hasSensor(sw : Switch){
   do {
     sw.println('SwitchMonitored: ');
   }
-}",,Tuple(sw: Switch),"Switch.allInstances()->select(
+}",,,"Switch.allInstances()->select(
 	sw | sw.monitoredBy->isEmpty()
-)->collect(
-	sw | Tuple{sw = sw}
 )",
 5,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,neg,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
     Route.follows(route, swP);
@@ -155,20 +153,20 @@ pattern segmentLength(segment: Segment, length: java Integer){
 }
 pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
     TrackElement.monitoredBy(track, sensor);
-}",,,,,Tuple(track: TrackElement), TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2),"Check if EMF allows duplicates in links, like monitoredBy has the same sensor multiple times. (VIATRA and OCL is expected to behave differently. Decide on how to proceed.) Answer: No, this is not relevant."
+}",,,,,, TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2),"Check if EMF allows duplicates in links, like monitoredBy has the same sensor multiple times. (VIATRA and OCL is expected to behave differently. Decide on how to proceed.) Answer: No, this is not relevant."
 8,,RailwayElements that are either Switches or SwitchPositions.,type,pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
     Switch(raliway);
 } or {
     SwitchPosition(raliway);
-}",,,,,Tuple(raliway: RailwayElement),,
+}",,,,,,RailwayElement.allInstances()->select(element | element.oclIsTypeOf(Switch) or element.oclIsTypeOf(SwitchPosition)),
 9,,Railway elements that are Switches.,type,pattern switchRailwayElements(railway: RailwayElement){,"pattern switchRailwayElements(railway: RailwayElement){
     Switch(railway);
-}",,,,,Tuple(railway: RailwayElement),,
+}",,,,,,RailwayElement.allInstances()->select(element | element.oclIsTypeOf(Switch)),
 10,,Active routes with entry GO semaphore.,normal,pattern goActiveRoute(route: Route){,"pattern goActiveRoute(route: Route){
     Route.active(route,true);
     Route.entry(route, semaphore);
     Semaphore.signal(semaphore, Signal::GO);    
-}",,,,,Tuple(route: Route),,
+}",,,,,,Route.allInstances()->select(route | route.active and route.entry.signal = Signal::GO),
 11,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,Retrieve all segments whose lengths are less or equal than zero.,normal,pattern posLength(segment : Segment){,"pattern posLength(segment : Segment){
     Segment.length(segment, length);
     check(length <= 0);
@@ -178,17 +176,15 @@ pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
   do {
     segment.println('PosLength: ');
   }
-}",,Tuple(segment: Segment),"Segment.allInstances()->select(
+}",,,"Segment.allInstances()->select(
 	segment | segment.length <= 0
-)->collect(
-	segment | Tuple{segment = segment}
 )",
 12,,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,normal,pattern misalignedSwitchPosition(swP : SwitchPosition){,"pattern misalignedSwitchPosition(swP : SwitchPosition){
     SwitchPosition.target(swP, sw);
     SwitchPosition.position(swP, swpPosition);
     Switch.currentPosition(sw, swCurrentPosition);
     swpPosition != swCurrentPosition;
-}",,,,,Tuple(swP : SwitchPosition),,
+}",,,,,Tuple(swP : SwitchPosition),SwitchPosition.allInstances()->select(wsp | wsp.position <> wsp.target.currentPosition),"In OCL, there seems to be an issue with null safety when a chain of relation is null at some point. Evaluation criteria might need to be adjusted."
 13,,"Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.",mix,pattern bigRegion(region: Region){,"pattern bigRegion(region: Region){
     length == sum find trackLengthInRegion(region, _,#);
     check(length >= 50);
@@ -202,13 +198,21 @@ pattern trackLengthInRegion(region: Region, track: Segment, length: EInt){
 }
 pattern sensorInRegion(region:Region, sensor: Sensor){
     Region.sensors(region,sensor);
-}",,,,,Tuple(region: Region),,
+}",,,,,,"Region.allInstances()->select(region | 
+    region.elements->select(e | e.oclIsTypeOf(Segment))
+                     ->collect(e | e.oclAsType(Segment).length)
+                     ->sum() >= 50 
+    or region.sensors->size() >= 10
+)",
 14,,Segments that are at least 7 units long or are switches.,mix,pattern sevenSegmentOrSwitch(track: TrackElement){,"pattern sevenSegmentOrSwitch(track: TrackElement){
     Switch(track);
 } or {
     Segment.length(track, length);
     check(length >= 7);
-}",,,,,Tuple(track: TrackElement),,
+}",,,,,,"TrackElement.allInstances()->select(element | 
+    element.oclIsTypeOf(Switch) or
+    (element.oclIsTypeOf(Segment) and element.oclAsType(Segment).length >= 7)
+)",
 15,,Active route whose entry is a GO semaphore but not monitored by any sensor.,mix,pattern dangerousRoute(route: Route){,"pattern dangerousRoute(route: Route){
         find activeRouteWithGO(route);
         neg find routeMonitroedBy(route,_);
@@ -220,7 +224,9 @@ pattern activeRouteWithGO(route: Route){
     Route.active(route, true);
     Route.entry(route, entry);
     Semaphore.signal(entry, ::GO);
-}",,,,,Tuple(route: Route),,
+}",,,,,,"Route.allInstances()->select(route | 
+    route.active and route.entry.signal = Signal::GO and route.requires->isEmpty()
+)",Fix NL specification
 16,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"Two different routes where the exit semaphore of a route is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.",neg,"pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
        Route.exit(route1, semaphore);
 	Route.requires(route1, sensor1);

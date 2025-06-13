@@ -19,16 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-public class TestMonitoredBy2 {
+public class TestSwitchOrSWPosition {
     private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
 
     String query = """
-TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
+RailwayElement.allInstances()->select(element | element.oclIsTypeOf(Switch) or element.oclIsTypeOf(SwitchPosition))
             """;
 
     @Test
-    public void testLength() throws ParserException {
+    public void test() throws ParserException {
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
@@ -41,54 +41,20 @@ TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
         //EObject sema = (EObject) getEObject(model, "regions", "elements", "semaphores");
-        assertEquals(1, matches.size());
+        assertEquals(2, matches.size());
         //assertEquals(matches.get(0), "@"+Integer.toHexString(sema.hashCode()));
     }
     private EObject makeModel1(){
         var container = packageHelper.make("RailwayContainer");
+        var route = packageHelper.make(container, "routes", "Route");
         var region = packageHelper.make(container, "regions", "Region");
         var segment1 = packageHelper.make(region, "elements","Segment");
-        var segment2 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        var sensor2 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor2);
-
-        packageHelper.link(segment2, "monitoredBy", sensor1);
+        var sw = packageHelper.make(region, "elements","Switch");
+        var swp = packageHelper.make(route, "follows", "SwitchPosition");
         
         return container;
     }
 
-    /**
-     * Check if EMF allos duplicates in reference lists.
-     * (If yes, it would allow a mismatch between VQL and OCL truth.)
-     * Answer: Seemingly no.
-     */
-    @Test
-    public void testSameSensor() throws ParserException {
-        EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
-        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
-        OCLHelper helper = ocl.createOCLHelper();
-        helper.setContext(packageHelper.epackage.getEClassifier("RailwayContainer"));
-        OCLExpression expression = helper.createQuery(query);
-        //Object expression = helper.defineOperation(query);
-        var OCLquery = ocl.createQuery(expression);
-        
-        EObject model = makeModel2();
-        Object result = OCLquery.evaluate(model);
-        List<String> matches = matchProcessor.processContainer(result);
-        assertEquals(0, matches.size());
-    }
-    private EObject makeModel2(){
-        var container = packageHelper.make("RailwayContainer");
-        var region = packageHelper.make(container, "regions", "Region");
-        var segment1 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        
-        return container;
-    }
 
     
 

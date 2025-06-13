@@ -19,16 +19,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-public class TestMonitoredBy2 {
+public class TestBigRegion {
     private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
 
     String query = """
-TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
+Region.allInstances()->select(region | 
+    region.elements->select(e | e.oclIsTypeOf(Segment))
+                     ->collect(e | e.oclAsType(Segment).length)
+                     ->sum() >= 50 
+    or region.sensors->size() >= 10
+)
             """;
 
     @Test
-    public void testLength() throws ParserException {
+    public void test1() throws ParserException {
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
@@ -37,35 +42,16 @@ TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
         //Object expression = helper.defineOperation(query);
         var OCLquery = ocl.createQuery(expression);
         
-        EObject model = makeModel1();
+        EObject model = makeModel1(2, 1, 3, 25, 30, -1);
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
-        //EObject sema = (EObject) getEObject(model, "regions", "elements", "semaphores");
         assertEquals(1, matches.size());
-        //assertEquals(matches.get(0), "@"+Integer.toHexString(sema.hashCode()));
-    }
-    private EObject makeModel1(){
-        var container = packageHelper.make("RailwayContainer");
-        var region = packageHelper.make(container, "regions", "Region");
-        var segment1 = packageHelper.make(region, "elements","Segment");
-        var segment2 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        var sensor2 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor2);
-
-        packageHelper.link(segment2, "monitoredBy", sensor1);
-        
-        return container;
+        EObject swp = (EObject) getEObject(model, "regions");
+        assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
     }
 
-    /**
-     * Check if EMF allos duplicates in reference lists.
-     * (If yes, it would allow a mismatch between VQL and OCL truth.)
-     * Answer: Seemingly no.
-     */
     @Test
-    public void testSameSensor() throws ParserException {
+    public void test2() throws ParserException {
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
@@ -74,21 +60,65 @@ TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
         //Object expression = helper.defineOperation(query);
         var OCLquery = ocl.createQuery(expression);
         
-        EObject model = makeModel2();
+        EObject model = makeModel1(10, 1, 3);
+        Object result = OCLquery.evaluate(model);
+        List<String> matches = matchProcessor.processContainer(result);
+        assertEquals(1, matches.size());
+        EObject swp = (EObject) getEObject(model, "regions");
+        assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
+    }
+
+    @Test
+    public void test3() throws ParserException {
+        EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
+        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
+        OCLHelper helper = ocl.createOCLHelper();
+        helper.setContext(packageHelper.epackage.getEClassifier("RailwayContainer"));
+        OCLExpression expression = helper.createQuery(query);
+        //Object expression = helper.defineOperation(query);
+        var OCLquery = ocl.createQuery(expression);
+        
+        EObject model = makeModel1(2, 1, 3);
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
         assertEquals(0, matches.size());
+        //EObject swp = (EObject) getEObject(model, "regions");
+        //assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
     }
-    private EObject makeModel2(){
+
+    @Test
+    public void test4() throws ParserException {
+        EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
+        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
+        OCLHelper helper = ocl.createOCLHelper();
+        helper.setContext(packageHelper.epackage.getEClassifier("RailwayContainer"));
+        OCLExpression expression = helper.createQuery(query);
+        //Object expression = helper.defineOperation(query);
+        var OCLquery = ocl.createQuery(expression);
+        
+        EObject model = makeModel1(2);
+        Object result = OCLquery.evaluate(model);
+        List<String> matches = matchProcessor.processContainer(result);
+        assertEquals(0, matches.size());
+        //EObject swp = (EObject) getEObject(model, "regions");
+        //assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
+    }
+
+    private EObject makeModel1(int sensors, int... lengths){
         var container = packageHelper.make("RailwayContainer");
         var region = packageHelper.make(container, "regions", "Region");
-        var segment1 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        
+
+        for(int i=0; i<sensors; i++){
+            packageHelper.make(region, "sensors", "Sensor");
+        }
+        for(int length : lengths){
+            var segment = packageHelper.make(region, "elements", "Segment");
+            packageHelper.set(segment, "length", length);
+        }
+
         return container;
     }
+
 
     
 

@@ -19,16 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-public class TestMonitoredBy2 {
+public class TestDangeriousRoute {
     private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
 
     String query = """
-TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
+Route.allInstances()->select(route | 
+    route.active and route.entry.signal = Signal::GO and route.requires->isEmpty()
+)
             """;
 
     @Test
-    public void testLength() throws ParserException {
+    public void test1() throws ParserException {
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
@@ -37,35 +39,16 @@ TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
         //Object expression = helper.defineOperation(query);
         var OCLquery = ocl.createQuery(expression);
         
-        EObject model = makeModel1();
+        EObject model = makeModel1(true, "Go", false);
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
-        //EObject sema = (EObject) getEObject(model, "regions", "elements", "semaphores");
         assertEquals(1, matches.size());
-        //assertEquals(matches.get(0), "@"+Integer.toHexString(sema.hashCode()));
-    }
-    private EObject makeModel1(){
-        var container = packageHelper.make("RailwayContainer");
-        var region = packageHelper.make(container, "regions", "Region");
-        var segment1 = packageHelper.make(region, "elements","Segment");
-        var segment2 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        var sensor2 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor2);
-
-        packageHelper.link(segment2, "monitoredBy", sensor1);
-        
-        return container;
+        EObject swp = (EObject) getEObject(model, "routes");
+        assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
     }
 
-    /**
-     * Check if EMF allos duplicates in reference lists.
-     * (If yes, it would allow a mismatch between VQL and OCL truth.)
-     * Answer: Seemingly no.
-     */
     @Test
-    public void testSameSensor() throws ParserException {
+    public void test2() throws ParserException {
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
@@ -74,21 +57,32 @@ TrackElement.allInstances()->select(track | track.monitoredBy->size()>=2)
         //Object expression = helper.defineOperation(query);
         var OCLquery = ocl.createQuery(expression);
         
-        EObject model = makeModel2();
+        EObject model = makeModel1(true, "Go", true);
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
         assertEquals(0, matches.size());
+        //EObject swp = (EObject) getEObject(model, "routes");
+        //assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
     }
-    private EObject makeModel2(){
+
+    private EObject makeModel1(boolean active, String signal, boolean sensor){
         var container = packageHelper.make("RailwayContainer");
         var region = packageHelper.make(container, "regions", "Region");
-        var segment1 = packageHelper.make(region, "elements","Segment");
-        var sensor1 = packageHelper.make(region, "sensors","Sensor");
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        packageHelper.link(segment1, "monitoredBy", sensor1);
-        
+        var segment = packageHelper.make(region, "elements", "Segment");
+        var sema = packageHelper.make(segment, "semaphores", "Semaphore");
+        var route = packageHelper.make(container, "routes", "Route");
+        packageHelper.link(route, "entry", sema);
+
+        packageHelper.link(route, "active", active);
+        packageHelper.makeEnum(sema, "signal", "Signal::"+signal.toUpperCase());
+        if(sensor){
+            var s = packageHelper.make(region, "sensors", "Sensor");
+            packageHelper.link(route, "requires", s);
+        }
+
         return container;
     }
+
 
     
 
