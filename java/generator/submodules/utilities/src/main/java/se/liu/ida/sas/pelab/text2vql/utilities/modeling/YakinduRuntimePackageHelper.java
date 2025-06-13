@@ -15,7 +15,7 @@ public class YakinduRuntimePackageHelper extends PackageHelper{
         var resourceSet = new ResourceSetImpl();
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
                 "ecore", new EcoreResourceFactoryImpl());
-        Resource meta = resourceSet.getResource(URI.createFileURI("/config/text2vql/dataset_construction/seed/yakindu_simplified.ecore"),true);
+        Resource meta = resourceSet.getResource(URI.createFileURI("../../../../dataset_construction/seed/yakindu_simplified.ecore"),true);
         return (EPackage) meta.getContents().getFirst();
     }
 }
