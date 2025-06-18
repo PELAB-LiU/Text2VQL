@@ -66,6 +66,7 @@ public class DebugQuery extends StandaloneApplication {
                 
                 context Statechart
                 def: foo() : Bag(Tuple(s : State)) =
+
                 Vertex.allInstances()->select(state | state.oclIsTypeOf(Entry) or state.oclIsTypeOf(FinalState))->collect(state | Tuple{s=state})
 
                 

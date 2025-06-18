@@ -48,7 +48,7 @@ TrackElement.allInstances()->collect(te1 |
         Object result = OCLquery.evaluate(model);
         List<String> matches = matchProcessor.processContainer(result);
         //EObject sema = (EObject) getEObject(model, "regions", "elements", "semaphores");
-        //assertEquals(1, matches.size());
+        assertEquals(1, matches.size());
         //assertEquals(matches.get(0), "@"+Integer.toHexString(sema.hashCode()));
     }
     private EObject makeModel1(){

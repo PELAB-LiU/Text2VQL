@@ -12,13 +12,16 @@ import org.junit.jupiter.api.Test;
 
 import se.liu.ida.sas.pelab.text2vql.epl.truth.railway.util.Util;
 
-public class Test4SwitchNotMonitored extends Util{
+
+
+public class Test9Switch extends Util{
 private String query = 
 """
-pattern SwitchMonitored
-  sw : Switch from: Switch.all.select(sw|sw.monitoredBy.size = 0) {
+pattern SwitchOrSwitchPositionRailwayElement
+    sw: RailwayElement from: Switch.all {
 }
 """;
+
     @Test
     public void test0() throws Exception{
         var module = new EplModule();
@@ -42,11 +45,7 @@ pattern SwitchMonitored
         var container = make("RailwayContainer");
         resource.getContents().add(container);
         var region = make(container, "regions", "Region");
-        var segment = make(region, "elements","Segment");
-        var sw = make(region, "elements","Switch");
-        var sw2 = make(region, "elements","Switch");
-        var sensor = make(region, "sensors", "Sensor");
-        link(sw2, "monitoredBy", sensor);
+        var sw = make(region, "elements", "Switch");
         
         return resource;
     }

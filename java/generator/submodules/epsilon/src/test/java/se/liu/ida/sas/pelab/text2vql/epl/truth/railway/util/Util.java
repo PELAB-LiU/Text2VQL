@@ -7,6 +7,9 @@ import java.util.regex.Matcher;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.epsilon.epl.execute.PatternMatch;
 import org.eclipse.epsilon.epl.execute.model.PatternMatchModel;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,9 +45,18 @@ public class Util {
     protected EObject make(EObject parent, String relation, String eclass){
         return packageHelper.make(parent, relation, eclass);
     }
+    protected <T> void link(EObject source, String relation, T value){
+        packageHelper.link(source, relation, value);
+    }
+
+    protected Resource makeEmpty(){
+        var resource = new ResourceImpl();
+        return resource;
+    }
 
     @BeforeAll
     static protected void configure(){
         EPackage.Registry.INSTANCE.put(packageHelper.epackage.getNsURI(), packageHelper.epackage);
+        EPackage.Registry.INSTANCE.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
     }
 }
