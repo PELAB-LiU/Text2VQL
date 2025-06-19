@@ -17,7 +17,7 @@ private String query =
 pattern GoRoute
     route: Route from : Route.all.select(rt |  rt.entry.signal == Signal#GO) {
     
-    match: (route.active) and 
+    match: (route.`active`) and 
         route.follows->exists(swP | swP.position != swP.target.currentPosition)
 }
 """;

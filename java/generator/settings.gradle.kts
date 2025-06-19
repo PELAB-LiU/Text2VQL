@@ -7,6 +7,7 @@ include(
         "epsilon",
         "ocl",
         "vql",
+        "acceleo",
         "utilities"
 )
 for (project in rootProject.children) {

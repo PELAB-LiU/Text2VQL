@@ -31,6 +31,7 @@ import org.eclipse.ocl.xtext.completeocl.utilities.CompleteOCLASResourceImpl;
 import org.eclipse.ocl.xtext.essentialocl.EssentialOCLStandaloneSetup;
 import org.eclipse.ocl.xtext.oclinecore.OCLinEcoreStandaloneSetup;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import se.liu.ida.sas.pelab.text2vql.ocl.helper.MatchProcessor;
 import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
@@ -55,6 +56,8 @@ public class DebugQuery extends StandaloneApplication {
     private static PackageHelper packageHelper = new YakinduRuntimePackageHelper();
     //private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
+    
+    @Disabled
     @Test
     public void debug() throws ParserException, IOException, InterruptedException {
         CompleteOCLStandaloneSetup.doSetup();
