@@ -41,7 +41,8 @@ import se.liu.ida.sas.pelab.text2vql.utilities.modeling.YakinduRuntimePackageHel
 import se.liu.ida.sas.pelab.text2vql.utilities.syntax.SyntaxChecker;
 
 //import org.eclipse.ocl.pivot.utilities.OCL;
-import org.eclipse.ocl.ecore.OCL;
+//import org.eclipse.ocl.ecore.OCL;
+import org.eclipse.ocl.OCL;
 import org.eclipse.ocl.examples.standalone.StandaloneApplication;
 
 import java.io.BufferedWriter;
@@ -57,7 +58,7 @@ public class DebugQuery extends StandaloneApplication {
     //private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
     
-    @Disabled
+    //@Disabled
     @Test
     public void debug() throws ParserException, IOException, InterruptedException {
         CompleteOCLStandaloneSetup.doSetup();
@@ -68,7 +69,7 @@ public class DebugQuery extends StandaloneApplication {
                 -- import 'http://www.example.org/yakindu'
                 
                 context Statechart
-                def: foo() : Bag(Tuple(s : State)) =
+                foo() : Bag(Tuple(s : State)) =
 
                 Vertex.allInstances()->select(state | state.oclIsTypeOf(Entry) or state.oclIsTypeOf(FinalState))->collect(state | Tuple{s=state})
 
@@ -82,16 +83,20 @@ public class DebugQuery extends StandaloneApplication {
           // *.ocl
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         Environment environment = environmentFactory.createEnvironment();
-        environment.getUMLReflection().getClass();
-        OCL ocl = OCL.newInstance();
+        //environment.getUMLReflection().getClass();
+        //OCL ocl = OCL.newInstance();
+        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         //ocl.getResourceSet().getPackageRegistry().put(packageHelper.epackage.getNsURI(), packageHelper.epackage);
         
+        OCLHelper helper = ocl.createOCLHelper();
+
+        Object foo = helper.defineOperation(query);
         //ocl.parse
         //var uri = tmpFile(query);
-        var uri = tmpFIS(query);
+        /*var uri = tmpFIS(query);
         System.out.println("Foo "+uri);
         var foo = ocl.parse(new OCLInput(uri));
-        System.out.println(foo);
+        System.out.println(foo);*/
         if(foo instanceof CompleteOCLASResourceImpl valami){
             System.out.println("Errors="+valami.getErrors().size());
             valami.getErrors().forEach(System.out::println);

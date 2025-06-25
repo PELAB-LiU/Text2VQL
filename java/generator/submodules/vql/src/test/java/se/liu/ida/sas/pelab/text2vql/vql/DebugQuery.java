@@ -20,10 +20,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.liu.ida.sas.pelab.text2vql.utilities.modeling.RailwayRuntimePackageHelper;
+import se.liu.ida.sas.pelab.text2vql.utilities.modeling.YakinduRuntimePackageHelper;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 public class DebugQuery {
     private static RailwayRuntimePackageHelper railway;
+    private static YakinduRuntimePackageHelper yakindu;
     private AdvancedViatraQueryEngine engine;
     private ResourceSet resources;
 
@@ -31,13 +33,13 @@ public class DebugQuery {
     @Test
     public void debug(){
         String query = """
-                import "railway"
+                import "hu.bme.mit.inf.yakindumm"
                 import "http://www.eclipse.org/emf/2002/Ecore"
                 
-                pattern positive(s1: Segment){
-                    Segment.length(s1,l);
-                    check(l>=0);
-                }
+                pattern atLeast5Entries(){
+                            cnt == count Entry(_);
+                            check(cnt>=5);
+                        }
                 """;
         PatternParsingResults result = PatternParserBuilder.instance().parse(query);
 
@@ -103,5 +105,7 @@ public class DebugQuery {
         Resource meta = resourceSet.getResource(ResourcesHelper.emfURI("railway/railway.ecore"),true);
         railway = new RailwayRuntimePackageHelper((EPackage) meta.getContents().getFirst());
         EPackage.Registry.INSTANCE.put(railway.railway.getNsURI(), railway.railway);
+        yakindu = new YakinduRuntimePackageHelper();
+        EPackage.Registry.INSTANCE.put(yakindu.epackage.getNsURI(), yakindu.epackage);
     }
 }
