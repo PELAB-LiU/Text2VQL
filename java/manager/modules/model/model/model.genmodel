@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ASCII"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/model/src/main/emf-gen" copyrightFields="false">
+  <genPackages disposableProviderFactory="true">
+    <ecorePackage href="../model.ecore#/0"/>
+    <genDataTypes>
+      <ecoreDataType href="../model.ecore#/0/Boolean"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="../model.ecore#/0/Integer"/>
+    </genDataTypes>
+    <genDataTypes>
+      <ecoreDataType href="../model.ecore#/0/String"/>
+    </genDataTypes>
+  </genPackages>
+  <genPackages disposableProviderFactory="true">
+    <ecorePackage href="../model.ecore#/1"/>
+    <genClasses image="false">
+      <ecoreClass href="../model.ecore#/1/LocatedElement"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="../model.ecore#/1/LocatedElement/location"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="../model.ecore#/1/LocatedElement/commentsBefore"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="../model.ecore#/1/LocatedElement/commentsAfter"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Bibtex"/>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="../model.ecore#/1/Bibtex/entries"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="../model.ecore#/1/Entry"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="../model.ecore#/1/Entry/key"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="../model.ecore#/1/Entry/fields"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Article"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Book"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Inbook"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Booklet"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Inproceedings"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Proceedings"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Incollection"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Techreport"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/PhdThesis"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/MastersThesis"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Manual"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Misc"/>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="../model.ecore#/1/Field"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="../model.ecore#/1/Field/value"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Authors"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/AuthorUrls"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Title"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Journal"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/BookTitle"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Institution"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Organization"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Type"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Day"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Number"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Chapter"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Volume"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Series"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Pages"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Publisher"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Howpublished"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/School"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Editor"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Edition"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Address"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Year"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Month"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Note"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Text"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/AbstractField"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Isbn"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Issn"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Url"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="../model.ecore#/1/Doi"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

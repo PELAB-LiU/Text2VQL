@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ASCII"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightFields="false">
+  <genPackages disposableProviderFactory="true">
+    <ecorePackage href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#/"/>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Playlist"/>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Playlist/tracks"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Playlist/name"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Track"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Track/name"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI/schema"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI/authority"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI/path"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI/fragment_"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//URI/queries"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//User"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//User/username"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//User/password"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Host"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Host/port"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv4Host"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv4Host/b1"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv4Host/b2"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv4Host/b3"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv4Host/b4"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//IPv6Host"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//DNSHost"/>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Path"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Path/segment"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Authority"/>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Authority/user"/>
+      </genFeatures>
+      <genFeatures property="None" children="true" createChild="true">
+        <ecoreFeature xsi:type="ecore:EReference" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Authority/host"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses>
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Query"/>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Query/key"/>
+      </genFeatures>
+      <genFeatures createChild="false">
+        <ecoreFeature xsi:type="ecore:EAttribute" href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Query/value"/>
+      </genFeatures>
+    </genClasses>
+    <genClasses image="false">
+      <ecoreClass href="file:/C:/Apps/git/Text2VQL/java/manager/modules/model/model/playlist.ecore#//Location"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
