@@ -4,11 +4,8 @@ plugins {
 }
 include(
         //"refinery",
-        //"epsilon",
         "ocl",
         "vql",
-        //"acceleo",
-        "yamtl",
         "utilities"
 )
 for (project in rootProject.children) {
