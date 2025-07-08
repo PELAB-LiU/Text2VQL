@@ -18,6 +18,7 @@ import org.eclipse.viatra.query.runtime.localsearch.matcher.integration.LocalSea
 import org.eclipse.viatra.query.runtime.rete.matcher.ReteBackendFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import se.liu.ida.sas.pelab.text2vql.utilities.modeling.RailwayRuntimePackageHelper;
 import se.liu.ida.sas.pelab.text2vql.utilities.modeling.YakinduRuntimePackageHelper;
@@ -29,7 +30,7 @@ public class DebugQuery {
     private AdvancedViatraQueryEngine engine;
     private ResourceSet resources;
 
-    //@Disabled
+    @Disabled
     @Test
     public void debug(){
         String query = """

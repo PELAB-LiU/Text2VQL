@@ -1,0 +1,5 @@
+
+
+[query public getPublicProperties(class : uml::Class) : Set(uml::Property) =
+	class.attribute->select(property : uml::Property | property.visibility = uml::VisbilityKind::public)
+/]

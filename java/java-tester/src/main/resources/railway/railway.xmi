@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="railway">
+  <routes id="1"
+      requires="//@regions.0/@sensors.0 //@regions.0/@sensors.2"
+      entry="//@regions.0/@elements.0/@semaphores.0"
+      exit="//@regions.0/@elements.0/@semaphores.0"/>
+  <routes id="2"
+      requires="//@regions.0/@sensors.1 //@regions.0/@sensors.0"
+      entry="//@regions.0/@elements.1/@semaphores.0"
+      exit="//@regions.0/@elements.0/@semaphores.0"/>
+  <routes id="3"
+      requires="//@regions.0/@sensors.1 //@regions.0/@sensors.2"
+      entry="//@regions.0/@elements.1/@semaphores.0"
+      exit="//@regions.0/@elements.4/@semaphores.0"/>
+  <regions id="4">
+    <sensors
+        id="401"
+        monitors="//@regions.0/@elements.0 //@regions.0/@elements.5"/>
+    <sensors
+        id="402"
+        monitors="//@regions.0/@elements.1 //@regions.0/@elements.2"/>
+    <sensors
+        id="403"
+        monitors="//@regions.0/@elements.4"/>
+    <elements
+        xsi:type="Segment"
+        id="411"
+        length="5"
+        monitoredBy="//@regions.0/@sensors.0"
+        connectsTo="//@regions.0/@elements.1">
+      <semaphores
+          id="4112"/>
+    </elements>
+    <elements
+        xsi:type="Segment"
+        id="412"
+        length="0"
+        monitoredBy="//@regions.0/@sensors.1">
+      <semaphores
+          id="4121"/>
+    </elements>
+    <elements
+        xsi:type="Switch"
+        id="421"
+        monitoredBy="//@regions.0/@sensors.1"
+        connectsTo="//@regions.0/@elements.3"/>
+    <elements
+        xsi:type="Switch"
+        id="422"/>
+    <elements
+        xsi:type="Segment"
+        id="431"
+        length="-3"
+        monitoredBy="//@regions.0/@sensors.2"
+        connectsTo="//@regions.0/@elements.5">
+      <semaphores
+          id="4311"/>
+    </elements>
+    <elements
+        xsi:type="Switch"
+        id="432"
+        monitoredBy="//@regions.0/@sensors.0"/>
+  </regions>
+</RailwayContainer>

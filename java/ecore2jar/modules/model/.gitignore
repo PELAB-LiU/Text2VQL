@@ -1,0 +1,3 @@
+target/
+src/main/emf-gen/
+model/model.ecore

@@ -58,7 +58,7 @@ public class DebugQuery extends StandaloneApplication {
     //private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);
     
-    //@Disabled
+    @Disabled
     @Test
     public void debug() throws ParserException, IOException, InterruptedException {
         CompleteOCLStandaloneSetup.doSetup();

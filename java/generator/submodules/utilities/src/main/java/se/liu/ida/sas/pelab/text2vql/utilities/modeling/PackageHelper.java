@@ -2,14 +2,22 @@ package se.liu.ida.sas.pelab.text2vql.utilities.modeling;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 
 public class PackageHelper {
+    public final Resource resource;
     public final EPackage epackage;
     public final EFactory factory;
 
     public PackageHelper(EPackage epackage){
+        this(epackage, (Resource) epackage.eResource());
+    }
+    public PackageHelper(EPackage epackage, Resource resource){
         this.epackage = epackage;
+        this.resource = resource;
         factory = epackage.getEFactoryInstance();
+        
     }
 
     public EObject make(String eClass){

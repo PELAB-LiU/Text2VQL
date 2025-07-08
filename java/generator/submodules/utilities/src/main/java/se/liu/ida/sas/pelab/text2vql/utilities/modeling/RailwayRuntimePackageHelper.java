@@ -36,6 +36,7 @@ public class RailwayRuntimePackageHelper  extends PackageHelper{
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
                 "ecore", new EcoreResourceFactoryImpl());
         Resource meta = resourceSet.getResource(ResourcesHelper.emfURI("railway/railway.ecore"),true);
+        
         return (EPackage) meta.getContents().getFirst();
     }
 }

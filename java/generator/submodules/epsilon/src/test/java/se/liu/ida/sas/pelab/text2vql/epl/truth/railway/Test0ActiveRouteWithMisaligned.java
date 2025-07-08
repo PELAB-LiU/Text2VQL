@@ -26,7 +26,7 @@ pattern GoRoute
         var module = new EplModule();
         System.out.println(module.parse(query));
         module.getParseProblems().forEach(System.out::println);
-
+        
         var instance = new InMemoryEmfModel(makeEmpty());
         instance.setMetamodelFile("C:\\Apps\\git\\Text2VQL\\java\\generator\\submodules\\utilities\\src\\main\\resources\\railway\\railway.ecore");
         instance.load();

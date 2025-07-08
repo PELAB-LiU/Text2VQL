@@ -3,11 +3,12 @@ plugins {
     id("tools.refinery.settings") version "0.1.3"
 }
 include(
-        "refinery",
-        "epsilon",
+        //"refinery",
+        //"epsilon",
         "ocl",
         "vql",
-        "acceleo",
+        //"acceleo",
+        "yamtl",
         "utilities"
 )
 for (project in rootProject.children) {

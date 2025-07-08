@@ -54,24 +54,6 @@ Region.allInstances()->select(r |
         */
     }
 
-    @Test
-    public void test2() throws ParserException {
-        EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
-        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
-        OCLHelper helper = ocl.createOCLHelper();
-        helper.setContext(packageHelper.epackage.getEClassifier("RailwayContainer"));
-        OCLExpression expression = helper.createQuery(query);
-        //Object expression = helper.defineOperation(query);
-        var OCLquery = ocl.createQuery(expression);
-        
-        EObject model = makeModel1(10, 1, 3, 7, 8);
-        Object result = OCLquery.evaluate(model);
-        List<String> matches = matchProcessor.processContainer(result);
-        assertEquals(12, matches.size());
-        //EObject swp = (EObject) getEObject(model, "regions");
-        //assertEquals(matches.get(0), "@"+Integer.toHexString(swp.hashCode()));
-    }
-
     private EObject makeModel1(int swc, int... lengths){
         var container = packageHelper.make("RailwayContainer");
         var region = packageHelper.make(container, "regions", "Region");

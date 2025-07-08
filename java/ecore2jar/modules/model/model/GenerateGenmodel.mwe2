@@ -1,0 +1,26 @@
+module se.liu.ida.sas.pelab.text2vql.ecore2jar.GeneratePlaylistModel
+
+import org.eclipse.emf.mwe2.runtime.workflow.Workflow
+import org.eclipse.emf.mwe.utils.StandaloneSetup
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
+
+
+var rootPath = "."
+var projectName = "model"
+
+Workflow {
+    bean = StandaloneSetup {
+        platformUri = "${rootPath}"
+        scanClassPath = true
+    }
+    component = DirectoryCleaner {
+		directory = "src/main/emf-gen"
+	}
+    component = EcoreGenerator {
+        genModel = "platform:/resource/${projectName}/model/gen/model.genmodel"
+		srcPath = "platform:/resource/${projectName}/src/main/emf-gen/"
+		generateModel = true
+    }
+}
+

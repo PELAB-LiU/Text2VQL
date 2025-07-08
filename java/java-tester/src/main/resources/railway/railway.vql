@@ -1,0 +1,37 @@
+import "http://www.eclipse.org/emf/2002/Ecore"
+import "railway"
+
+pattern goRouteMisalignedSwitch(route: Route){
+  Route(route);
+ find goRoute(route);
+ Route.follows(route, swP);
+ find misalignedSwitchPosition(swP);
+}
+
+pattern goRoute(route: Route){
+	Route.active(route,true);
+	Route.entry(route, semaphore);
+	Semaphore.signal(semaphore, Signal::GO);
+}
+
+pattern misalignedSwitchPosition(swP : SwitchPosition){
+	SwitchPosition.target(swP, sw);
+	SwitchPosition.position(swP, swpPosition);
+	Switch.currentPosition(sw, swCurrentPosition);
+	swpPosition != swCurrentPosition;
+}
+
+pattern bigRegion(region: Region){
+    length == sum find trackLengthInRegion(region, _,#);
+    check(length >= 50);
+} or {
+    cnt == count find sensorInRegion(region, _);
+    check(cnt >= 10);
+}
+pattern trackLengthInRegion(region: Region, track: Segment, length: EInt){
+    Region.elements(region,track);
+    Segment.length(track,length);
+}
+pattern sensorInRegion(region:Region, sensor: Sensor){
+    Region.sensors(region,sensor);
+}
