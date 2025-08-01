@@ -356,7 +356,7 @@ OCL_SEED = {
                         
                             private void collectEntryInRegion(EObject eObject, Set<Match> result) {
                                 if (eObject instanceof Region r) {
-                                    for (Vertex v : r.getVertices()) {
+                                    for (Vertex v : (EList<Vertex>) r.getVertices()) {
                                         if (v instanceof Entry e) {
                                             result.add(new Match(r, e));
                                         }
@@ -409,7 +409,7 @@ OCL_SEED = {
                             private void collectRegionWithSeveralEntries(EObject eObject, Set<Region> result) {
                                 if (eObject instanceof Region r) {
                                     int entryCount = 0;
-                                    for (Vertex v : r.getVertices()) {
+                                    for (Vertex v : (EList<Vertex>) r.getVertices()) {
                                         if (v instanceof Entry) {
                                             entryCount++;
                                             if (entryCount >= 2) {
@@ -705,8 +705,8 @@ OCL_SEED = {
                             private void collectRegionAndPseudostate(EObject eObject, Set<Vertex> result) {
                                 if (eObject instanceof Vertex vertex) {
                                     
-                                    Set<Transition> outgoingToPseudo = toPseudoState();
-                                    Set<Transition> incomingDifferentRegion = differentRegion();
+                                    Set<Transition> outgoingToPseudo = toPseudoState(eObject.eResource());
+                                    Set<Transition> incomingDifferentRegion = differentRegion(eObject.eResource());
                         
                                     outgoingToPseudo.retainAll(vertex.getOutgoingTransitions());
                                     incomingDifferentRegion.retainAll(vertex.getIncomingTransitions());
@@ -758,15 +758,13 @@ OCL_SEED = {
                                     Vertex source = transition.getSource();
                                     Vertex target = transition.getTarget();
 
-                                    if (source == null || target == null) {
-                                        return false;
-                                    }
+                                    if (source != null && target != null) {
+                                        Region region1 = findRegionContainingVertex(source);
+                                        Region region2 = findRegionContainingVertex(target);
 
-                                    Region region1 = findRegionContainingVertex(source);
-                                    Region region2 = findRegionContainingVertex(target);
-
-                                    if(region1 != null && region2 != null && !region1.equals(region2)){
-                                        result.add(transition)
+                                        if(region1 != null && region2 != null && !region1.equals(region2)){
+                                            result.add(transition);
+                                        }
                                     }
                                 }
 
@@ -784,7 +782,7 @@ OCL_SEED = {
             },
             {
                 "description": "All final states that have an incoming transition from a Pseudostate",
-                "_comment": "Chak for a get containing resource for calling other patterns",
+                "_comment": "Check for a get containing resource for calling other patterns",
                 "vql": {
                     "signature": "pattern regionWithPseudoToRegular(vertex: FinalState)",
                     "query": textwrap.dedent(
@@ -824,7 +822,7 @@ OCL_SEED = {
                     "query": textwrap.dedent(
                         """\
                         public class Query {
-                             public Set<FinalState> regionWithPseudoToRegular(Resource resource) {
+                            public Set<FinalState> regionWithPseudoToRegular(Resource resource) {
                                 Set<FinalState> result = new HashSet<>();
                         
                                 for (EObject root : resource.getContents()) {
@@ -836,8 +834,10 @@ OCL_SEED = {
                         
                             private void collectRegionWithPseudoToRegular(EObject eObject, Set<FinalState> result) {
                                 if (eObject instanceof FinalState finalState) {
+                                    Set<Transition> pseudoToRegular = pseudoToRegular(eObject.eResource());
+
                                     boolean matches = finalState.getIncomingTransitions().stream()
-                                        .anyMatch(t -> !pseudoToRegular(t).isEmpty());
+                                        .anyMatch(t -> pseudoToRegular.contains(t));
                         
                                     if (matches) {
                                         result.add(finalState);
@@ -849,7 +849,7 @@ OCL_SEED = {
                                 }
                             }
                         
-                            private void pseudoToRegular(Resource resource) {
+                            private Set<Transition> pseudoToRegular(Resource resource) {
                                 Set<Transition> result = new HashSet<>();
                         
                                 for (EObject root : resource.getContents()) {
@@ -901,6 +901,35 @@ OCL_SEED = {
                             r.vertices->size() >= 4
                         )
                         """)
+                },
+                "java": {
+                    "signature": "Set<Region>",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                                public Set<Region> regionWith4OrMoreVertices(Resource resource) {
+                                    Set<Region> result = new HashSet<>();
+                            
+                                    for (EObject root : resource.getContents()) {
+                                        collectRegionWith4OrMoreVertices(root, result);
+                                    }
+                            
+                                    return result;
+                                }
+                            
+                                private void collectRegionWith4OrMoreVertices(EObject eObject, Set<Region> result) {
+                                    if (eObject instanceof Region region) {
+                                        if (region.getVertices().size() >= 4) {
+                                            result.add(region);
+                                        }
+                                    }
+                            
+                                    for (EObject child : eObject.eContents()) {
+                                        collectRegionWith4OrMoreVertices(child, result);
+                                    }
+                                }
+                        }
+                        """)
                 }
             },
             {
@@ -923,6 +952,34 @@ OCL_SEED = {
                             v.outgoingTransitions->size() <= 3
                         )
                         """)
+                },
+                "java": {
+                    "signature": "Set<Vertex>",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public Set<Vertex> vertexWith3OrLessOutgoingTransitions(Resource resource) {
+                                Set<Vertex> result = new HashSet<>();
+                        
+                                for (EObject root : resource.getContents()) {
+                                    collectVertexWith3OrLessOutgoingTransitions(root, result);
+                                }
+                        
+                                return result;
+                            }
+                            
+                            private void collectVertexWith3OrLessOutgoingTransitions(EObject eObject, Set<Vertex> result) {
+                                if (eObject instanceof Vertex v) {
+                                    if (v.getOutgoingTransitions().size() <= 3) {
+                                        result.add(v);
+                                    }
+                                }                            
+                                for (EObject child : eObject.eContents()) {
+                                    collectVertexWith3OrLessOutgoingTransitions(child, result);
+                                }
+                            }
+                        }
+                        """)
                 }
             },
             {
@@ -941,6 +998,37 @@ OCL_SEED = {
                     "query": textwrap.dedent(
                         """\
                         State.allInstances()->size()
+                        """)
+                },
+                "java": {
+                    "signature": "int",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public int countStates(Resource resource) {
+                                int count = 0;
+                        
+                                for (EObject root : resource.getContents()) {
+                                    count += countStatesInEObject(root);
+                                }
+                        
+                                return count;
+                            }
+                        
+                            private int countStatesInEObject(EObject eObject) {
+                                int count = 0;
+                        
+                                if (eObject instanceof State) {
+                                    count++;
+                                }
+                        
+                                for (EObject child : eObject.eContents()) {
+                                    count += countStatesInEObject(child);
+                                }
+                        
+                                return count;
+                            }
+                        }
                         """)
                 }
             },
@@ -972,6 +1060,55 @@ OCL_SEED = {
                         let minlength : Integer = vertexToCount->collect(t | t.cnt)->min() in
                         vertexToCount->select(t | t.cnt = minlength)
                         """)
+                },
+                "java": {
+                    "signature": "Set<Match> where Match is a public static record Match(Vertex vertex, int minlength)",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public static record Match(Vertex vertex, int minlength) {}
+                        
+                            public static record CountIncomingMatch(Vertex vertex, int count) {}
+                        
+                            public Set<Match> vertexLeastIncoming(Resource resource) {
+                                Set<CountIncomingMatch> allVertices = countIncomingTransitions(resource);
+                                
+                                int minIncoming = allVertices.stream()
+                                        .mapToInt(CountIncomingMatch::count)
+                                        .min()
+                                        .orElse(0);
+                        
+                                Set<Match> result = new HashSet<>();
+                                for (CountIncomingMatch v : allVertices) {
+                                    if (v.count() == minIncoming) {
+                                        result.add(new Match(v.vertex(), minIncoming));
+                                    }
+                                }
+                        
+                                return result;
+                            }
+
+                            public Set<CountIncomingMatch> countIncomingTransitions(Resource resource) {
+                                Set<CountIncomingMatch> result = new HashSet<>();
+                        
+                                for (EObject root : resource.getContents()) {
+                                    collectCountIncomingTransitions(root, result);
+                                }
+                        
+                                return result;
+                            }
+                        
+                            private void collectCountIncomingTransitions(EObject eObject, Set<CountIncomingMatch> result) {
+                                if (eObject instanceof Vertex v) {
+                                    result.add(new CountIncomingMatch(v, v.getIncomingTransitions().size()));
+                                }
+
+                                for (EObject child : eObject.eContents()) {
+                                    collectCountIncomingTransitions(child, result);
+                                }
+                            }
+                        }
+                        """)
                 }
             },
             {
@@ -991,6 +1128,40 @@ OCL_SEED = {
                     "query": textwrap.dedent(
                         """\
                         Entry.allInstances()->size() >= 5
+                        """)
+                },
+                "java": {
+                    "signature": "boolean",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public boolean atLeast5Entries(Resource resource) {
+                                int count = 0;
+                        
+                                for (EObject root : resource.getContents()) {
+                                    count += countEntries(root);
+                                    if (count >= 5) {
+                                        return true;
+                                    }
+                                }
+                        
+                                return false;
+                            }
+                        
+                            private int countEntries(EObject eObject) {
+                                int count = 0;
+                        
+                                if (eObject instanceof Entry) {
+                                    count++;
+                                }
+                        
+                                for (EObject child : eObject.eContents()) {
+                                    count += countEntries(child);
+                                }
+                        
+                                return count;
+                            }
+                        }
                         """)
                 }
             }
@@ -1015,6 +1186,35 @@ OCL_SEED = {
                         """\
                         Entry.allInstances()->select(e | e.outgoingTransitions->isEmpty())
                         """)
+                },
+                "java": {
+                    "signature": "Set<Entry>",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public Set<Entry> entryWithoutOutgoingTransitions(Resource resource) {
+                                Set<Entry> result = new HashSet<>();
+                        
+                                for (EObject root : resource.getContents()) {
+                                    collectEntryWithoutOutgoing(root, result);
+                                }
+                        
+                                return result;
+                            }
+                        
+                            private void collectEntryWithoutOutgoing(EObject eObject, Set<Entry> result) {
+                                if (eObject instanceof Entry e) {
+                                    if (e.getOutgoingTransitions().isEmpty()) {
+                                        result.add(e);
+                                    }
+                                }
+                        
+                                for (EObject child : eObject.eContents()) {
+                                    collectEntryWithoutOutgoing(child, result);
+                                }
+                            }
+                        }
+                        """)
                 }
             },
             {
@@ -1035,6 +1235,35 @@ OCL_SEED = {
                         Region.allInstances()->select(r |
                             r.vertices->forAll(v | not v.oclIsKindOf(State))
                         )
+                        """)
+                },
+                "java": {
+                    "signature": "Set<Region>",
+                    "query": textwrap.dedent(
+                        """\
+                        public class Query {
+                            public Set<Region> noStateInRegion(Resource resource) {
+                                Set<Region> result = new HashSet<>();
+                        
+                                for (EObject root : resource.getContents()) {
+                                    collectNoStateInRegion(root, result);
+                                }
+                        
+                                return result;
+                            }
+                        
+                            private void collectNoStateInRegion(EObject eObject, Set<Region> result) {
+                                if (eObject instanceof Region r) {
+                                    if (r.getVertices().isEmpty()) {
+                                        result.add(r);
+                                    }
+                                }
+                        
+                                for (EObject child : eObject.eContents()) {
+                                    collectNoStateInRegion(child, result);
+                                }
+                            }
+                        }
                         """)
                 }
             },
