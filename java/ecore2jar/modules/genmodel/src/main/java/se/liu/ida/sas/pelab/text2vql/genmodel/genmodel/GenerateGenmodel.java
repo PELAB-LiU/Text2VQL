@@ -13,6 +13,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModelFactory;
+import org.eclipse.emf.codegen.ecore.genmodel.GenJDKLevel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -71,6 +72,7 @@ public class GenerateGenmodel extends AbstractMojo{
             meta.save(Map.of());
 
             GenModel genModel = GenModelFactory.eINSTANCE.createGenModel();
+            genModel.setComplianceLevel(GenJDKLevel.JDK60_LITERAL);
             genModel.setModelDirectory(modeldir);
             //genModel.initialize(Collections.singletonList(ePackage));
             System.out.println("Number of metamodels:"+list.size());
@@ -79,7 +81,7 @@ public class GenerateGenmodel extends AbstractMojo{
             if(basepackage!=null){
                 genPackage.setBasePackage(basepackage);
             }
-
+            
             Resource genModelResource = resourceSet.createResource(URI.createFileURI(target));
             genModelResource.getContents().add(genModel);
             genModelResource.save(Collections.emptyMap());

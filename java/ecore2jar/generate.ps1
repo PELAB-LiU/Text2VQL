@@ -19,8 +19,12 @@ if (-not (Test-Path -Path $INPUT_DIR -PathType Container)) {
 $OUTPUT_DIR = "domains"
 New-Item -ItemType Directory -Path $OUTPUT_DIR -Force | Out-Null
 
+# CSV output path
+$CSV_REPORT = "$OUTPUT_DIR/build_report.csv"
+$results = @()
+
 # Get all .ecore files in the input folder
-$ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore
+$ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore -Recurse -File
 
 if ($ecoreFiles.Count -eq 0) {
     Write-Host "No .ecore files found in $INPUT_DIR."
@@ -48,33 +52,60 @@ foreach ($ecoreFile in $ecoreFiles) {
         Write-Host "Maven build failed once for $ECORE_PATH (exit code: $exitCode). Retry..."
         & mvn -DECORE_FILE="$ECORE_PATH" clean package
         $exitCode = $LASTEXITCODE
-        
-        if ($exitCode -ne 0) {
-            Write-Host "❌ Maven build failed for $ECORE_PATH (exit code: $exitCode). Skip..."
-            echo $null >> "$OUTPUT_DIR\err.$ECORE_PATH"
-            continue
+    }
+
+    if ($exitCode -ne 0) {
+        Write-Host "❌ Maven build failed for $ECORE_PATH (exit code: $exitCode). Skipping..."
+        $results += [PSCustomObject]@{
+            FilePath = $ECORE_PATH
+            Status   = "Failed"
         }
+        continue
     }
 
+    # Find the main JAR (exclude -sources.jar and -javadoc.jar)
+    $jarFile = Get-ChildItem -Path "modules/model/target" -Filter *.jar -Recurse |
+               Where-Object { $_.Name -notmatch "-sources\.jar$" -and $_.Name -notmatch "-javadoc\.jar$" } |
+               Select-Object -First 1
 
+    # Find the sources JAR
+    $sourcesJar = Get-ChildItem -Path "modules/model/target" -Filter *-sources.jar -Recurse |
+                  Select-Object -First 1
 
-    # Find the jar file in the target directory
-    $jarFiles = Get-ChildItem -Path "modules/model/target" -Filter *.jar -Recurse | Select-Object -First 1
-
-    if (-not $jarFiles) {
-        Write-Host "No JAR file found in target/ after mvn package."
-        exit 1
+    if (-not $jarFile) {
+        Write-Host "No main JAR file found in target/ after mvn package."
+        $results += [PSCustomObject]@{
+            FilePath = $ECORE_PATH
+            Status   = "Failed - No JAR"
+        }
+        continue
     }
 
-    $JAR_FILE = $jarFiles.FullName
-
-    # Create a new jar name based on the ecore file
+    # Base name for renaming
     $ECORE_BASENAME = [System.IO.Path]::GetFileNameWithoutExtension($ECORE_PATH)
-    $NEW_JAR_NAME = "$ECORE_BASENAME.jar"
 
-    # Copy and rename jar to output folder
-    Copy-Item -Path $JAR_FILE -Destination (Join-Path $OUTPUT_DIR $NEW_JAR_NAME) -Force
-    Write-Host "Copied and renamed to $OUTPUT_DIR\$NEW_JAR_NAME"
+    # Copy main JAR
+    $newJarName = "$ECORE_BASENAME.jar"
+    Copy-Item -Path $jarFile.FullName -Destination (Join-Path $OUTPUT_DIR $newJarName) -Force
+    Write-Host "Copied and renamed to $OUTPUT_DIR\$newJarName"
+
+    # Copy sources JAR if it exists
+    if ($sourcesJar) {
+        $newSourcesName = "$ECORE_BASENAME-sources.jar"
+        Copy-Item -Path $sourcesJar.FullName -Destination (Join-Path $OUTPUT_DIR $newSourcesName) -Force
+        Write-Host "Copied sources JAR to $OUTPUT_DIR\$newSourcesName"
+    } else {
+        Write-Host "⚠ No sources JAR found for $ECORE_PATH."
+    }
+
+    # Record success
+    $results += [PSCustomObject]@{
+        FilePath = $ECORE_PATH
+        Status   = "Success"
+    }
 }
 
+# Save results to CSV
+$results | Export-Csv -Path $CSV_REPORT -NoTypeInformation
+Write-Host "📄 Build report saved to $CSV_REPORT"
 Write-Host "All done."

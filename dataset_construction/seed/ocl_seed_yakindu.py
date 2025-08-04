@@ -356,7 +356,7 @@ OCL_SEED = {
                         
                             private void collectEntryInRegion(EObject eObject, Set<Match> result) {
                                 if (eObject instanceof Region r) {
-                                    for (Vertex v : (EList<Vertex>) r.getVertices()) {
+                                    for (Vertex v : r.getVertices()) {
                                         if (v instanceof Entry e) {
                                             result.add(new Match(r, e));
                                         }
@@ -409,7 +409,7 @@ OCL_SEED = {
                             private void collectRegionWithSeveralEntries(EObject eObject, Set<Region> result) {
                                 if (eObject instanceof Region r) {
                                     int entryCount = 0;
-                                    for (Vertex v : (EList<Vertex>) r.getVertices()) {
+                                    for (Vertex v : r.getVertices()) {
                                         if (v instanceof Entry) {
                                             entryCount++;
                                             if (entryCount >= 2) {

@@ -1,24 +1,19 @@
-package se.liu.ida.sas.pelab.text2vql.java
+package se.liu.ida.sas.pelab.text2vql.java;
 
-class JavaTemplate{
-    def generateJavaCode(String classname){
-        return '''
-        import java.util.HashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.text.MultiStringMatcher.Match;
 
 import yakindumm.*;
 
-        public class «classname» {
-            public static void main(String[] args){
-                System.out.println("Hello World!");
-            }
-
-            public static record Match(Region region, Entry entry) {}
+public class Query {
+    // Main pattern
+public static record Match(Region region, Entry entry) {}
                         
                             public Set<Match> entryInRegion(Resource resource) {
                                 Set<Match> result = new HashSet<>();
@@ -32,7 +27,7 @@ import yakindumm.*;
                         
                             private void collectEntryInRegion(EObject eObject, Set<Match> result) {
                                 if (eObject instanceof Region r) {
-                                    for (Vertex v : (EList<Vertex>) r.getVertices()) {
+                                    for (Vertex v : r.getVertices()) {
                                         if (v instanceof Entry e) {
                                             result.add(new Match(r, e));
                                         }
@@ -43,8 +38,6 @@ import yakindumm.*;
                                     collectEntryInRegion(child, result);
                                 }
                             }
+                        
 
-        }
-        '''
-    }
 }

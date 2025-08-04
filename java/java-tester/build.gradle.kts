@@ -11,7 +11,7 @@ repositories {
     }
     maven {         
         url = uri("https://github.com/yamtl/yamtl.github.io/raw/master/mvn-repo/snapshot-repo")
-    }
+    } 
 }
 
 dependencies {
