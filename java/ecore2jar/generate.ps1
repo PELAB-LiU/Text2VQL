@@ -1,9 +1,9 @@
 # Exit on error
 $ErrorActionPreference = "Stop"
 
-# Check if folder argument is provided
-if ($args.Count -ne 1) {
-    Write-Host "Usage: $PSCommandPath <folder>"
+# Check if folder arguments are provided
+if ($args.Count -ne 2) {
+    Write-Host "Usage: $PSCommandPath <source folder> <target folder>"
     exit 1
 }
 
@@ -15,13 +15,21 @@ if (-not (Test-Path -Path $INPUT_DIR -PathType Container)) {
     exit 1
 }
 
-# Create a directory for collected jars
-$OUTPUT_DIR = "domains"
+# Create output directory
+$OUTPUT_DIR = $args[1]
 New-Item -ItemType Directory -Path $OUTPUT_DIR -Force | Out-Null
 
 # CSV output path
-$CSV_REPORT = "$OUTPUT_DIR/build_report.csv"
+$CSV_REPORT = Join-Path $OUTPUT_DIR "build_report.csv"
 $results = @()
+
+# If CSV doesn't exist, create with header
+if (-not (Test-Path $CSV_REPORT)) {
+    "FilePath,Status" | Out-File -FilePath $CSV_REPORT -Encoding utf8
+} else {
+    # Import existing results
+    $results = Import-Csv -Path $CSV_REPORT
+}
 
 # Get all .ecore files in the input folder
 $ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore -Recurse -File
@@ -33,23 +41,31 @@ if ($ecoreFiles.Count -eq 0) {
 
 foreach ($ecoreFile in $ecoreFiles) {
     $ECORE_PATH = $ecoreFile.FullName
+
+    # Skip if already in report
+    if ($results | Where-Object { $_.FilePath -eq $ECORE_PATH }) {
+        Write-Host "⏩ Skipping $ECORE_PATH (already in build report)"
+        continue
+    }
+
     Write-Host "Processing $ECORE_PATH..."
 
     # Copy ECORE file to modules/model/model/model.ecore
     $destinationPath = "modules/model/model/model.ecore"
+    New-Item -ItemType Directory -Path (Split-Path $destinationPath) -Force | Out-Null
     Copy-Item -Path $ECORE_PATH -Destination $destinationPath -Force
     Write-Host "Copied $ECORE_PATH to $destinationPath"
 
     # Set environment variable
     $env:ECORE_FILE = $ECORE_PATH
 
-    # Run Maven package and capture the result
+    # Run Maven build
     Write-Host "Running Maven build..."
     & mvn -DECORE_FILE="$ECORE_PATH" clean package
     $exitCode = $LASTEXITCODE
 
     if ($exitCode -ne 0) {
-        Write-Host "Maven build failed once for $ECORE_PATH (exit code: $exitCode). Retry..."
+        Write-Host "Maven build failed once for $ECORE_PATH (exit code: $exitCode). Retrying..."
         & mvn -DECORE_FILE="$ECORE_PATH" clean package
         $exitCode = $LASTEXITCODE
     }
@@ -63,14 +79,10 @@ foreach ($ecoreFile in $ecoreFiles) {
         continue
     }
 
-    # Find the main JAR (exclude -sources.jar and -javadoc.jar)
+    # Find main JAR (exclude -sources.jar and -javadoc.jar)
     $jarFile = Get-ChildItem -Path "modules/model/target" -Filter *.jar -Recurse |
                Where-Object { $_.Name -notmatch "-sources\.jar$" -and $_.Name -notmatch "-javadoc\.jar$" } |
                Select-Object -First 1
-
-    # Find the sources JAR
-    $sourcesJar = Get-ChildItem -Path "modules/model/target" -Filter *-sources.jar -Recurse |
-                  Select-Object -First 1
 
     if (-not $jarFile) {
         Write-Host "No main JAR file found in target/ after mvn package."
@@ -81,22 +93,11 @@ foreach ($ecoreFile in $ecoreFiles) {
         continue
     }
 
-    # Base name for renaming
+    # Rename and copy JAR
     $ECORE_BASENAME = [System.IO.Path]::GetFileNameWithoutExtension($ECORE_PATH)
-
-    # Copy main JAR
     $newJarName = "$ECORE_BASENAME.jar"
     Copy-Item -Path $jarFile.FullName -Destination (Join-Path $OUTPUT_DIR $newJarName) -Force
     Write-Host "Copied and renamed to $OUTPUT_DIR\$newJarName"
-
-    # Copy sources JAR if it exists
-    if ($sourcesJar) {
-        $newSourcesName = "$ECORE_BASENAME-sources.jar"
-        Copy-Item -Path $sourcesJar.FullName -Destination (Join-Path $OUTPUT_DIR $newSourcesName) -Force
-        Write-Host "Copied sources JAR to $OUTPUT_DIR\$newSourcesName"
-    } else {
-        Write-Host "⚠ No sources JAR found for $ECORE_PATH."
-    }
 
     # Record success
     $results += [PSCustomObject]@{
@@ -105,7 +106,7 @@ foreach ($ecoreFile in $ecoreFiles) {
     }
 }
 
-# Save results to CSV
+# Save results back to CSV
 $results | Export-Csv -Path $CSV_REPORT -NoTypeInformation
 Write-Host "📄 Build report saved to $CSV_REPORT"
 Write-Host "All done."
