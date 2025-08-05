@@ -27,8 +27,11 @@ if (-not (Test-Path $CSV_REPORT)) {
     "FilePath,Status" | Out-File -FilePath $CSV_REPORT -Encoding utf8
 }
 
-# Load existing report
-$existingResults = Import-Csv -Path $CSV_REPORT
+# Load existing report (force array to avoid += errors)
+$existingResults = @()
+if (Test-Path $CSV_REPORT) {
+    $existingResults = @(Import-Csv -Path $CSV_REPORT)
+}
 
 # Get all .ecore files in the input folder
 $ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore -Recurse -File
