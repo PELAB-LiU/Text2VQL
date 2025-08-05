@@ -21,15 +21,14 @@ New-Item -ItemType Directory -Path $OUTPUT_DIR -Force | Out-Null
 
 # CSV output path
 $CSV_REPORT = Join-Path $OUTPUT_DIR "build_report.csv"
-$results = @()
 
 # If CSV doesn't exist, create with header
 if (-not (Test-Path $CSV_REPORT)) {
     "FilePath,Status" | Out-File -FilePath $CSV_REPORT -Encoding utf8
-} else {
-    # Import existing results
-    $results = Import-Csv -Path $CSV_REPORT
 }
+
+# Load existing report
+$existingResults = Import-Csv -Path $CSV_REPORT
 
 # Get all .ecore files in the input folder
 $ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore -Recurse -File
@@ -43,7 +42,7 @@ foreach ($ecoreFile in $ecoreFiles) {
     $ECORE_PATH = $ecoreFile.FullName
 
     # Skip if already in report
-    if ($results | Where-Object { $_.FilePath -eq $ECORE_PATH }) {
+    if ($existingResults | Where-Object { $_.FilePath -eq $ECORE_PATH }) {
         Write-Host "⏩ Skipping $ECORE_PATH (already in build report)"
         continue
     }
@@ -72,10 +71,8 @@ foreach ($ecoreFile in $ecoreFiles) {
 
     if ($exitCode -ne 0) {
         Write-Host "❌ Maven build failed for $ECORE_PATH (exit code: $exitCode). Skipping..."
-        $results += [PSCustomObject]@{
-            FilePath = $ECORE_PATH
-            Status   = "Failed"
-        }
+        Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`",Failed"
+        $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Failed" }
         continue
     }
 
@@ -86,10 +83,8 @@ foreach ($ecoreFile in $ecoreFiles) {
 
     if (-not $jarFile) {
         Write-Host "No main JAR file found in target/ after mvn package."
-        $results += [PSCustomObject]@{
-            FilePath = $ECORE_PATH
-            Status   = "Failed - No JAR"
-        }
+        Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`","Failed - No JAR""
+        $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Failed - No JAR" }
         continue
     }
 
@@ -99,14 +94,10 @@ foreach ($ecoreFile in $ecoreFiles) {
     Copy-Item -Path $jarFile.FullName -Destination (Join-Path $OUTPUT_DIR $newJarName) -Force
     Write-Host "Copied and renamed to $OUTPUT_DIR\$newJarName"
 
-    # Record success
-    $results += [PSCustomObject]@{
-        FilePath = $ECORE_PATH
-        Status   = "Success"
-    }
+    # Record success immediately
+    Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`",Success"
+    $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Success" }
 }
 
-# Save results back to CSV
-$results | Export-Csv -Path $CSV_REPORT -NoTypeInformation
 Write-Host "📄 Build report saved to $CSV_REPORT"
 Write-Host "All done."
