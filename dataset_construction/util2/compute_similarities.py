@@ -15,6 +15,8 @@ import signal
 import sys
 import tracemalloc
 import time
+import pickle
+
 
 def clear_similarities(conn):
     cursor = conn.cursor()
@@ -144,12 +146,18 @@ def compute_similarities(db, threshold, skip_on_exists=False, skip_over_size=-1)
     if skip_over_size >= 0 and count_similarities(conn) >= skip_over_size:
         conn.close
         return
-
-    paths = get_valid_metamodel_paths(conn)#[:2000]
     concepts = {}
-    with ProcessPoolExecutor() as executor:
-        results = list(tqdm(executor.map(extract_concepts, paths), total=len(paths), desc='Extracting concepts'))
-        concepts = dict(results)
+    if os.path.exists("cache/concepts.pkl"):
+        with open("cache/concepts.pkl", "rb") as f:
+            concepts = pickle.load(f)
+    else:
+        paths = get_valid_metamodel_paths(conn)#[:2000]
+        #concepts = {}
+        with ProcessPoolExecutor() as executor:
+            results = list(tqdm(executor.map(extract_concepts, paths), total=len(paths), desc='Extracting concepts'))
+            concepts = dict(results)
+        with open("cache/concepts.pkl", "wb") as f:
+            pickle.dump(concepts, f)
     
     compute_similarity_pairs(db, concepts)
     
