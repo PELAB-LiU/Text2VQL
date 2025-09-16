@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.folmate.playlist</groupId>
-    <artifactId>manager</artifactId>
+    <groupId>se.liu.ida.sas.pelab.text2vql</groupId>
+    <artifactId>ecore2jar</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
@@ -21,7 +21,7 @@
       <version>${emf-version}</version>
   	</dependency>
     <dependency>
-      <groupId>com.folmate.playlist</groupId>
+      <groupId>se.liu.ida.sas.pelab.text2vql</groupId>
       <artifactId>genmodel</artifactId>
       <version>0.0.1-SNAPSHOT</version>
   	</dependency>
@@ -30,7 +30,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.folmate.playlist</groupId>
+        <groupId>se.liu.ida.sas.pelab.text2vql</groupId>
         <artifactId>genmodel</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <executions>
@@ -40,11 +40,10 @@
             </goals>
             <phase>generate-sources</phase>
             <configuration>
-              <ecore>${env.ECORE_FILE}</ecore>
-              <!--ecore>/${project.basedir}/model/model.ecore</ecore-->
+              <!-- Set in maven call as: mvn -DECORE_FILE=... -->
+              <ecore>${ECORE_FILE}</ecore>
               <target>/${project.basedir}/model/gen/model.genmodel</target>
               <modeldir>/${project.name}/src/main/emf-gen</modeldir>
-              <!--basepackage>/${project.basedir}/src/main/emf-gen</basepackage-->
             </configuration>
           </execution>
         </executions>

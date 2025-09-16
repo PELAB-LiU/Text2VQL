@@ -51,15 +51,12 @@ public class GenerateGenmodel extends AbstractMojo{
         try {
             System.out.println("Generating genmodel for metamodel: "+ecore);
             var resourceSet = new ResourceSetImpl();
-            /*resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                    "ecore", new EcoreResourceFactoryImpl());*/
             resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
                     "genmodel", new XMIResourceFactoryImpl());
             resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
                     "ecore", new XMIResourceFactoryImpl());
 
             Resource meta = resourceSet.getResource(URI.createFileURI(ecore),true);
-            //EPackage ePackage = (EPackage) meta.getContents().getFirst();
             List<EPackage> list = meta.getContents().stream()
                 .filter(e -> e instanceof EPackage)
                 .map(e -> (EPackage) e)

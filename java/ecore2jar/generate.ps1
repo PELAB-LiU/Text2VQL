@@ -2,105 +2,90 @@
 $ErrorActionPreference = "Stop"
 
 # Check if folder arguments are provided
-if ($args.Count -ne 2) {
-    Write-Host "Usage: $PSCommandPath <source folder> <target folder>"
+param(
+    [Parameter(Mandatory=$true)][string]$InputDir,
+    [Parameter(Mandatory=$true)][string]$OutputDir
+)
+
+if (-not (Test-Path $InputDir -PathType Container)) {
+    Write-Host "Error: Folder '$InputDir' does not exist."
     exit 1
 }
 
-$INPUT_DIR = $args[0]
-
-# Check if folder exists
-if (-not (Test-Path -Path $INPUT_DIR -PathType Container)) {
-    Write-Host "Error: Folder '$INPUT_DIR' does not exist."
-    exit 1
+# Create output directory if it doesn't exist
+if (-not (Test-Path $OutputDir)) {
+    New-Item -ItemType Directory -Path $OutputDir | Out-Null
 }
-
-# Create output directory
-$OUTPUT_DIR = $args[1]
-New-Item -ItemType Directory -Path $OUTPUT_DIR -Force | Out-Null
 
 # CSV output path
-$CSV_REPORT = Join-Path $OUTPUT_DIR "build_report.csv"
+$CsvReport = Join-Path $OutputDir "build_report.csv"
 
-# If CSV doesn't exist, create with header
-if (-not (Test-Path $CSV_REPORT)) {
-    "FilePath,Status" | Out-File -FilePath $CSV_REPORT -Encoding utf8
+# If report doesn't exist, create with header
+if (-not (Test-Path $CsvReport)) {
+    "FilePath,Status" | Out-File -FilePath $CsvReport -Encoding UTF8
 }
 
-# Load existing report (force array to avoid += errors)
-$existingResults = @()
-if (Test-Path $CSV_REPORT) {
-    $existingResults = @(Import-Csv -Path $CSV_REPORT)
-}
+# Get all .ecore files recursively
+$EcoreFiles = Get-ChildItem -Path $InputDir -Filter "*.ecore" -Recurse
 
-# Get all .ecore files in the input folder
-$ecoreFiles = Get-ChildItem -Path $INPUT_DIR -Filter *.ecore -Recurse -File
-
-if ($ecoreFiles.Count -eq 0) {
-    Write-Host "No .ecore files found in $INPUT_DIR."
+if ($EcoreFiles.Count -eq 0) {
+    Write-Host "No .ecore files found in $InputDir."
     exit 0
 }
 
-foreach ($ecoreFile in $ecoreFiles) {
-    $ECORE_PATH = $ecoreFile.FullName
+foreach ($EcoreFile in $EcoreFiles) {
+    $EcorePath = $EcoreFile.FullName
 
-    # Skip if already in report
-    if ($existingResults | Where-Object { $_.FilePath -eq $ECORE_PATH }) {
-        Write-Host "⏩ Skipping $ECORE_PATH (already in build report)"
+    # Check if this file is already in the report
+    if (Select-String -Path $CsvReport -Pattern [regex]::Escape($EcorePath)) {
+        Write-Host "⏩ Skipping $EcorePath (already in build report)"
         continue
     }
 
-    Write-Host "Processing $ECORE_PATH..."
-
-    # Copy ECORE file to modules/model/model/model.ecore
-    $destinationPath = "modules/model/model/model.ecore"
-    New-Item -ItemType Directory -Path (Split-Path $destinationPath) -Force | Out-Null
-    Copy-Item -Path $ECORE_PATH -Destination $destinationPath -Force
-    Write-Host "Copied $ECORE_PATH to $destinationPath"
-
-    # Set environment variable
-    $env:ECORE_FILE = $ECORE_PATH
-
-    # Run Maven build
+    Write-Host "Processing $EcorePath..."
     Write-Host "Running Maven build..."
-    & mvn -DECORE_FILE="$ECORE_PATH" clean package
-    $exitCode = $LASTEXITCODE
 
-    if ($exitCode -ne 0) {
-        Write-Host "Maven build failed once for $ECORE_PATH (exit code: $exitCode). Retrying..."
-        & mvn -DECORE_FILE="$ECORE_PATH" clean package
-        $exitCode = $LASTEXITCODE
+    $buildSuccess = $false
+
+    # Try Maven build up to 2 times
+    for ($i=0; $i -lt 2; $i++) {
+        try {
+            & mvn "-DECORE_FILE=$EcorePath" clean package
+            $buildSuccess = $true
+            break
+        } catch {
+            Write-Host "Maven build failed attempt $($i+1) for $EcorePath."
+        }
     }
 
-    if ($exitCode -ne 0) {
-        Write-Host "❌ Maven build failed for $ECORE_PATH (exit code: $exitCode). Skipping..."
-        Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`",Failed"
-        $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Failed" }
+    if (-not $buildSuccess) {
+        Write-Host "❌ Maven build failed for $EcorePath. Skipping..."
+        "$EcorePath,Failed" | Out-File -FilePath $CsvReport -Append -Encoding UTF8
         continue
     }
 
     # Find main JAR (exclude -sources.jar and -javadoc.jar)
-    $jarFile = Get-ChildItem -Path "modules/model/target" -Filter *.jar -Recurse |
-               Where-Object { $_.Name -notmatch "-sources\.jar$" -and $_.Name -notmatch "-javadoc\.jar$" } |
+    $JarFile = Get-ChildItem -Path "modules/model/target" -Filter "*.jar" -Recurse |
+               Where-Object { $_.Name -notmatch "(-sources|-javadoc)\.jar$" } |
                Select-Object -First 1
 
-    if (-not $jarFile) {
+    if (-not $JarFile) {
         Write-Host "No main JAR file found in target/ after mvn package."
-        Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`","Failed - No JAR""
-        $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Failed - No JAR" }
+        "$EcorePath,Failed - No JAR" | Out-File -FilePath $CsvReport -Append -Encoding UTF8
         continue
     }
 
-    # Rename and copy JAR
-    $ECORE_BASENAME = [System.IO.Path]::GetFileNameWithoutExtension($ECORE_PATH)
-    $newJarName = "$ECORE_BASENAME.jar"
-    Copy-Item -Path $jarFile.FullName -Destination (Join-Path $OUTPUT_DIR $newJarName) -Force
-    Write-Host "Copied and renamed to $OUTPUT_DIR\$newJarName"
+    # Base name for renaming
+    $EcoreBaseName = [System.IO.Path]::GetFileNameWithoutExtension($EcorePath)
 
-    # Record success immediately
-    Add-Content -Path $CSV_REPORT -Value "`"$ECORE_PATH`",Success"
-    $existingResults += [PSCustomObject]@{ FilePath = $ECORE_PATH; Status = "Success" }
+    # Copy and rename JAR
+    $NewJarName = "$EcoreBaseName.jar"
+    Copy-Item -Path $JarFile.FullName -Destination (Join-Path $OutputDir $NewJarName) -Force
+    Write-Host "Copied and renamed to $(Join-Path $OutputDir $NewJarName)"
+
+    # Record success
+    "$EcorePath,Success" | Out-File -FilePath $CsvReport -Append -Encoding UTF8
 }
 
-Write-Host "📄 Build report saved to $CSV_REPORT"
+Write-Host "📄 Build report saved to $CsvReport"
 Write-Host "All done."

@@ -43,14 +43,6 @@ for ECORE_PATH in "${ECORE_FILES[@]}"; do
     fi
 
     echo "Processing $ECORE_PATH..."
-
-    # Copy ECORE file to modules/model/model/model.ecore
-    DEST_PATH="modules/model/model/model.ecore"
-    mkdir -p "$(dirname "$DEST_PATH")"
-    cp -f "$ECORE_PATH" "$DEST_PATH"
-    echo "Copied $ECORE_PATH to $DEST_PATH"
-
-    export ECORE_FILE="$ECORE_PATH"
     
     # Run Maven build (with environment variable)
     echo "Running Maven build..."
