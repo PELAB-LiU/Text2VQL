@@ -12,6 +12,7 @@
     "vscode": {
       "extensions": [
         "ms-python.python",
+        "qwtel.sqlite-viewer",
         "vscjava.vscode-java-pack",
         "vscjava.vscode-gradle",
         "vscjava.vscode-maven"
