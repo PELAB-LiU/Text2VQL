@@ -3,7 +3,7 @@ FROM ubuntu:latest
 RUN apt update -y
 
 RUN apt install -y sudo
-RUN useradd -s /bin/bash abc 
+RUN useradd -m -s /bin/bash abc 
 RUN usermod -aG sudo abc 
 RUN echo "abc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
