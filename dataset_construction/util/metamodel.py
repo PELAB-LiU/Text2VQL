@@ -1,7 +1,7 @@
 from pyecore.ecore import EClass, EEnum, EReference
 from pyecore.resources import ResourceSet, URI
 
-
+# This is leaky.
 class MetaModel:
     def __init__(self, path, domain=None):
         self.path = path

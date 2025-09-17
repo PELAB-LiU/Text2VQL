@@ -1,85 +1,174 @@
-from util.metamodel import MetaModel
+import sqlite3
 
-import os
-import argparse
 import pandas as pd
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
+import threading
+import time
+import os
+import signal
+import sys
+import tracemalloc
+import time
+import pickle
+import copy
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+from metamodel import MetaModel
+from processor import  ConcurrentPipelineProcessor,Iterable2Queue,Queue2Iterable
+from queue import Queue
+from args import makeParser
+
+def clear_similarities(conn):
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM similarities")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='similarities'")
+    conn.commit()
+
+def list_models_of(conn, dataset):
+    cursor = conn.cursor()
+    cursor.execute("SELECT model FROM metamodels WHERE dataset = ?", (dataset,))
+    return [row[0] for row in cursor.fetchall()]
+
+def drop_similarities_of(conn, dataset):
+    cursor = conn.cursor()
+    # Delete from similarities where m1 or m2 is a model from the given dataset
+    cursor.execute("""
+        DELETE FROM similarities
+        WHERE m1 IN (SELECT model FROM metamodels WHERE dataset = ?)
+           OR m2 IN (SELECT model FROM metamodels WHERE dataset = ?)
+    """, (dataset, dataset))
+    conn.commit()
+
+def check_pair_exists(conn, model1, model2):
+    if model1 == model2:
+        return True
     
-def register_pairs(pairs, similarities_csv):
-    """
-    Saves similarity pairs to a CSV file.
-    If the file exists, appends new pairs (avoiding duplicates).
-    """
-    new_df = pd.DataFrame(pairs, columns=['m1', 'm2'])
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM similarities WHERE (m1 = ? AND m2 = ?) OR (m1 = ? AND m2 = ?) LIMIT 1", (model1,model2,model2,model1))
+    return cursor.fetchone() is not None
 
-    try:
-        existing_df = pd.read_csv(similarities_csv)
-        combined_df = pd.concat([existing_df, new_df], ignore_index=True)
-        combined_df.drop_duplicates(subset=['m1', 'm2'], inplace=True)
-    except FileNotFoundError:
-        combined_df = new_df
+def add_pair(conn, model1, model2, similarity):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO similarities(m1, m2, similarity) VALUES (?, ?, ?) ", (model1,model2,similarity))
+    conn.commit()
 
-    combined_df.to_csv(similarities_csv, index=False)
-    return combined_df
+def add_similarities(conn, similarities):
+    cursor = conn.cursor()
+    cursor.executemany("INSERT INTO similarities(m1, m2, similarity) VALUES (?, ?, ?)", similarities)
+    conn.commit()
 
-def jaccard(x, y):
-    intersection_cardinality = len(x.intersection(y))
-    union_cardinality = len(x.union(y))
-    return intersection_cardinality / float(union_cardinality)
+def similarities_exists(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM similarities LIMIT 1")
+    return cursor.fetchone() is not None
 
-def get_duplicates(paths, threshold, existing_pairs=None):
-    """
-    Compare metamodels, loading them only when needed and caching them in memory.
-    """
-    pairs = []
-    metamodel_cache = {}
 
-    for i, path1 in enumerate(tqdm(paths, desc='Computing similarities')):
-        for path2 in paths[i+1:]:
-            # Skip if already computed
-            if existing_pairs is not None and ((path1, path2) in existing_pairs or (path2, path1) in existing_pairs):
-                continue
+def count_similarities(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM similarities")
+    count = cursor.fetchone()[0]
+    return count
 
-            # Load metamodels lazily and cache
-            if path1 not in metamodel_cache:
-                mm1 = MetaModel(path1)
-                metamodel_cache[path1] = set(c.lower() for c in mm1.get_elements())
-            if path2 not in metamodel_cache:
-                mm2 = MetaModel(path2)
-                metamodel_cache[path2] = set(c.lower() for c in mm2.get_elements())
+def get_valid_metamodel_paths(conn):
+    df = pd.read_sql_query("SELECT model FROM metamodels WHERE parseable", conn)
+    paths = list(df['model'])
+    return paths
 
-            # Compute similarity
-            sim = jaccard(metamodel_cache[path1], metamodel_cache[path2])
-            if sim > threshold:
-                pairs.append((path1, path2))
-    return pairs
+def extract_concepts(path):
+    metamodel = MetaModel(path)
+    return path, {c.lower() for c in metamodel.get_elements()}
 
-def similarities(models, similarities_csv, threshold=0.7):
-    """
-    Compute similarities between models.
-    Uses similarities_csv as cache to skip previously computed pairs.
-    """
-    paths = models['Path']
+class SimilarityComputer:
+    def __init__(self, db, current):
+        self.db = db
+        self.current = current
+    def __call__(self, candidate):
+        path1, concepts1 = candidate
+        path2, concepts2 = self.current
+        if(path1 < path2):
+            sim = self.jaccard(concepts1, concepts2)
+            if(sim > 0.5):
+                return path1, path2, sim
+        return None
 
-    # Load existing pairs if cache exists
-    if os.path.isfile(similarities_csv):
-        existing_df = pd.read_csv(similarities_csv)
-        existing_pairs = set(zip(existing_df['m1'], existing_df['m2']))
-        print(f"Loaded cached similarities from {os.path.abspath(similarities_csv)} ({len(existing_pairs)} pairs)")
+    def jaccard(self, x, y):
+        intersection_cardinality = len(x.intersection(y))
+        union_cardinality = len(x.union(y))
+        return intersection_cardinality / float(union_cardinality)
+    
+def compute_similarity_pairs(db, concepts_dict,BATCH_SIZE=100_000_000, update=None):
+    with sqlite3.connect(db) as conn:
+        clear_similarities(conn)
+
+        entries = concepts_dict
+        if(update is not None):
+            entries = {}
+            for path in update:
+                entries[path] = concepts_dict[path]
+
+        batch_results = []
+        for entry in tqdm(entries.items(), desc='Computing similarities'):
+            f = SimilarityComputer(db, entry)
+            with ConcurrentPipelineProcessor(f, Iterable2Queue(concepts_dict.items())) as sim:
+                result = list(Queue2Iterable(sim.output()))
+                batch_results.extend(result)
+                if len(batch_results) >= BATCH_SIZE:
+                    add_similarities(conn, batch_results)
+                    batch_results.clear()  # reset batch
+            
+        add_similarities(conn, batch_results)
+        batch_results.clear()  # reset batch
+
+def load_concepts_cache(conn, cache_file="cache/concepts.pkl", load_cache=True, update=None):
+    concepts = {}
+    if load_cache and os.path.exists(cache_file):
+        with open(cache_file, "rb") as f:
+            concepts = pickle.load(f)
     else:
-        existing_pairs = set()
-
-    # Compute only missing similarities
-    pairs = get_duplicates(paths, threshold, existing_pairs=existing_pairs)
-    result = register_pairs(pairs, similarities_csv)
-    # Save new pairs to cache
-    if pairs:
-        print(f"Added {len(pairs)} new similarity pairs to {os.path.abspath(similarities_csv)}")
-    else:
-        print("No new pairs to compute — all similarities already cached.")
+        paths = get_valid_metamodel_paths(conn)
+        with ProcessPoolExecutor() as executor:
+            results = list(tqdm(executor.map(extract_concepts, paths), total=len(paths), desc='Extracting concepts'))
+            concepts = dict(results)
+        with open(cache_file, "wb") as f:
+            pickle.dump(concepts, f)
     
-    return result
-    
+    if load_cache and update is not None: 
+        with ProcessPoolExecutor() as executor:
+            results = list(tqdm(executor.map(extract_concepts, update), total=len(update), desc='Updating concepts'))
+            concepts.update(dict(results))
+        with open(cache_file, "wb") as f:
+            pickle.dump(concepts, f)
+    return concepts
 
+def compute_similarities(db, skip_on_exists=False, skip_over_size=-1, load_cache=True, update=None):
+    with sqlite3.connect(db) as conn:
+        if skip_on_exists and similarities_exists(conn):
+            return
+        if skip_over_size >= 0 and count_similarities(conn) >= skip_over_size:
+            return
+    
+        concepts = load_concepts_cache(conn, load_cache=load_cache, update=update)
+        compute_similarity_pairs(db, concepts, update=update)
+
+# Runnable version to (re)compute similarities for a set of metamodels
+# /workspaces/Text2VQL/dataset_construction$ python util2/compute_similarities.py --dataset=test_metamodel
+def main():
+    parser = makeParser()
+    parser.add_argument('--dataset', type=str, default='test_metamodel', help='Dataset where the similarities should be recomputed.')
+    args = parser.parse_args()
+    db = args.db
+    dataset = args.dataset
+
+    conn = sqlite3.connect(db)
+    models = list_models_of(conn, dataset)
+    drop_similarities_of(conn, dataset)
+    conn.close()
+
+    compute_similarities(db, update=models)
+
+if __name__ == "__main__":
+    main()

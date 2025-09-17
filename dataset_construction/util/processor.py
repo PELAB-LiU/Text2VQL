@@ -1,8 +1,15 @@
 from concurrent.futures import ThreadPoolExecutor
-#from queue import Queue
-from util2.queue import Queue,ShutDown
 from threading import Lock, Event
 from typing import Callable, TypeVar
+
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+from threadsafeQueue import Queue,ShutDown
+
 
 
 T = TypeVar('T')  # Type of items in the source queue

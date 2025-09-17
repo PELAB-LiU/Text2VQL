@@ -1,11 +1,18 @@
 import glob
 import os
+import sys
 import sqlite3
 
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
-from util2.metamodel import MetaModel
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
+from metamodel import MetaModel
+from args import parser
+
 
 def dataset_exists(db, dataset_name):
     conn = sqlite3.connect(db)
@@ -51,9 +58,7 @@ class Indexer:
                     if len(info.strip()) == 0:
                         return False, file, self.dataset
                     else:
-                        #return True, file, self.dataset, metamodel
-                        #return True, file, self.dataset, metamodel
-                        return True, file, self.dataset, metamodel.get_metamodel_info(),metamodel.number_of_elements()
+                        return True, file, self.dataset, metamodel
             except:
                 return False, file, self.dataset
         return None
@@ -121,3 +126,13 @@ def indexAll(roots, db, skip_dataset=True, skip_model=True):
             #find_and_index_metamodels_multithread(db, root, dataset_name, skip_model)
         else:
             print(f"Skipping dataset {dataset_name} (entry from this dataset exists)")
+
+# Runnable version to look for new metamodels in folders and insert them to the database
+def main():
+    args = parser.parse_args()
+    db = args.db
+    folders = args.metamodels_datasets.split(",")
+    indexAll(folders,db, False, True)
+
+if __name__ == "__main__":
+    main()
