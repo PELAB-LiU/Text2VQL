@@ -83,6 +83,17 @@ foreach ($EcoreFile in $EcoreFiles) {
     Copy-Item -Path $JarFile.FullName -Destination (Join-Path $OutputDir $NewJarName) -Force
     Write-Host "Copied and renamed to $(Join-Path $OutputDir $NewJarName)"
 
+    # ✅ Check for model-fixed.ecore
+    $FixedEcorePath = Join-Path "modules/model/model/gen" "model-fixed.ecore"
+    if (Test-Path $FixedEcorePath) {
+        $NewEcoreName = "$EcoreBaseName.ecore"
+        $NewEcorePath = Join-Path $OutputDir $NewEcoreName
+        Copy-Item -Path $FixedEcorePath -Destination $NewEcorePath -Force
+        Write-Host "Copied model-fixed.ecore to $NewEcorePath"
+    } else {
+        Write-Host "⚠️ model-fixed.ecore not found in modules/model/model/gen/"
+    }
+    
     # Record success
     "$EcorePath,Success" | Out-File -FilePath $CsvReport -Append -Encoding UTF8
 }

@@ -73,6 +73,16 @@ for ECORE_PATH in "${ECORE_FILES[@]}"; do
     cp -f "$jarFile" "$OUTPUT_DIR/$newJarName"
     echo "Copied and renamed to $OUTPUT_DIR/$newJarName"
 
+    # Look for generated model-fixed.ecore
+    fixedEcore="modules/model/model/gen/model-fixed.ecore"
+    if [[ -f "$fixedEcore" ]]; then
+        newEcoreName="$ECORE_BASENAME.ecore"
+        cp -f "$fixedEcore" "$OUTPUT_DIR/$newEcoreName"
+        echo "Copied model-fixed.ecore to $OUTPUT_DIR/$newEcoreName"
+    else
+        echo "⚠️ model-fixed.ecore not found for $ECORE_PATH"
+    fi
+
     # Record success
     echo "\"$ECORE_PATH\",Success" >> "$CSV_REPORT"
 done
