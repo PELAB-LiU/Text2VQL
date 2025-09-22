@@ -8,7 +8,7 @@ RUN usermod -aG sudo abc
 RUN echo "abc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN apt update -y
-RUN apt install -y wget unzip git
+RUN apt install -y wget unzip git nano vim
 
 # Install java
 RUN apt install -y openjdk-21-jdk
