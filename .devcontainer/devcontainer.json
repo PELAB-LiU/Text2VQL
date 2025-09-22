@@ -8,6 +8,9 @@
       // Path is relative to the devcontainer.json file.
       "dockerfile": "Dockerfile"
   },
+
+  "runArgs": ["--env-file", ".env"],
+
   "customizations": {
     "vscode": {
       "extensions": [
