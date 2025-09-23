@@ -3,3 +3,4 @@ argparse==1.4.0
 pyecore==0.15.2
 tqdm==4.67.1
 networkx==3.5
+openai==1.108.2

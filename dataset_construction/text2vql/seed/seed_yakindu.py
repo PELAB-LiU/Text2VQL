@@ -1,13 +1,26 @@
-from text2vql.metamodel import MetaModel
+from text2vql.util.metamodel import MetaModel
 import textwrap
+from types import SimpleNamespace
+import json
 
+from text2vql.seed.util import AttrDict
 #
 # Structure
 #
 #
-OCL_SEED = {
+SEED = AttrDict({
     "metamodel": MetaModel('seed/yakindu_simplified.ecore'),
-    "or": {
+    "language": {
+        "vql": "Viatra Query Language (VQL)",
+        "ocl": "Object Constraint Language (OCL)",
+        "java": "Java and Eclipse Modeling Framework (EMF)"
+    },
+    "disjunction": {
+        "feature": {
+            "vql": "disjunction",
+            "ocl": "boolean logic",
+            "java": "boolean logic"
+        },
         "examples": [
             {
                 "description": "Vertices that are either entry or final state",
@@ -252,6 +265,11 @@ OCL_SEED = {
         ]
     },
     "normal": {
+        "feature": {
+            "vql": "any language feature",
+            "ocl": "any language feature",
+            "java": "any language feature"
+        },
         "examples": [
             {
                 "description": "Transitions with their sources and targets",
@@ -534,6 +552,11 @@ OCL_SEED = {
     },
     "type": {
         "_comment": "Note: oclIsTypeoOf and oclIsKindOf is not the same. (oclIsKindOf is the equivalent of java instanceof)",
+        "feature": {
+            "vql": "type constraint",
+            "ocl": "type constraint",
+            "java": "type constraint"
+        },
         "examples": [
             {
                 "description": "All vertices that are regular states",
@@ -630,6 +653,11 @@ OCL_SEED = {
         ]
     },
     "find": {
+        "feature": {
+            "vql": "auxiliary patterns",
+            "ocl": "auxiliary variables",
+            "java": "auxiliary query functions"
+        },
         "examples": [
             {
                 "description": "Vertex that has an incoming transition from a different region and an outgoing transition to a Pseudostate",
@@ -880,6 +908,11 @@ OCL_SEED = {
         ]
     },
     "aggregate": {
+        "feature": {
+            "vql": "aggregators",
+            "ocl": "aggregators",
+            "java": "aggregators"
+        },
         "examples": [
             {
                 "description": "Regions with at least 4 vertices.",
@@ -1168,6 +1201,11 @@ OCL_SEED = {
         ]
     },
     "negation": {
+        "feature": {
+            "vql": "negation",
+            "ocl": "negation",
+            "java": "negation"
+        },
         "examples": [
             {
                 "description": "Entries that do not have outgoing transitions",
@@ -1269,58 +1307,4 @@ OCL_SEED = {
             },
         ]
     }, 
-}
-
-"""
-Given the following metamodel: 
-
-abstract class Pseudostate extends Vertex {
-}
-abstract class Vertex {
-	reference Transition[0..*] incomingTransitions;
-	reference Transition[0..*] outgoingTransitions;
-}
-class Region {
-	reference Vertex[0..*] vertices;
-	attribute EString[0..1] name;
-}
-class Transition {
-	reference Vertex[1..1] target;
-	reference Vertex[0..1] source;
-}
-class Statechart extends CompositeElement {
-}
-class Entry extends Pseudostate {
-}
-class Synchronization extends Pseudostate {
-}
-class State extends RegularState, CompositeElement {
-}
-abstract class RegularState extends Vertex {
-}
-abstract class CompositeElement {
-	reference Region[0..*] regions;
-}
-class Choice extends Pseudostate {
-}
-class Exit extends Pseudostate {
-}
-class FinalState extends RegularState {
-}
-
-Translate the following Viatra query to OCL:
-
-pattern entryOrFinalState(s : Vertex) {
-    Entry(s);
-} or {
-    FinalState(s);
-}
-
-Output template:
-
-def: [name of query](): Tuple([literals according to query header]) = [query body]
-
-The output must satisfy the following constraints:
-* The output should be an OCL query, not an invariant.
-* The OCL pattern shoud return a Tuple matching the header of the viatra query.
-"""
+})

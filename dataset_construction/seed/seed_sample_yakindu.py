@@ -1,4 +1,4 @@
-from text2vql.metamodel import MetaModel
+from dataset_construction.util.metamodel import MetaModel
 
 SEED_METAMODEL = MetaModel('seed_metamodels/yakindu_simplified.ecore')
 
