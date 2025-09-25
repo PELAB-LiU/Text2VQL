@@ -2,6 +2,7 @@ from openai import OpenAI
 import textwrap
 from string import Template
 import argparse
+import pickle
 
 from text2vql.util.metamodel import MetaModel
 
@@ -26,8 +27,12 @@ $query
 ```""")
 
 class ChatGPTAgent:
-    def __init__(self, seed, langcode, max_output_tokens=3000, temperature=0.4, model=None):
+    def __init__(self, seed, langcode, max_output_tokens=3000, temperature=0.4, model=None, effort="minimal"):
+        self.model = model
+        self.max_output_tokens = max_output_tokens
+        self.temperature = temperature
         self.client = OpenAI()
+        self.effort = effort
         self.language = langcode
         self.expertise = seed.language[langcode]
         self.seed = seed
@@ -41,6 +46,10 @@ class ChatGPTAgent:
         # regular method
         return value * 0
 
+    @property
+    def template(self):
+        return self.call_template
+    
     @property
     def template(self):
         return self.call_template
@@ -70,15 +79,29 @@ class ChatGPTAgent:
             number=5, 
             target_domain=target_domain
         )
-    def __call__(self, value: int) -> int:
-        #reponse = self.client.reponses.create(
-        #    model=self.model,
-        #    messages=[{"role": "system", "content": f"You are an expert in {self.expertise}."},
-        #              {"role": "user", "content": instruction}] + messages,
-        #    max_tokens=max_tokens,
-        #    temperature=temperature
-        #)
-        return None
+    
+    def make_call_json(self, category, target_domain):
+        query = self.make_call_text(category, target_domain)
+        return {
+            "model": self.model,
+            "instructions": f"You are an expert in {self.expertise}.",
+            "input": query,
+            "reasoning": {
+                "effort": self.effort #minimal, low, medium
+            }, 
+            #messages=[{"role": "system", "content": },
+            #          {"role": "user", "content": query}],
+            "max_output_tokens": self.max_output_tokens
+        }
+
+    def __call__(self, category, target_domain):
+        params = self.make_call_json(category, target_domain)
+
+        response = self.client.responses.create(**params)
+
+        with open("cache/chat_response.pkl", "wb") as f:
+            pickle.dump(response, f)
+        return params["input"], response.output_text
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Show ChatGPT call text.')
@@ -89,3 +112,5 @@ if __name__ == "__main__":
     ai = ChatGPTAgent(SEED, args.lang)
     target = MetaModel('test_metamodel/railway.ecore')
     print(ai.make_call_text(args.feat, target))
+
+#OCL type is acting up
