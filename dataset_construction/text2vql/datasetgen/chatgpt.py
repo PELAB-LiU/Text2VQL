@@ -11,26 +11,32 @@ from text2vql.seed.seed_yakindu import SEED
 
 CALL_TEMPLATE = Template("""            
 Given the following meta-model:
+```
 $seed_metamodel
+```
+
 Some example queries in $expertise are:
+
 $seed_queries
 
 Now write $number different queries (with `$feature`) for the following meta-model and follow the same format as the examples:
+```
 $new_metamodel
+```
 """)
 
 QUERY_TEMPLATE = Template("""
 $idx. $nl_description
+
 Signature: $signature
 ```$lang
 $query
 ```""")
 
 class ChatGPTAgent:
-    def __init__(self, seed, langcode, max_output_tokens=3000, temperature=0.4, model=None, effort="minimal"):
+    def __init__(self, seed, langcode, max_output_tokens=3000, model=None, effort="minimal"):
         self.model = model
         self.max_output_tokens = max_output_tokens
-        self.temperature = temperature
         self.client = OpenAI()
         self.effort = effort
         self.language = langcode

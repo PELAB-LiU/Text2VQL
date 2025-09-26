@@ -16,7 +16,7 @@ def get_domain_jars(conn, limit=None):
     return cursor.fetchall()
 
 class CampaignBase:
-    def __init__(self, db, lang, feat, maxdomains=None):
+    def __init__(self, db, lang, feat, maxdomains=None, model="gpt-5-nano", reasoning="minimal"):
         self.db = db
         self.lang = lang
         self.feat = feat
@@ -24,7 +24,7 @@ class CampaignBase:
         self.maxdomains = maxdomains
         if lang=='java':
             self.limit = int(self.limit * 1.5)
-        self.agent = ChatGPTAgent(SEED, lang, self.limit, model="gpt-5-nano")
+        self.agent = ChatGPTAgent(SEED, lang, self.limit, model=model, effort=reasoning)
 
     def list_requests(self):
         requests = []
