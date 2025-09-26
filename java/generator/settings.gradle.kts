@@ -6,7 +6,8 @@ include(
         //"refinery",
         "ocl",
         "vql",
-        "utilities"
+        "utilities",
+        "server"
 )
 for (project in rootProject.children) {
     val projectName = project.name

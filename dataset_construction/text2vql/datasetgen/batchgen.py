@@ -73,4 +73,4 @@ if __name__ == "__main__":
     batch.add(ai)
 
     batch.prepare()
-    batch.send_save_start("logs/testbat.jsonl")
+    batch.send_save_start("chatgpt/testbat.jsonl")
