@@ -1,16 +1,12 @@
 import glob
 import os
-import sys
 import sqlite3
 
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
-from metamodel import MetaModel
-from args import parser
+from text2vql.util.metamodel import MetaModel
+from text2vql.util.args import parser
 
 
 def dataset_exists(db, dataset_name):

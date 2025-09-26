@@ -3,7 +3,7 @@ import sqlite3
 import networkx as nx
 import pandas as pd
 
-from util2.compute_similarities import get_valid_metamodel_paths
+from text2vql.util.compute_similarities import get_valid_metamodel_paths
 
 def upsert_cluster(conn, model, cluster):
     cursor = conn.cursor()

@@ -21,7 +21,7 @@ if __name__ == "__main__":
         for feat in args.feat.split(","):
             ai = CampaignBase(args.db, lang, feat, maxdomains=args.domains, model=args.model, reasoning=args.reasoning)
             batch.add(ai)
-        local_name = f"chatgpt/bacth_{lang}_{datetime.now().isoformat()}.jsonl"
+        local_name = f"chatgpt/batch_{lang}_{datetime.now().isoformat()}.jsonl"
         #batch.prepare(local_name)
         batch.send_save_start(local_name)
 

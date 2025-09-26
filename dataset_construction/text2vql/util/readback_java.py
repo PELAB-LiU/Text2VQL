@@ -1,10 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
-from args import parser
+from text2vql.util.args import parser
 
 def get_domain_jars(conn):
     cursor = conn.cursor()

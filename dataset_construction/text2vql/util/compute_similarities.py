@@ -4,23 +4,12 @@ import pandas as pd
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor,ThreadPoolExecutor
 
-import threading
-import time
 import os
-import signal
-import sys
-import tracemalloc
-import time
 import pickle
-import copy
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.append(current_dir)
-from metamodel import MetaModel
-from processor import  ConcurrentPipelineProcessor,Iterable2Queue,Queue2Iterable
-from queue import Queue
-from args import makeParser
+from text2vql.util.metamodel import MetaModel
+from text2vql.util.processor import  ConcurrentPipelineProcessor,Iterable2Queue,Queue2Iterable
+from text2vql.util.args import makeParser
 
 def clear_similarities(conn):
     cursor = conn.cursor()
