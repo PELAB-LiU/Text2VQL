@@ -34,12 +34,23 @@ CREATE TABLE domains (
 )
 
 
-
-CREATE TABLE pairs (
-	id integer primary key autoincrement,
-	nl TEXT NOT NULL,
-	pattern TEXT NOT NULL,
+CREATE TABLE chatgpt (
+	id INTEGER PRIMARY KEY autoincrement,
 	metamodel TEXT NOT NULL,
-	FOREIGN KEY (metamodel)
-    REFERENCES metamodels (id)
+    lang TEXT NOT NULL,
+    feat TEXT NOT NULL,
+    descript TEXT NOT NULL,
+    signat,
+	pattern TEXT NOT NULL,
+    generation INTEGER NOT NULL,
+	syntax BOOLEAN,
+	FOREIGN KEY (metamodel) REFERENCES metamodels (model)
+);
+
+CREATE TABLE mutation (
+	query INTEGER NOT NULL,
+    parent INTEGER NOT NULL,
+    PRIMARY KEY (query, parent),
+    FOREIGN KEY (query) REFERENCES chatgpt(id),
+    FOREIGN KEY (parent) REFERENCES chatgpt(id)
 );

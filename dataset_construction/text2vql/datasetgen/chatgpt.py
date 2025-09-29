@@ -19,7 +19,9 @@ Some example queries in $expertise are:
 
 $seed_queries
 
-Now write $number different queries (with `$feature`) for the following meta-model and follow the same format as the examples:
+Now write $number different queries (with `$feature`) for the following meta-model and follow the same format as the examples.
+Group all code in each query to one code block.
+                         
 ```
 $new_metamodel
 ```
