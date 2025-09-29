@@ -6,11 +6,10 @@ plugins {
 group = "se.liu.ida.sas.pelab.text2vql"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.20.0")
+    implementation(project(":vql"))
+
     compileOnly("org.eclipse.xtext:org.eclipse.xtext:2.36.0")
     implementation("org.eclipse.emf:org.eclipse.emf.codegen.ecore:2.39.0")
     implementation("org.apache.commons:commons-csv:1.13.0")

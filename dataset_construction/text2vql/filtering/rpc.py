@@ -1,31 +1,45 @@
 import requests
 import json 
+import sqlite3
+import os.path as path
+import os
 
 from text2vql.util.args import makeParser
 
 class JavaHTTPSyntaxCheck:
-    def __init__(self, endpoint="http://localhost:63028", timeout=60):
+    def __init__(self, db, endpoint="http://localhost:63028", timeout=60):
         self.timeout = timeout
         self.endpoint = endpoint
+        self.db = db
+
+    def getUncheckedQueries(self):
+        with sqlite3.connect(self.db) as conn:
+            cursor = conn.cursor()
+            cursor.execute("""SELECT c.id, c.metamodel, c.lang, c.signat, c.pattern, cl.cluster 
+                              FROM chatgpt c 
+                              LEFT JOIN clusters cl ON c.metamodel = cl.model 
+                              WHERE c.syntax IS NULL""")
+            return cursor.fetchall()
+        
 
     def evaluate(self, entry):
-        query, domain, lang = entry
-        
-        payload = json.dumps({
+        query, domain, lang, cluster = entry
+
+        domain_file_mane = path.splitext(path.basename(domain))[0]
+        resp = requests.post(f"{self.endpoint}/{lang}", json={
             "query": query,
-            "metamodel": domain
-        })
-        resp = requests.post(f"{self.endpoint}/{lang}", json=payload, timeout=self.timeout)
+            "metamodel": f"metamodels/2-jars/{cluster}_{domain_file_mane}.ecore",
+            "jar": f"metamodels/2-jars/{cluster}_{domain_file_mane}.jar",
+            "wd": os.getcwd()
+        }, timeout=self.timeout)
         resp.raise_for_status()
         data = resp.json()
 
         return data
     
-    def __call__(self, entry):
-        try:
-            return self.evaluate(entry)
-        except Exception as e:
-            return e
+    def processUnchecked(self):
+        for uncheked in self.getUncheckedQueries():
+            print(self.evaluate((uncheked[4], uncheked[1], uncheked[2], uncheked[5])))
 
 if __name__ == "__main__":
     parser = makeParser()
@@ -34,6 +48,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-    checker = JavaHTTPSyntaxCheck()
-    for int in range(10):
-        print(checker((int,"Hello","vql")))
+    checker = JavaHTTPSyntaxCheck(args.db)
+    checker.processUnchecked()
+    
