@@ -6,6 +6,7 @@ include(
         //"refinery",
         "ocl",
         "vql",
+        "java",
         "utilities",
         "server"
 )

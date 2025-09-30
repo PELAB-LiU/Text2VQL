@@ -38,7 +38,7 @@ Region.allInstances()->select(r |
         EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(EPackage.Registry.INSTANCE);
         OCL ocl = OCL.newInstanceAbstract(environmentFactory);
         OCLHelper helper = ocl.createOCLHelper();
-        helper.setContext(packageHelper.epackage.getEClassifier("Statechart"));
+        helper.setContext(packageHelper.epackage.getEClassifiers().getFirst());
         OCLExpression expression = helper.createQuery(query);
         //Object expression = helper.defineOperation(query);
         var OCLquery = ocl.createQuery(expression);

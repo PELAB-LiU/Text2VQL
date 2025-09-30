@@ -116,7 +116,20 @@ class Parser:
                     code_start_line = i
                     break
             
-
+            ## Sometimes chatgpr forgets that a class is expected and only provides a function.
+            #partial_java_code = False
+            #if code_start_line<0:
+            #    code_start_line = 0
+            #    if langhint is None or langhint == 'java':
+            #        for i, line in enumerate(lines):
+            #            match = re.match(r'^(?:public\b|private\b|\/\/|\/\*)', line) #Regex verified with https://regexr.com/
+            #            if match:
+            #                if verbose:
+            #                    print(f"Partial start found on line {i}")
+            #                partial_java_code = True
+            #                code_start_line = i
+            #                break
+            #
             
             end_regex = {}
             # Java line ending. (We expect a class and therefore it should be a line starting with '}')
@@ -136,6 +149,9 @@ class Parser:
                     break
             
             query_lines = lines[code_start_line:code_end_line+1]
+            #if partial_java_code:
+            #    query_lines = ['public class Query {']+query_lines+['}']
+            
             query = "\n".join(query_lines).strip()
 
         return {
