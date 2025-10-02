@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("java-library")
     id("de.undercouch.download") version "5.6.0"
 }
 
@@ -21,7 +21,9 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation(fileTree("libs/ocl") { include("*.jar") })
+    //implementation(fileTree("libs/ocl") { include("*.jar") })
+    api(fileTree(mapOf("dir" to "libs/ocl", "include" to listOf("*.jar"))))
+    //api(fileTree("libs/ocl") { include("*.jar") })
     
     implementation(project(":utilities"))
 

@@ -8,6 +8,7 @@ include(
         "vql",
         "java",
         "utilities",
+        "comparison",
         "server"
 )
 for (project in rootProject.children) {

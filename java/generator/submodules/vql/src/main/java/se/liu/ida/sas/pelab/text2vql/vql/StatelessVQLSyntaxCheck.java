@@ -55,8 +55,7 @@ public interface StatelessVQLSyntaxCheck {
             .map(it -> (EPackage) it)
             .toList();
     }
-
-    default ParseResult check(Resource metamodels, String baseQuery){
+    default PatternParsingResults parse(Resource metamodels, String baseQuery){
         /*
          * Setup resource set
          */
@@ -64,10 +63,13 @@ public interface StatelessVQLSyntaxCheck {
         PatternParser parser = parserBuilder.build();
 
         String query = buildQueryString(baseQuery, metamodels);
-        System.out.println(query);
+        //System.out.println(query);
+        return parser.parse(query);
+    }
+    default ParseResult check(Resource metamodels, String baseQuery){
         try{
-            PatternParsingResults result = parser.parse(query);
-
+            PatternParsingResults result = this.parse(metamodels, baseQuery);
+            
             StringBuilder diagnostics = new StringBuilder();
             result.getAllDiagnostics().forEach(issue -> {
                 diagnostics.append(issue.getMessage()).append(System.lineSeparator());

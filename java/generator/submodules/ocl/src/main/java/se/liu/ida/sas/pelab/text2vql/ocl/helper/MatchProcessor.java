@@ -60,7 +60,7 @@ public class MatchProcessor {
     public String processData(Object data){
         if(data instanceof Tuple<?,?> tuple){
             StringBuilder builder = new StringBuilder();
-
+            
             Matcher m = regex.matcher(tuple.toString());
             while (m.find()) {
                 builder.append(m.group().replaceAll("DynamicEObjectImpl",""));
