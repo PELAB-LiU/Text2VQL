@@ -10,29 +10,37 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 
 import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava;
+import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava.CompilerOutput;
 
 public interface StatelessSyntaxCheckJava {
-    default ParseResult check(String query, Resource metamodels, File domainJar){
+    default CompilerOutput parse(String query, Resource metamodels, File domainJar){
         try {
             Path tmpwd = Files.createTempDirectory("text2vql-java-syntax");
+            
             CompileJava compiler = new CompileJava(tmpwd);
             File queryJava = compiler.generateJavaFile(query, getMetamodelsOfResource(metamodels));
 
             if(queryJava==null){
-                return new ParseResult(false, "Query class not found.");
+                return null;
             }
 
-            var result = compiler.compileJavaFile(domainJar, queryJava);
-
-            StringBuilder diagnostics = new StringBuilder();
-            result.getValue().forEach(issue -> {
-                diagnostics.append(issue).append(System.lineSeparator());
-            });
-
-            return new ParseResult(result.getKey() != null, diagnostics.toString());
+            return compiler.compileJavaFile(domainJar, queryJava);
         } catch (IOException e) {
-            return new ParseResult(false, e.getMessage());
+            return null;
         }
+    }
+
+    default ParseResult check(String query, Resource metamodels, File domainJar){
+        CompilerOutput output = parse(query, metamodels, domainJar);
+        if(output==null){
+            return new ParseResult(false, "Query class not found or compiler failed with exception.");
+        }
+        StringBuilder diagnostics = new StringBuilder();
+        output.diagnostics().forEach(issue -> {
+            diagnostics.append(issue).append(System.lineSeparator());
+        });
+
+        return new ParseResult(output.classFiles() != null, diagnostics.toString());
     }
 
     static List<EPackage> getMetamodelsOfResource(Resource resource){

@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -31,6 +33,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CompileJava {
+    private static final Map<String, String> builtInDomains = Map.of(
+        "ecore", "org.eclipse.emf.ecore", 
+        "vql", "org.eclipse.viatra.query.patternlanguage.emf.vql.");
     private Path wd;
     private boolean deleteOnExit = false;
     private JavaTemplate template = new JavaTemplate();
@@ -39,8 +44,7 @@ public class CompileJava {
         this.wd = wd;
     }
 
-    public String extractClassName(String source){
-        System.out.println(source);
+    public static String extractClassName(String source){
         Pattern pattern = Pattern.compile("\\bclass\\s+(\\w+)", Pattern.DOTALL);
         Matcher matcher = pattern.matcher(source);
         if (matcher.find()) {
@@ -54,13 +58,19 @@ public class CompileJava {
         if(classname==null){
             return null;
         }
+    
 
-        String[] packages = metamodels.stream().map(epackage -> epackage.getName()).toArray(String[]::new);
+        String[] packages = metamodels.stream().map(epackage -> {
+            String pkgname = epackage.getName();
+            return builtInDomains.getOrDefault(pkgname, pkgname);//Replace packagename of packages already on the classpath
+        }).toArray(String[]::new);
 
 
         File file = new File(wd.toFile(), classname+".java");
         FileWriter writer = new FileWriter(file);
-        writer.write(template.generateJavaCode(query, packages));
+        String fullCode = template.generateJavaCode(query, packages);
+        //System.out.println(fullCode);
+        writer.write(fullCode);
         writer.flush();
         writer.close();
 
@@ -70,8 +80,10 @@ public class CompileJava {
         return file;
     }
 
-    public AbstractMap.SimpleEntry<File[],List<String>> compileJavaFile(File domainjar, File... files){
-        var compilerOptions = Arrays.asList("-classpath", domainjar.getAbsolutePath() + File.pathSeparator + System.getProperty("java.class.path"));
+    public CompilerOutput compileJavaFile(File domainjar, File... files){
+        var compilerOptions = domainjar!=null ? 
+            Arrays.asList("-classpath", domainjar.getAbsolutePath() + File.pathSeparator + System.getProperty("java.class.path")):
+            Arrays.asList("-classpath", System.getProperty("java.class.path"));
         
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -107,9 +119,9 @@ public class CompileJava {
                     }
                 }
             }
-            return new AbstractMap.SimpleEntry<>(compiled.toArray(new File[compiled.size()]), diag);
+            return new CompilerOutput(this.wd.toFile(), compiled.toArray(new File[compiled.size()]), diag);
         }
-        return new AbstractMap.SimpleEntry<>(null, diag);
+        return new CompilerOutput(this.wd.toFile(), null, diag);
     }
 
     public void run(String classname, Function0<Object[]> args, File... files) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException{
@@ -129,4 +141,6 @@ public class CompileJava {
         
         targetMethod.invoke(targetInstance, args.apply()); // Cas
     }
+
+    public static record CompilerOutput(File wd, File[] classFiles, List<String> diagnostics){};
 }

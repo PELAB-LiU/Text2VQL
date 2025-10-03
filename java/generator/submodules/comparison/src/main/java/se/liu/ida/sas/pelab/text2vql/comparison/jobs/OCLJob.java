@@ -95,6 +95,7 @@ public class OCLJob implements Job {
             // There can be a problem if the condition is a global true/false.
             // Viatra might use a query like pattern foo(), wich would be mepped to M
             // OCL (invariant-like queries) maps the same to either M_ or M_true/M_false
+            // Possibly fix at java
             return "M_"+processValue(match);
         }
     }
@@ -104,5 +105,9 @@ public class OCLJob implements Job {
         } else {
             return Objects.toString(value);
         }
+    }
+
+    public void dispose(){
+        this.query.env().dispose();
     }
 }

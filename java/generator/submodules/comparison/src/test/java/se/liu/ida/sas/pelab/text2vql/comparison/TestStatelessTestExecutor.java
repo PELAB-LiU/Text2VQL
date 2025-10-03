@@ -1,5 +1,7 @@
 package se.liu.ida.sas.pelab.text2vql.comparison;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -23,20 +25,30 @@ public class TestStatelessTestExecutor {
         
         instances.add(PatternLanguagePackage.eINSTANCE);
         instances.add(EcorePackage.eINSTANCE);
-        
+
         Query truth = new Query("normalClasses", TestVQLJob.normalClasses);
         Query faulty = new Query("abstractClasses", TestVQLJob.abstractClasses);
 
         Query ocl1 = new Query("", TestOCLJob.abstractClasses);
         Query ocl2 = new Query("", TestOCLJob.normalClassesTuple);
-        TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{ocl1, ocl2}, new Query[]{});
+
+        Query java1 = new Query("query", TestJavaJob.normalClasses);
+        Query java2 = new Query("query", TestJavaJob.abstractClasses); 
+        TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{ocl1, ocl2}, new Query[]{java1, java2});
 
         
         //TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{}, new Query[]{});
 
 
         StatelessTestExecutor executor = new StatelessTestExecutor(){};
-        executor.serveTest(instances, test);
+        try {
+            executor.serveTest(instances, test, null);
+        } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | SecurityException
+                | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | InterruptedException | ExecutionException e) {// Happy Friday: There are a few failure points...
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
 }
