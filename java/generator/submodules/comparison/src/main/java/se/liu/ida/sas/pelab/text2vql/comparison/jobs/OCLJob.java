@@ -45,7 +45,7 @@ public class OCLJob implements Job {
         }
 
         trace.clear();
-        //reverse.clear();
+        reverse.clear();
         instanceModel = trace.copy(model);
         trace.copyReferences();
         trace.entrySet().forEach(it -> reverse.put(it.getValue(), it.getKey()));
@@ -56,9 +56,8 @@ public class OCLJob implements Job {
         if(query==null){
             return null;
         }
-
-        //Object result  = query.env().evaluate(resource.getContents().getFirst(), query.query());
-        query.query().getEvaluationEnvironment().clear();
+        query.env().dispose();
+        // query() creates a query from the OCLExpression to avoid a caching bug.
         Object result = query.query().evaluate(instanceModel);
         
         List<String> matches = new LinkedList<>();

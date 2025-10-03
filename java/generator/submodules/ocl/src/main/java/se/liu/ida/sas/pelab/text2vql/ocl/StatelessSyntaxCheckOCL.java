@@ -17,7 +17,11 @@ import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 
 public interface StatelessSyntaxCheckOCL {
-    public static record OCLParsed(OCL env, Query query){};
+    public static record OCLParsed(OCL env, OCLExpression expression){
+        public Query query(){
+            return env.createQuery(expression);
+        }
+    };
 
     default OCLParsed parse(String baseQuery, Resource metamodel) throws ParserException{
         EPackageRegistryImpl registry = new EPackageRegistryImpl();
@@ -31,8 +35,10 @@ public interface StatelessSyntaxCheckOCL {
         helper.setContext(EcorePackage.Literals.ECLASS);//Must be set
         OCLExpression expression = helper.createQuery(baseQuery);
         
-        //return new OCLParsed(ocl, expression);
-        return new OCLParsed(ocl, ocl.createQuery(expression));
+        return new OCLParsed(ocl, expression);
+
+        // Queries cache an extent map which does not reset after ven context.
+        //return new OCLParsed(ocl, ocl.createQuery(expression));
     }
     default ParseResult check(String baseQuery, Resource metamodel){
         try {

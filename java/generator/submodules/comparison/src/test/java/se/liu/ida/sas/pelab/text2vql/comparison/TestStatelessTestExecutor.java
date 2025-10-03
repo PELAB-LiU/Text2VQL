@@ -20,9 +20,10 @@ public class TestStatelessTestExecutor {
         StatelessVQLSyntaxCheck.init();
 
         List<EObject> instances = new ArrayList<EObject>();
-        instances.add(EcorePackage.eINSTANCE);
+        
         instances.add(PatternLanguagePackage.eINSTANCE);
-
+        instances.add(EcorePackage.eINSTANCE);
+        
         Query truth = new Query("normalClasses", TestVQLJob.normalClasses);
         Query faulty = new Query("abstractClasses", TestVQLJob.abstractClasses);
 
