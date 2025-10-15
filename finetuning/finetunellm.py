@@ -80,6 +80,7 @@ def load_model_and_tokenizer(args):
                                      lora_dropout=0.1,
                                      bias="none")
         model = get_peft_model(model, peft_config)
+        print("Params")
         model.print_trainable_parameters()
 
     if getattr(tokenizer, "pad_token_id") is None:
@@ -204,6 +205,8 @@ def main():
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     train(model_args, data_args, training_args)
 
-
+#qwen-1.5 java: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl --max_input_length 2048 --max_target_length 1024
+#qwen-1.5 ocl: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl --max_input_length 2048 --max_target_length 1024
+#qwen-1.5 vql: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl --max_input_length 2048 --max_target_length 1024
 if __name__ == '__main__':
     main()
