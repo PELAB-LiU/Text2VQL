@@ -16,20 +16,23 @@ import org.eclipse.viatra.query.runtime.api.AdvancedViatraQueryEngine;
 import org.eclipse.viatra.query.runtime.api.IQuerySpecification;
 import org.eclipse.viatra.query.runtime.emf.EMFScope;
 
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.vql.StatelessVQLSyntaxCheck;
 
 public class VQLJob implements Job {
+    private Query query;
     private PatternParsingResults patterns;
     private IQuerySpecification<?> main;
     private AdvancedViatraQueryEngine engine;
     private Resource resource;
     private List<String> parameterNames;
-    public VQLJob(Resource metamodel, String main, String query){
+    public VQLJob(Resource metamodel, Query query){
+        this.query = query;
         StatelessVQLSyntaxCheck checker = new StatelessVQLSyntaxCheck(){};
-        this.patterns = checker.parse(metamodel, query);
+        this.patterns = checker.parse(metamodel, query.query());
 
         if(!this.patterns.hasError()){
-            this.main = this.patterns.getQuerySpecification(main).orElseGet(()-> null);
+            this.main = this.patterns.getQuerySpecification(query.entry()).orElseGet(()-> null);
             if(this.main==null){
                 return;
             }
@@ -87,5 +90,13 @@ public class VQLJob implements Job {
             engine.dispose();
             engine = null;
         }
+    }
+    @Override
+    public boolean hasSyntaxError() {
+        return this.patterns.hasError();
+    }
+    @Override
+    public Query getQuery() {
+        return this.query;
     }
 }

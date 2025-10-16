@@ -21,6 +21,7 @@ import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import java.util.HashSet;
 import java.util.List;
 
+@SuppressWarnings("all")
 public class MatchTest {
     @Disabled
     @Test

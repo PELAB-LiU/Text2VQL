@@ -9,16 +9,17 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.ocl.OCL;
-import org.eclipse.ocl.ParserException;
-import org.eclipse.ocl.Query;
-import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
-import org.eclipse.ocl.expressions.OCLExpression;
-import org.eclipse.ocl.helper.OCLHelper;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.ocl.pivot.ExpressionInOCL;
+import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.ocl.pivot.internal.utilities.IllegalLibraryException;
+import org.eclipse.ocl.pivot.utilities.OCL;
+import org.eclipse.ocl.pivot.utilities.OCLHelper;
+import org.eclipse.ocl.pivot.utilities.ParserException;
+import org.eclipse.ocl.pivot.utilities.Query;
 
-
-public interface StatelessSyntaxCheckOCL {
-    public static record OCLParsed(OCL env, OCLExpression expression){
+public interface StatelessSyntaxCheckPivotOCL {
+    public static record OCLParsed(OCL env, ExpressionInOCL expression){
         public Query query(){
             return env.createQuery(expression);
         }
@@ -26,15 +27,20 @@ public interface StatelessSyntaxCheckOCL {
 
     default OCLParsed parse(String baseQuery, Resource metamodel) throws ParserException{
         EPackageRegistryImpl registry = new EPackageRegistryImpl();
+        OCL ocl = OCL.newInstance(registry);
+        ResourceSet resourceSet = ocl.getResourceSet();
+        
         registry.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
-        getMetamodelsOfResource(metamodel).forEach(epackage -> registry.put(epackage.getNsURI(), epackage));
+        getMetamodelsOfResource(metamodel).forEach(epackage -> {
+            registry.put(epackage.getNsURI(), epackage);
+            System.out.println("\tRegistering: "+epackage.getNsURI());
+            
+        });
+
+
+        OCLHelper helper = ocl.createOCLHelper(getMetamodelsOfResource(metamodel).getFirst().getEClassifiers().getFirst());
         
-        EcoreEnvironmentFactory environmentFactory = new EcoreEnvironmentFactory(registry);
-        OCL ocl = OCL.newInstanceAbstract(environmentFactory);
-        OCLHelper helper = ocl.createOCLHelper();
-        
-        helper.setContext(EcorePackage.Literals.ECLASS);//Must be set
-        OCLExpression expression = helper.createQuery(baseQuery);
+        ExpressionInOCL expression = helper.createQuery(baseQuery);
         
         return new OCLParsed(ocl, expression);
 
@@ -43,10 +49,13 @@ public interface StatelessSyntaxCheckOCL {
     }
     default ParseResult check(String baseQuery, Resource metamodel){
         try {
+            if(baseQuery.length()<5){
+                return new ParseResult(false, "Query is too short, probably empty. (length: "+baseQuery.length()+")");
+            }
             this.parse(baseQuery, metamodel); //OCL dies with exception if parsing fails.
             return new ParseResult(true, "");
-        } catch (ParserException e) {
-            return new ParseResult(false, e.getMessage());
+        } catch (ParserException | IndexOutOfBoundsException | IllegalStateException | WrappedException e) {
+            return new ParseResult(false, e.getClass().getSimpleName()+": "+e.getMessage());
         }
     }
     static EPackage getMainPackage(List<EPackage> packages){

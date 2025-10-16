@@ -3,7 +3,6 @@ package se.liu.ida.sas.pelab.text2vql.utilities.modeling;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 
 public class PackageHelper {
     public final Resource resource;
@@ -46,6 +45,7 @@ public class PackageHelper {
         return value;
     }
 
+    @SuppressWarnings("unchecked")
     public <T> void link(EObject object, String feature, T value){
         EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
         if(object.eGet(relation) instanceof EList list){
@@ -59,6 +59,7 @@ public class PackageHelper {
         object.eSet(relation, value);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> void add(EObject object, String feature, T value){
         EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
         ((EList) object.eGet(relation)).add(value);

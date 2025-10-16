@@ -16,4 +16,4 @@ allprojects {
             url = uri("https://repo.eclipse.org/content/groups/releases/")
         }
     }
-}
+} 

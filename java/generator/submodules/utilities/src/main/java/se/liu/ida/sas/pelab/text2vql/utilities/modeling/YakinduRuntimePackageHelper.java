@@ -5,7 +5,6 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 
 public class YakinduRuntimePackageHelper extends PackageHelper{
     public YakinduRuntimePackageHelper() {

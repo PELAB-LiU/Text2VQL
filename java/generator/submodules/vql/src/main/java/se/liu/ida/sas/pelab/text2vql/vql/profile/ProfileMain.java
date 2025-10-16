@@ -15,6 +15,8 @@ import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Guice;
 
+@Deprecated
+@SuppressWarnings("null")
 public class ProfileMain {
 	static final String MODE = System.getenv("MODE");
 	static final String CSV = System.getenv("CSV");
@@ -35,6 +37,7 @@ public class ProfileMain {
 			throw new IllegalArgumentException("Unexpected value: " + MODE);
 		}
 	}
+	
 	
 	private static void csv_aggregate_proofile() {
 		Iterable<CSVRecord> input = null;//(Iterable<CSVRecord>) CSVHandler.parse(CSV);

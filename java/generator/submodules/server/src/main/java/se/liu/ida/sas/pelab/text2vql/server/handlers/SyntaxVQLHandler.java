@@ -1,6 +1,5 @@
 package se.liu.ida.sas.pelab.text2vql.server.handlers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -9,9 +8,7 @@ import se.liu.ida.sas.pelab.text2vql.server.util.EMFPackageManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;

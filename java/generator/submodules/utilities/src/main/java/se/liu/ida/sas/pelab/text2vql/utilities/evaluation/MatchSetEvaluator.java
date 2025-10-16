@@ -2,17 +2,14 @@ package se.liu.ida.sas.pelab.text2vql.utilities.evaluation;
 
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import se.liu.ida.sas.pelab.text2vql.utilities.csv.CSVHandler;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 

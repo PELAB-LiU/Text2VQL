@@ -2,6 +2,7 @@ package se.liu.ida.sas.pelab.text2vql.server;
 
 import com.sun.net.httpserver.HttpServer;
 
+import se.liu.ida.sas.pelab.text2vql.server.handlers.EvaluationHandler;
 import se.liu.ida.sas.pelab.text2vql.server.handlers.SyntaxJavaHandler;
 import se.liu.ida.sas.pelab.text2vql.server.handlers.SyntaxOCLHandler;
 import se.liu.ida.sas.pelab.text2vql.server.handlers.SyntaxVQLHandler;
@@ -20,6 +21,7 @@ public class ServerMain {
         server.createContext("/vql", new SyntaxVQLHandler());
         server.createContext("/java", new SyntaxJavaHandler());
         server.createContext("/ocl", new SyntaxOCLHandler());
+        server.createContext("/eval", new EvaluationHandler());
 
         // Start the server
         server.setExecutor(null); // creates a default executor

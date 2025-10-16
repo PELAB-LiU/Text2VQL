@@ -4,9 +4,9 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.viatra.query.patternlanguage.emf.vql.PatternLanguagePackage;
 import org.junit.jupiter.api.Test;
 
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.comparison.jobs.OCLJob;
 
 public class TestOCLJob {
@@ -28,7 +28,7 @@ public class TestOCLJob {
         //var ecore = PatternLanguagePackage.eINSTANCE;
         Resource metamodels = new ResourceImpl();
         metamodels.getContents().add(EcoreUtil.copy(EcorePackage.eINSTANCE));
-        var job = new OCLJob(metamodels, normalClassesTuple);
+        var job = new OCLJob(metamodels, new Query(0, "", normalClassesTuple));
         job.configureInstanceModel(ecore);
         System.out.println(job.call());
     }    

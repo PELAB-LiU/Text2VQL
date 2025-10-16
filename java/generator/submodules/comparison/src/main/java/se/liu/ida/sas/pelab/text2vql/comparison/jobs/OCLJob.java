@@ -17,18 +17,21 @@ import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.types.TupleType;
 import org.eclipse.ocl.util.Tuple;
 
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL;
 import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL.OCLParsed;
 
 
 public class OCLJob implements Job {
+    private Query qut;
     private OCLParsed query;
     private Map<TupleType,List<String>> typekeys = new HashMap<>();
 
-    public OCLJob(Resource metamodel, String query){
+    public OCLJob(Resource metamodel, Query query){
+        this.qut = query;
         StatelessSyntaxCheckOCL checker = new StatelessSyntaxCheckOCL(){};
         try{
-            this.query = checker.parse(query, metamodel);
+            this.query = checker.parse(query.query(), metamodel);
         } catch (ParserException e){
             System.out.println("Error?");
             e.printStackTrace();
@@ -108,6 +111,18 @@ public class OCLJob implements Job {
     }
 
     public void dispose(){
-        this.query.env().dispose();
+        if(this.query!=null){
+            this.query.env().dispose();
+        }
+    }
+
+    @Override
+    public boolean hasSyntaxError() {
+        return query==null;
+    }
+
+    @Override
+    public Query getQuery() {
+        return this.qut;
     }
 }

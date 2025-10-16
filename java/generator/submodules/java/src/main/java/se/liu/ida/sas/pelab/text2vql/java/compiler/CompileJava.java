@@ -100,13 +100,14 @@ public class CompileJava {
             throw new RuntimeException(e);
         }
         
-        List<String> diag = diagnostics.getDiagnostics().stream().map(d ->
+        List<String> diag = diagnostics.getDiagnostics().stream().map(d ->   
             String.format(
                 "Error on line %d in %s: %s",
                 d.getLineNumber(),
                 d.getSource() == null ? "Unknown Source" : d.getSource().getName(),
                 d.getMessage(Locale.getDefault())
             )
+            
         ).toList();
         
 

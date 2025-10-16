@@ -4,6 +4,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.junit.jupiter.api.Test;
 
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.comparison.jobs.VQLJob;
 import se.liu.ida.sas.pelab.text2vql.vql.StatelessVQLSyntaxCheck;
 
@@ -23,7 +24,7 @@ public class TestVQLJob {
         StatelessVQLSyntaxCheck.init();
 
         var ecore = EcorePackage.eINSTANCE;
-        var job = new VQLJob(new ResourceImpl(), "normalClasses", normalClasses);
+        var job = new VQLJob(new ResourceImpl(), new Query(0, "normalClasses", abstractClasses));
         job.configureInstanceModel(ecore);
         job.call();
     }    

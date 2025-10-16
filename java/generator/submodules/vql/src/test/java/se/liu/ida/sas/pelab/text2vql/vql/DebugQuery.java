@@ -61,8 +61,6 @@ public class DebugQuery {
     }
 
     private EObject makeModel(){
-        var factory = railway.factory;
-
         var container = railway.make("RailwayContainer");
         var region = railway.make("Region");
         var segment1 = railway.make("Segment");
@@ -87,6 +85,7 @@ public class DebugQuery {
     public static void setupGlobal(){
         EMFPatternLanguageStandaloneSetup.doSetup();
         var runtimeModule = new EMFPatternLanguageStandaloneSetup.StandaloneParserWithSeparateModules();
+        @SuppressWarnings("unused")
         Injector injector = Guice.createInjector(runtimeModule);
         //XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 

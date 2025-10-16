@@ -1,6 +1,5 @@
 package se.liu.ida.sas.pelab.text2vql.utilities.modeling;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;

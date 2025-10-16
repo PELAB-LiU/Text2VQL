@@ -7,6 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.*;
 import java.util.*;
 
+@SuppressWarnings("all")
 public class CSVHandler {
     private final CSVPrinter output;
     private final String[] columns;

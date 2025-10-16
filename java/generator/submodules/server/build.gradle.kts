@@ -11,6 +11,7 @@ dependencies {
     implementation(project(":vql"))
     implementation(project(":ocl"))
     implementation(project(":java"))
+    implementation(project(":comparison"))
     
     compileOnly("org.eclipse.xtext:org.eclipse.xtext:2.36.0")
     implementation("org.eclipse.emf:org.eclipse.emf.codegen.ecore:2.39.0")

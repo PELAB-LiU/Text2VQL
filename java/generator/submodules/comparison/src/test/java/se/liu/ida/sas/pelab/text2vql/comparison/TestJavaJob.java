@@ -5,6 +5,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.jupiter.api.Test;
+
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.comparison.jobs.JavaJob;
 
 public class TestJavaJob {
@@ -14,7 +16,7 @@ public class TestJavaJob {
         //var ecore = PatternLanguagePackage.eINSTANCE;
         Resource metamodels = new ResourceImpl();
         metamodels.getContents().add(EcoreUtil.copy(EcorePackage.eINSTANCE));
-        var job = new JavaJob(metamodels, "query", normalClassesRecord, null);
+        var job = new JavaJob(metamodels, new Query(0, "query", normalClassesRecord), null);
         job.configureInstanceModel(ecore);
         System.out.println(job.call());
     }

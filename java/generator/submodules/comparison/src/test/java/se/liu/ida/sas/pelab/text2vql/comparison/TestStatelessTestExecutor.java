@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.viatra.query.patternlanguage.emf.vql.PatternLanguagePackage;
 import org.junit.jupiter.api.Test;
 
@@ -26,15 +27,15 @@ public class TestStatelessTestExecutor {
         instances.add(PatternLanguagePackage.eINSTANCE);
         instances.add(EcorePackage.eINSTANCE);
 
-        Query truth = new Query("normalClasses", TestVQLJob.normalClasses);
-        Query faulty = new Query("abstractClasses", TestVQLJob.abstractClasses);
+        Query truth = new Query(0, "normalClasses", TestVQLJob.normalClasses);
+        Query faulty = new Query(0, "abstractClasses", TestVQLJob.abstractClasses);
 
-        Query ocl1 = new Query("", TestOCLJob.abstractClasses);
-        Query ocl2 = new Query("", TestOCLJob.normalClassesTuple);
+        Query ocl1 = new Query(0, "", TestOCLJob.abstractClasses);
+        Query ocl2 = new Query(0, "", TestOCLJob.normalClassesTuple);
 
-        Query java1 = new Query("query", TestJavaJob.normalClasses);
-        Query java2 = new Query("query", TestJavaJob.abstractClasses); 
-        TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{ocl1, ocl2}, new Query[]{java1, java2});
+        Query java1 = new Query(0, "query", TestJavaJob.normalClasses);
+        Query java2 = new Query(0, "query", TestJavaJob.abstractClasses); 
+        TestCase test = new TestCase(truth, new Query[]{truth, faulty}, new Query[]{ocl1, ocl2}, new Query[]{java1, java2});
 
         
         //TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{}, new Query[]{});
@@ -42,7 +43,7 @@ public class TestStatelessTestExecutor {
 
         StatelessTestExecutor executor = new StatelessTestExecutor(){};
         try {
-            executor.serveTest(instances, test, null);
+            executor.serveTest(new ResourceImpl(), instances, test, null);
         } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | SecurityException
                 | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | InterruptedException | ExecutionException e) {// Happy Friday: There are a few failure points...

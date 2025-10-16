@@ -68,15 +68,6 @@ tasks{
         description = "Compare match sets of queries from CSV. Expect environment variables: META,INPUT,OUTPUT,INSTANCEDIR,AI"
     }
 
-    register<JavaExec>("syntaxCheckVQL"){
-        val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
-        dependsOn(mainRuntimeClasspath)
-        classpath(mainRuntimeClasspath)
-        mainClass.set("se.liu.ida.sas.pelab.text2vql.vql.SyntaxCheckVQL")
-        standardInput = System.`in`
-        group = "text2vql"
-        description = "Run syntax check on a database containing VQL queries"
-    }
     register<JavaExec>("validateVQL"){
         val mainRuntimeClasspath = sourceSets.main.map { it.runtimeClasspath }
         dependsOn(mainRuntimeClasspath)

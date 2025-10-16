@@ -3,18 +3,18 @@ package se.liu.ida.sas.pelab.text2vql.utilities.evaluation;
 import java.util.Arrays;
 
 public class ComparisonResult {
-    private final String query;
+    //private final String query;
     private final Boolean[] parse;
 
     private final Boolean[] compare;
 
-    private final String[] message;
+    //private final String[] message;
     private int count;
     public ComparisonResult(String query, int count){
-        this.query = query;
+        //this.query = query;
         this.parse = new Boolean[count];
         this.compare = new Boolean[count];
-        this.message = new String[count];
+        //this.message = new String[count];
         for(int i=0; i<count; i++){
             parse[i] = false;
             compare[i] = true;

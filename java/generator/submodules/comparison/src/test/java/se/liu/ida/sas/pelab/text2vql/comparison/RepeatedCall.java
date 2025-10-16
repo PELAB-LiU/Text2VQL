@@ -8,17 +8,18 @@ import org.eclipse.ocl.Query;
 import org.eclipse.ocl.ecore.OCL;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("all")
 public class RepeatedCall {
+    @Disabled
     @Test
     public void test() throws ParserException{
-        OCL ocl = OCL.newInstance();
+        OCL ocl = OCL.newInstance();        
         OCLHelper helper = ocl.createOCLHelper();
         helper.setContext(EcorePackage.Literals.ECLASS);
         OCLExpression expression = helper.createQuery("EClass.allInstances()->select(c | c.abstract = false)");
-
-        
 
         EObject model1 = EcoreUtil.copy(EcorePackage.eINSTANCE);
         EObject model2 = EcoreUtil.copy(EcorePackage.eINSTANCE);

@@ -1,7 +1,6 @@
 package se.liu.ida.sas.pelab.text2vql.comparison.jobs;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,11 +24,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
+import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.java.StatelessSyntaxCheckJava;
 import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava;
 import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava.CompilerOutput;
 
 public class JavaJob implements Job {
+    private Query query;
     private URL domainJar;
     private CompilerOutput compiled;
     private URLClassLoader classLoader;
@@ -41,9 +42,10 @@ public class JavaJob implements Job {
     private Resource resource;
     private List<String> parameterNames;
     
-    public JavaJob(Resource metamodel, String main, String query, File domainJar) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+    public JavaJob(Resource metamodel, Query query, File domainJar) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+        this.query = query;
         StatelessSyntaxCheckJava checker = new StatelessSyntaxCheckJava(){};
-        this.compiled = checker.parse(query, metamodel, domainJar);
+        this.compiled = checker.parse(query.query(), metamodel, domainJar);
         if(!syntaxOk()){
             System.out.println(compiled.diagnostics());
             return;
@@ -55,9 +57,9 @@ public class JavaJob implements Job {
             URLClassLoader.newInstance(new URL[] { compiled.wd().toURI().toURL(), this.domainJar }):
             URLClassLoader.newInstance(new URL[] { compiled.wd().toURI().toURL() });
 
-        String mainclassname = CompileJava.extractClassName(query);
+        String mainclassname = CompileJava.extractClassName(query.query());
         mainclass = Class.forName(mainclassname, true, classLoader);
-        method = mainclass.getMethod(main, Resource.class);
+        method = mainclass.getMethod(query.entry(), Resource.class);
 
         Class<?> returnType = method.getReturnType();
         if(Collection.class.isAssignableFrom(returnType)){
@@ -181,5 +183,13 @@ public class JavaJob implements Job {
             engine.dispose();
             engine = null;
         }*/
+    }
+    @Override
+    public boolean hasSyntaxError() {
+        return !syntaxOk();
+    }
+    @Override
+    public Query getQuery() {
+        return this.query;
     }
 }

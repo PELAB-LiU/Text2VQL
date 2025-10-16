@@ -1,7 +1,5 @@
 package se.liu.ida.sas.pelab.text2vql.vql;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -18,8 +16,6 @@ import org.eclipse.viatra.query.runtime.api.IQuerySpecification;
 import org.eclipse.viatra.query.runtime.api.ViatraQueryEngineOptions;
 import org.eclipse.viatra.query.runtime.emf.EMFScope;
 import org.eclipse.viatra.query.runtime.localsearch.matcher.integration.LocalSearchEMFBackendFactory;
-import org.eclipse.viatra.query.runtime.localsearch.matcher.integration.LocalSearchEMFBackendFactory;
-import org.eclipse.viatra.query.runtime.rete.matcher.ReteBackendFactory;
 import org.eclipse.viatra.query.runtime.rete.matcher.ReteBackendFactory;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;

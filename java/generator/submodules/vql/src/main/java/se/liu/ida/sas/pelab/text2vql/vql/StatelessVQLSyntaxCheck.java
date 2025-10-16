@@ -1,9 +1,7 @@
 package se.liu.ida.sas.pelab.text2vql.vql;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -12,10 +10,8 @@ import org.eclipse.viatra.query.patternlanguage.emf.EMFPatternLanguageStandalone
 import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParserBuilder;
 import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParsingResults;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.viatra.query.patternlanguage.emf.util.AdvancedPatternParser;
 import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParser;
 import com.google.inject.Guice;
-import com.google.inject.Injector;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,18 +32,6 @@ public interface StatelessVQLSyntaxCheck {
 
         return resourceSet;
     }
-
-    /*static Resource loadMetamodelToGlobalPackageRegistry(File metamodel, ResourceSet resourceSet){
-        if(loadedResources.containsKey(metamodel)){
-            System.out.println("Metamodel is already loaded.");
-            return loadedResources.get(metamodel);
-        }
-        Resource meta = resourceSet.getResource(URI.createFileURI(metamodel.getAbsolutePath()), true);
-        loadedResources.put(metamodel, meta);
-
-        getMetamodelsOfResource(meta).forEach(it -> EPackage.Registry.INSTANCE.putIfAbsent(it.getNsURI(), it));
-        return meta;
-    }*/
     
     static List<EPackage> getMetamodelsOfResource(Resource resource){
         return resource.getContents().stream()
@@ -66,6 +50,17 @@ public interface StatelessVQLSyntaxCheck {
         //System.out.println(query);
         return parser.parse(query);
     }
+    default PatternParsingResults safeParse(Resource metamodels, String baseQuery){
+        try{
+            PatternParsingResults result = parse(metamodels, baseQuery);
+            if(result.hasError()){
+                return null;
+            }
+            return result;
+        } catch (Exception e){
+            return null;
+        }
+    }
     default ParseResult check(Resource metamodels, String baseQuery){
         try{
             PatternParsingResults result = this.parse(metamodels, baseQuery);
@@ -80,24 +75,6 @@ public interface StatelessVQLSyntaxCheck {
             return new ParseResult(false, e.getMessage());
         }
     }
-
-    /*default Injector makeInjector(){
-        StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules();
-        return Guice.createInjector(runtimeModule);
-    }*/
-
-    /*default EPackage.Registry makeRegistry(){
-        return new EPackageRegistryImpl(EPackage.Registry.INSTANCE);
-    }*/
-
-    /*default ResourceSet makeLocalResourceSet(Injector injector){
-        XtextResourceSet resources = injector.getInstance(XtextResourceSet.class);
-        EPackage.Registry registry = makeRegistry();
-        resources.setPackageRegistry(registry);
-        resources.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                "ecore", new EcoreResourceFactoryImpl());
-        return resources;
-    }*/
 
     default String buildQueryString(String basequery, Resource loadedResources){
         StringBuilder builder = new StringBuilder();

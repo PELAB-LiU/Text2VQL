@@ -2,7 +2,6 @@ package se.liu.ida.sas.pelab.text2vql.server.handlers;
 
 import com.sun.net.httpserver.HttpHandler;
 
-import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL;
 import se.liu.ida.sas.pelab.text2vql.server.SyntaxCheckRequest;
 import se.liu.ida.sas.pelab.text2vql.server.util.EMFPackageManager;
 
