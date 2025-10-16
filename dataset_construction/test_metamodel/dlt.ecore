@@ -1,39 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dlt" nsURI="http://pelab.liu.se/text2vql/dlt" nsPrefix="dlt">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dlt" nsURI="http://pelab.liu.se/text2vql/dlt" nsPrefix="dlt">
   <eClassifiers xsi:type="ecore:EClass" name="FabricNetwork" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="organizations" lowerBound="1"
-        upperBound="-1" eType="#//Organization" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="channels" lowerBound="1"
-        upperBound="-1" eType="#//Channel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organizations" lowerBound="1" upperBound="-1" eType="//Organization" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="channels" lowerBound="1" upperBound="-1" eType="//Channel" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="KafkaFabricNetwork" eSuperTypes="#//FabricNetwork"/>
-  <eClassifiers xsi:type="ecore:EClass" name="RaftFabricNetwork" eSuperTypes="#//FabricNetwork"/>
+  <eClassifiers xsi:type="ecore:EClass" name="KafkaFabricNetwork" eSuperTypes="//FabricNetwork"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RaftFabricNetwork" eSuperTypes="//FabricNetwork"/>
   <eClassifiers xsi:type="ecore:EClass" name="Organization">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="hosts" lowerBound="1" upperBound="-1"
-        eType="#//Host" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hosts" lowerBound="1" upperBound="-1" eType="//Host" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Host">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" lowerBound="1" upperBound="4"
-        eType="#//Node" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" lowerBound="1" upperBound="4" eType="//Node" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Node" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="OrderingNode" eSuperTypes="#//Node">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="orders" lowerBound="1"
-        upperBound="-1" eType="#//Channel" eOpposite="#//Channel/orderedBy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderingNode" eSuperTypes="//Node">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orders" lowerBound="1" upperBound="-1" eType="//Channel" eOpposite="//Channel/orderedBy"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EndorsingNode" eSuperTypes="#//Node">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endorses" eType="#//ChaincodeInstance"
-        eOpposite="#//ChaincodeInstance/endorsedBy"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EndorsingNode" eSuperTypes="//Node">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endorses" eType="//ChaincodeInstance" eOpposite="//ChaincodeInstance/endorsedBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Channel">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="chaincodes" lowerBound="1"
-        upperBound="-1" eType="#//ChaincodeInstance" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="orderedBy" eType="#//OrderingNode"
-        eOpposite="#//OrderingNode/orders"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="chaincodes" lowerBound="1" upperBound="-1" eType="//ChaincodeInstance" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderedBy" eType="//OrderingNode" eOpposite="//OrderingNode/orders"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChaincodeInstance">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endorsedBy" lowerBound="2"
-        upperBound="-1" eType="#//EndorsingNode" eOpposite="#//EndorsingNode/endorses"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endorsedBy" lowerBound="2" upperBound="-1" eType="//EndorsingNode" eOpposite="//EndorsingNode/endorses"/>
   </eClassifiers>
 </ecore:EPackage>
