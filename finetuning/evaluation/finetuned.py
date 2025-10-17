@@ -2,6 +2,7 @@ from evaluation.external import TEXT2VQL_ROOT as ROOT #Load text2vql project to 
 
 import os
 import re
+import csv
 
 import argparse
 from collections import defaultdict
@@ -13,7 +14,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Must import evaluation.external before in order to ensure proper operation
-# It loads finds the text2vql root folder and adds the text2vql python module to the system module path.
+# evaluation.external finds the text2vql root folder and adds the text2vql python module to the system module path.
 from text2vql.util.metamodel import MetaModel
 
 from transformers.trainer_utils import set_seed
@@ -75,6 +76,7 @@ class LLM:
             caseID = testcase['id']
 
             prompt = """
+                Produce code only.
                 {metamodel}
                 //{nl}
                 {header}
@@ -108,38 +110,46 @@ class LLM:
                     self.save(conn, caseID, domain, k, query)
 
 
+def loadCSV(file):
+    data = []
+    with open(file, newline="", encoding='unicode_escape') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            data.append(dict(row))
+    return data
 
-
+# Code to generate the evaluation shots
+"""
+python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b
+python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-java
+python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b
+python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-ocl
+python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b
+python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-vql
+"""
 if __name__ == '__main__':
-    # parse arguments
     parser = argparse.ArgumentParser(description='Run trained models')
     parser.add_argument('--times', type=int, default=5)
     #parser.add_argument('--temperature', type=float, default=0.4)
     parser.add_argument('--basemodel', default="qwen/qwen2.5-coder-1.5b")
-    #parser.add_argument('--checkpoint', default="qwen-1.5-java")
     parser.add_argument('--checkpoint')
     parser.add_argument('--lang', default="java")
     parser.add_argument('--db', default="evaluation.db")
-    parser.add_argument('--nl', default="nl")
-    parser.add_argument('--header', default="header_java")
+    parser.add_argument('--description', default="description")
     parser.add_argument('--verbose', default=True)
-
+    parser.add_argument('--truth', default='../dataset_construction/test_metamodel/truth.csv')
     args = parser.parse_args()
 
-    #test_dataset = pd.read_csv(os.path.join(ROOT, 'dataset_construction/test_metamodel/test_queries.csv'), sep=',', encoding='unicode_escape')
-    
-    llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.nl, signature=args.header, db=args.db, lang=args.lang)
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')),
-        'trainbenchmark',
-        [{
-            'id': 0,
-            'nl': 'Semaphores with STOP or GO signals.',
-            'header_java': 'public class Query{ public List<Semaphore> stopOrGo(Resource resource){'
-        },
-        {
-            'id': 1,
-            'nl': 'Track elements monitored by at lest two sensors.',
-            'header_java': 'public class Query{ public List<TrackElement> monitoredBy2Sensors(Resource resource){'
-        }]
-    )
+    newtokens = 512 if args.lang!='java' else 1024
+    tests = loadCSV(args.truth)
+    railway = [x for x in tests if x['domain']=='railway']
+    dlt = [x for x in tests if x['domain']=='dlt']
+    cps = [x for x in tests if x['domain']=='cps']
+
+    llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, signature=f"header_{args.lang}", db=args.db, lang=args.lang)
+
+    # Let's warm the server room
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps, maxnewtokens=newtokens)
         
