@@ -21,7 +21,16 @@ from transformers.trainer_utils import set_seed
 
 set_seed(123)
 
-
+LANGINT = {
+    'java': "You are an agent to translate model query descriptions to java/EMF (Eclipse Modeling Framework) code for a provided metamodel.",
+    'vql': "You are an agent to translate model query descriptions to VQL (VIATRA Query Language) patterns for a provided metamodel.",
+    'ocl': "You are an agent to translate model query descriptions to OCL (Object Constraint Language) queries for a provided metamodel."
+}
+LANGCOMMENT = {
+    'java': "//",
+    'vql': "//",
+    'ocl': "--"
+}
 
 def findCheckpoint(base: str) -> str | None:
     pattern = re.compile(r"^checkpoint-(\d+)$")
@@ -76,12 +85,13 @@ class LLM:
             caseID = testcase['id']
 
             prompt = """
-                Produce code only.
+                {langint} Produce code only.
                 {metamodel}
-                //{nl}
+                {commentsign}{nl}
                 {header}
-                """.format(metamodel=metamodel.get_metamodel_info(),
-                           nl=nl_description,
+                """.format(langint=LANGINT[self.lang],
+                           metamodel=metamodel.get_metamodel_info(),
+                           commentsign=LANGCOMMENT[self.lang],nl=nl_description,
                            header=header)
             sample = self.tokenizer([prompt], return_tensors="pt")
     
