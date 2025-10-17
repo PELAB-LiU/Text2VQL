@@ -8,16 +8,18 @@ from peft import TaskType, LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser, \
     EarlyStoppingCallback
 
+from evaluation.langhints import LANGINST, LANGCOMMENT
+
 IGNORE_INDEX = -100
 PROMPT_NL = """Below there is the specification of a meta-model
 {metamodel}
-Write the queries in Java/EMF of the following natural language specification:
+{instruction}:
 {nl}
 Patterns:
 """
 
 PROMPT_CODE = """{metamodel}
-//{nl}
+{commentsign}{nl}
 """
 
 LORA_TARGET_MODULES = {
@@ -110,6 +112,7 @@ class DataArguments:
                                        metadata={"help": "Path to the training data."})
     data_path_local_test: str = field(default="./text2vql_test.jsonl",
                                       metadata={"help": "Path to the training data."})
+    lang: str = field(default="vql", metadata={"help": "Target language"})
 
 
 @dataclass
@@ -132,7 +135,7 @@ class TrainingArguments(transformers.TrainingArguments):
     num_train_epochs: int = field(default=10)
 
 
-def preprocess_function(example, tokenizer, max_target_length, max_input_length, nl_or_code):
+def preprocess_function(example, tokenizer, max_target_length, max_input_length, nl_or_code, lang):
     """
     # we tokenize, pad and truncate the samples in the following way:
     #   <pad><pad>...### Instruction:\n<intent>\n### Answer:\n<snippet><eos>
@@ -151,6 +154,8 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length,
 
     prompt = PROMPT.format(
         metamodel=example['definition'],
+        commentsign=LANGCOMMENT[lang],
+        instruction=LANGINST[lang],
         nl=example['descript']
     )
     max_prompt_len = (max_input_length + max_target_length) - \
@@ -183,7 +188,8 @@ def train(model_args, data_args, training_args):
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
                                                         data_args.max_target_length,
                                                         data_args.max_input_length,
-                                                        model_args.nl_or_code),
+                                                        model_args.nl_or_code,
+                                                        data_args.lang),
                           remove_columns=dataset["train"].column_names,
                           desc="Generating samples features.")
 
@@ -205,8 +211,8 @@ def main():
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     train(model_args, data_args, training_args)
 
-#qwen-1.5 java: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl --max_input_length 2048 --max_target_length 1024
-#qwen-1.5 ocl: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl --max_input_length 2048 --max_target_length 1024
-#qwen-1.5 vql: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --output_dir qwen-1.5-vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl --max_input_length 2048 --max_target_length 1024
+#qwen-1.5 java: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang java --output_dir qwen-1.5-java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl --max_input_length 2048 --max_target_length 1024
+#qwen-1.5 ocl: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang ocl --output_dir qwen-1.5-ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl --max_input_length 2048 --max_target_length 1024
+#qwen-1.5 vql: python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang vql --output_dir qwen-1.5-vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl --max_input_length 2048 --max_target_length 1024
 if __name__ == '__main__':
     main()

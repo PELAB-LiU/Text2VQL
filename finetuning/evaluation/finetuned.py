@@ -19,18 +19,9 @@ from text2vql.util.metamodel import MetaModel
 
 from transformers.trainer_utils import set_seed
 
-set_seed(123)
+from evaluation.langhints import LANGINT, LANGCOMMENT
 
-LANGINT = {
-    'java': "You are an agent to translate model query descriptions to java/EMF (Eclipse Modeling Framework) code for a provided metamodel.",
-    'vql': "You are an agent to translate model query descriptions to VQL (VIATRA Query Language) patterns for a provided metamodel.",
-    'ocl': "You are an agent to translate model query descriptions to OCL (Object Constraint Language) queries for a provided metamodel."
-}
-LANGCOMMENT = {
-    'java': "//",
-    'vql': "//",
-    'ocl': "--"
-}
+set_seed(123)
 
 def findCheckpoint(base: str) -> str | None:
     pattern = re.compile(r"^checkpoint-(\d+)$")
@@ -113,7 +104,7 @@ class LLM:
             with sqlite3.connect(self.db) as conn:
                 for k, new_tokens in enumerate(generated_new_tokens):
                     generated = self.tokenizer.decode(new_tokens, skip_special_tokens=True)
-                    query = header + '\n' + generated
+                    query = (header + '\n' + generated) if sleg.lang!='ocl' else generated
                     if self.verbose:
                         print(query)
                         print('-' * 100)
