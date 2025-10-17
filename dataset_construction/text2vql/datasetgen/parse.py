@@ -188,11 +188,12 @@ if __name__ == "__main__":
 
     ai = Parser(args.db)
 
-    with open(args.files, 'r') as f:
-        for line in f:
-            # Parse the JSON object from the line
-            record = AttrDict(json.loads(line))
-            # Do something with the record
-            ai.processResponse(record)
+    for file in args.files.split(','):
+        with open(f"chatgpt/{file}", 'r') as f:
+            for line in f:
+                # Parse the JSON object from the line
+                record = AttrDict(json.loads(line))
+                # Do something with the record
+                ai.processResponse(record)
     
 

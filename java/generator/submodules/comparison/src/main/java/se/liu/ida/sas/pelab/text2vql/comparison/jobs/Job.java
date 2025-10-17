@@ -1,5 +1,6 @@
 package se.liu.ida.sas.pelab.text2vql.comparison.jobs;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -12,4 +13,17 @@ public interface Job extends Callable<List<String>>{
     void configureInstanceModel(EObject model);
     Query getQuery();
     default void dispose(){};
+
+    Syntax getSyntaxResult();
+    public static record Syntax(boolean syntax, String[] diagnostics){
+        @Override
+        public final String toString() {
+            return "Syntax[syntax="+syntax+"true, diagnostics="+Arrays.toString(diagnostics);
+        }
+    };
+    public static record Semantics(boolean semantics, boolean nullpointer, String indicator){};
+    public static record Result(int id, Syntax syntax, Semantics semantics){};
+    default String identify(){
+        return this.getClass().getSimpleName()+"#"+this.getQuery().id();
+    }
 }

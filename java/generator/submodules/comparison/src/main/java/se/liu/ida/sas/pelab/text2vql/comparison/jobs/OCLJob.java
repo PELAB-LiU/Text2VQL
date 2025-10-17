@@ -25,16 +25,22 @@ import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL.OCLParsed;
 public class OCLJob implements Job {
     private Query qut;
     private OCLParsed query;
+    private Syntax syntax;
     private Map<TupleType,List<String>> typekeys = new HashMap<>();
 
     public OCLJob(Resource metamodel, Query query){
         this.qut = query;
         StatelessSyntaxCheckOCL checker = new StatelessSyntaxCheckOCL(){};
         try{
-            this.query = checker.parse(query.query(), metamodel);
+            String fixedQuery = query.query();
+            if (fixedQuery.startsWith("The query should return a ")) {
+                fixedQuery = "-- "+fixedQuery;
+            }
+            this.query = checker.parse(fixedQuery, metamodel);
+            this.syntax = new Syntax(true, new String[]{});
         } catch (ParserException e){
             System.out.println("Error?");
-            e.printStackTrace();
+            this.syntax = new Syntax(false, new String[]{e.getMessage(), e.getStackTrace().toString()});
             return;
         }
     }
@@ -124,5 +130,10 @@ public class OCLJob implements Job {
     @Override
     public Query getQuery() {
         return this.qut;
+    }
+
+    @Override
+    public Syntax getSyntaxResult() {
+        return this.syntax;
     }
 }

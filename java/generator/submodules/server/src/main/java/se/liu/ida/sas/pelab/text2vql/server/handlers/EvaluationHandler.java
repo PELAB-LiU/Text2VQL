@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import se.liu.ida.sas.pelab.text2vql.comparison.StatelessTestExecutor;
 import se.liu.ida.sas.pelab.text2vql.comparison.input.EvaluationResult;
 import se.liu.ida.sas.pelab.text2vql.comparison.input.TestCase;
+import se.liu.ida.sas.pelab.text2vql.comparison.jobs.Job.Result;
 import se.liu.ida.sas.pelab.text2vql.server.util.EMFPackageManager;
 import se.liu.ida.sas.pelab.text2vql.server.util.XMIModelCache;
 
@@ -42,7 +43,7 @@ public class EvaluationHandler implements HttpHandler{
             File jar = new File(request.wd(), request.jar());
         
             StatelessTestExecutor tester = new StatelessTestExecutor(){};
-            Map<Integer, EvaluationResult> result = tester.serveTest(meta, models, request.testcase(), request.getJar());
+            Map<Integer, Result> result = tester.serveTest(meta, models, request.testcase(), request.getJar());
 
             String response = objectMapper.writeValueAsString(result);
             System.out.println(response);

@@ -99,4 +99,12 @@ public class VQLJob implements Job {
     public Query getQuery() {
         return this.query;
     }
+    @Override
+    public Syntax getSyntaxResult() {
+        List<String> diag = new ArrayList<>();
+        patterns.getAllDiagnostics().iterator().forEachRemaining(e -> diag.add(e.toString()));
+        return new Syntax(!this.patterns.hasError(),
+            diag.toArray(String[]::new)
+        );
+    }
 }

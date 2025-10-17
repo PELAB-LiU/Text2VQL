@@ -1,10 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock, Event
-from typing import Callable, TypeVar
+from typing import Callable, Iterable, TypeVar
 
 from text2vql.util.threadsafeQueue import Queue,ShutDown
-
-
 
 T = TypeVar('T')  # Type of items in the source queue
 R = TypeVar('R')  # Type of items in the output queue

@@ -28,14 +28,16 @@ public class TestStatelessTestExecutor {
         instances.add(EcorePackage.eINSTANCE);
 
         Query truth = new Query(0, "normalClasses", TestVQLJob.normalClasses);
-        Query faulty = new Query(0, "abstractClasses", TestVQLJob.abstractClasses);
 
-        Query ocl1 = new Query(0, "", TestOCLJob.abstractClasses);
-        Query ocl2 = new Query(0, "", TestOCLJob.normalClassesTuple);
+        Query vql1 = new Query(1, "normalClasses", TestVQLJob.normalClasses);
+        Query vql2 = new Query(2, "abstractClasses", TestVQLJob.abstractClasses);
 
-        Query java1 = new Query(0, "query", TestJavaJob.normalClasses);
-        Query java2 = new Query(0, "query", TestJavaJob.abstractClasses); 
-        TestCase test = new TestCase(truth, new Query[]{truth, faulty}, new Query[]{ocl1, ocl2}, new Query[]{java1, java2});
+        Query ocl1 = new Query(3, "", TestOCLJob.abstractClasses);
+        Query ocl2 = new Query(4, "", TestOCLJob.normalClassesTuple);
+
+        Query java1 = new Query(5, "query", TestJavaJob.normalClasses);
+        Query java2 = new Query(6, "query", TestJavaJob.abstractClasses); 
+        TestCase test = new TestCase(truth, new Query[]{vql1, vql2}, new Query[]{ocl1, ocl2}, new Query[]{java1, java2});
 
         
         //TestCase test = new TestCase(null, truth, new Query[]{truth, faulty}, new Query[]{}, new Query[]{});
@@ -43,7 +45,7 @@ public class TestStatelessTestExecutor {
 
         StatelessTestExecutor executor = new StatelessTestExecutor(){};
         try {
-            executor.serveTest(new ResourceImpl(), instances, test, null);
+            System.out.println(executor.serveTest(new ResourceImpl(), instances, test, null));
         } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException | SecurityException
                 | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | InterruptedException | ExecutionException e) {// Happy Friday: There are a few failure points...

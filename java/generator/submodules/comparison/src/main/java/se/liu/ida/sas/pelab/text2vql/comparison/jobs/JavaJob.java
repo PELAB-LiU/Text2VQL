@@ -33,6 +33,7 @@ public class JavaJob implements Job {
     private Query query;
     private URL domainJar;
     private CompilerOutput compiled;
+    private Syntax syntax;
     private URLClassLoader classLoader;
     private Class<?> mainclass;
     private Method method;
@@ -47,9 +48,11 @@ public class JavaJob implements Job {
         StatelessSyntaxCheckJava checker = new StatelessSyntaxCheckJava(){};
         this.compiled = checker.parse(query.query(), metamodel, domainJar);
         if(!syntaxOk()){
-            System.out.println(compiled.diagnostics());
+            this.syntax = new Syntax(false, compiled.diagnostics().toArray(String[]::new));
             return;
         }
+        this.syntax = new Syntax(true, compiled.diagnostics().toArray(String[]::new));
+
         this.domainJar = domainJar!=null ? domainJar.toURI().toURL() : null;
         this.resource = new ResourceImpl();
 
@@ -191,5 +194,10 @@ public class JavaJob implements Job {
     @Override
     public Query getQuery() {
         return this.query;
+    }
+
+    @Override
+    public Syntax getSyntaxResult() {
+        return this.syntax;
     }
 }
