@@ -2,6 +2,7 @@ package se.liu.ida.sas.pelab.text2vql.utilities;
 
 import org.eclipse.emf.common.util.URI;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -10,6 +11,9 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class ResourcesHelper {
+    public static URI emfURI(File file){
+        return URI.createURI(file.toURI().toString());
+    }
     public static URI emfURI(String file){
         try {
             return URI.createURI(Objects.requireNonNull(

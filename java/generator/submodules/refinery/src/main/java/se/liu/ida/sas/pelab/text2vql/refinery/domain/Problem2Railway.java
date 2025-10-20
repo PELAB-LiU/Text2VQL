@@ -1,4 +1,4 @@
-package se.liu.ida.sas.pelab.text2vql.refinery;
+package se.liu.ida.sas.pelab.text2vql.refinery.domain;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -7,12 +7,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+
+import se.liu.ida.sas.pelab.text2vql.refinery.util.Text2VQLProjectStructure;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import tools.refinery.generator.ModelGenerator;
 import tools.refinery.logic.term.truthvalue.TruthValue;
 import tools.refinery.store.map.Cursor;
 import tools.refinery.store.tuple.Tuple;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -29,7 +32,8 @@ public class Problem2Railway {
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
 				"ecore", new EcoreResourceFactoryImpl());
 
-		Resource meta = resourceSet.getResource(ResourcesHelper.emfURI("railway/railway.ecore"), true);
+		File metamodel = Text2VQLProjectStructure.find("dataset_construction/test_metamodel/railway.ecore");
+		Resource meta = resourceSet.getResource(ResourcesHelper.emfURI(metamodel), true);
 
 		railway = (EPackage) meta.getContents().get(0);
 		factory = railway.getEFactoryInstance();
@@ -158,8 +162,8 @@ public class Problem2Railway {
 					+host.eGet(feature));
 		}
 	}
-	public void save(EObject root, String path) throws IOException {
-		var res = resourceSet.createResource(URI.createURI(path));
+	public void save(EObject root, File dir, String fileName) throws IOException {
+		var res = resourceSet.createResource(URI.createURI(new File(dir, fileName).toURI().toString()));
 		res.getContents().add(root);
 		res.save(Collections.EMPTY_MAP);
 

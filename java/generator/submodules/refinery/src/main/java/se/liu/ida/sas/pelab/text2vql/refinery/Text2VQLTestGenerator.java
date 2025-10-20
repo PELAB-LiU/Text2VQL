@@ -1,6 +1,8 @@
 package se.liu.ida.sas.pelab.text2vql.refinery;
 
 import com.google.inject.Inject;
+
+import se.liu.ida.sas.pelab.text2vql.refinery.domain.Problem2Railway;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import tools.refinery.generator.ModelGeneratorFactory;
 import tools.refinery.generator.ProblemLoader;
@@ -10,6 +12,7 @@ import tools.refinery.language.model.problem.Problem;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+@Deprecated
 public class Text2VQLTestGenerator {
 	@Inject
 	private ProblemLoader loader;
@@ -38,7 +41,7 @@ public class Text2VQLTestGenerator {
 			System.out.println("Generation started for model "+ i+ " of "+times);
 			generator.generate();
 			var root = mapper.toEMF(generator);
-			mapper.save(root, String.format(name, i));
+			mapper.save(root, null, String.format(name, i));
 		}
 
 	}
