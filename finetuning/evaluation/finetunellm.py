@@ -8,19 +8,10 @@ from peft import TaskType, LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, default_data_collator, HfArgumentParser, \
     EarlyStoppingCallback
 
-from evaluation.langhints import LANGINST, LANGCOMMENT
+from evaluation.templates import PROMPT_QUERY, QUERY
 
 IGNORE_INDEX = -100
-PROMPT_NL = """Below there is the specification of a meta-model
-{metamodel}
-{instruction}:
-{nl}
-Patterns:
-"""
 
-PROMPT_CODE = """{metamodel}
-{commentsign}{nl}
-"""
 
 LORA_TARGET_MODULES = {
     "Salesforce/codegen2-1B": {
@@ -98,7 +89,6 @@ def load_model_and_tokenizer(args):
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default="Salesforce/codegen2-7B")
     training_method: Optional[str] = field(default="lora")
-    nl_or_code: str = field(default="code")
     fp16_model: bool = field(default=True)
 
 
@@ -135,7 +125,7 @@ class TrainingArguments(transformers.TrainingArguments):
     num_train_epochs: int = field(default=10)
 
 
-def preprocess_function(example, tokenizer, max_target_length, max_input_length, nl_or_code, lang):
+def preprocess_function(example, tokenizer, max_target_length, max_input_length, lang):
     """
     # we tokenize, pad and truncate the samples in the following way:
     #   <pad><pad>...### Instruction:\n<intent>\n### Answer:\n<snippet><eos>
@@ -143,20 +133,18 @@ def preprocess_function(example, tokenizer, max_target_length, max_input_length,
     #   - prompt tokens `<pad><pad>...<intent + \n>` are ignored in the computation of the loss (-100 labels)
     #   - `<eos>` delimits the snippet and allows the model to have more focused predictions at inference
     """
-    tokenized_target = tokenizer(example['pattern'],
+    target = QUERY.safe_substitute(lang=lang, query=example['pattern'])
+    tokenized_target = tokenizer(target,
                                  truncation=True,
                                  max_length=max_target_length - 1,
                                  add_special_tokens=False)
     tokenized_target["input_ids"] = tokenized_target["input_ids"] + [tokenizer.eos_token_id]
     tokenized_target["attention_mask"] = tokenized_target["attention_mask"] + [1]
 
-    PROMPT = PROMPT_NL if nl_or_code == "nl" else PROMPT_CODE
-
-    prompt = PROMPT.format(
+    prompt = PROMPT_QUERY[lang].safe_substitute(
         metamodel=example['definition'],
-        commentsign=LANGCOMMENT[lang],
-        instruction=LANGINST[lang],
-        nl=example['descript']
+        description=example['descript'],
+        signature=example['signat']
     )
     max_prompt_len = (max_input_length + max_target_length) - \
                      len(tokenized_target["input_ids"])
@@ -188,7 +176,6 @@ def train(model_args, data_args, training_args):
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
                                                         data_args.max_target_length,
                                                         data_args.max_input_length,
-                                                        model_args.nl_or_code,
                                                         data_args.lang),
                           remove_columns=dataset["train"].column_names,
                           desc="Generating samples features.")

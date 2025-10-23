@@ -2,14 +2,27 @@ from text2vql.util.metamodel import MetaModel
 import textwrap
 from types import SimpleNamespace
 import json
-
+import os
+import sys
 from text2vql.seed.util import AttrDict
+
+TEXT2VQL_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+while True:
+    if os.path.basename(TEXT2VQL_ROOT) == "Text2VQL":
+        sys.path.append(os.path.join(TEXT2VQL_ROOT, "dataset_construction"))
+        break
+    new = os.path.dirname(TEXT2VQL_ROOT)
+    if new == TEXT2VQL_ROOT:
+        raise FileNotFoundError("Could not find a parent directory named 'Text2VQL'.")
+    TEXT2VQL_ROOT = new
+
 #
 # Structure
 #
 #
 SEED = AttrDict({
-    "metamodel": MetaModel('seed/yakindu_simplified.ecore'),
+    "metamodel": MetaModel(os.path.join(TEXT2VQL_ROOT,'dataset_construction/seed/yakindu_simplified.ecore')),
     "language": {
         "vql": "Viatra Query Language (VQL)",
         "ocl": "Object Constraint Language (OCL)",

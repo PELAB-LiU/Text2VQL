@@ -3,6 +3,7 @@ from evaluation.external import TEXT2VQL_ROOT as ROOT #Load text2vql project to 
 import os
 import re
 import csv
+import random 
 
 import argparse
 from collections import defaultdict
@@ -16,10 +17,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 # Must import evaluation.external before in order to ensure proper operation
 # evaluation.external finds the text2vql root folder and adds the text2vql python module to the system module path.
 from text2vql.util.metamodel import MetaModel
+from evaluation.templates import COMPLETION_QUERY, QUERY
+from text2vql.seed.seed_yakindu import SEED
 
 from transformers.trainer_utils import set_seed
-
-from evaluation.langhints import LANGINT, LANGCOMMENT
 
 set_seed(123)
 
@@ -42,7 +43,7 @@ def findCheckpoint(base: str) -> str | None:
     return checkpoint
 
 class LLM:
-    def __init__(self, basemodel, checkpoint=None, verbose=False, description='nl', signature='header_vql', db='evaluation.db', lang='vql'):
+    def __init__(self, basemodel, checkpoint=None, verbose=False, description='nl', headername='header_vql', db='evaluation.db', lang='vql'):
         self.basename = basemodel
         self.finetune = False
         self.lang = lang
@@ -60,30 +61,49 @@ class LLM:
         
         self.verbose = verbose
         self.descr = description
-        self.sign = signature
-    
+        self.headername = headername
+        self.random = random.Random(42)
+        
     def save(self, conn, caseID, domain, shotID, query):
         cursor = conn.cursor()
         cursor.execute("INSERT OR REPLACE INTO evaluation (llm, finetune, caseid, domain, lang, shotid, query) VALUES (?, ?, ?, ?, ?, ?, ?)", (self.basename, self.finetune, caseID, domain, self.lang, shotID, query))
         conn.commit() 
+        
+    def makeContextHints(self):
+        hint = f"""
+```
+{SEED.metamodel.get_metamodel_info()}
+```
+"""
+        types = ['normal','find','disjunction','negation','aggregate','type']
+        for feature in types:
+            queryhint = self.random.choice(SEED[feature].examples)
+            if self.lang=='ocl':
+                hint = f"{hint}{queryhint.description}\n{queryhint[self.lang].signature}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
+            else:
+                hint = f"{hint}{queryhint.description}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
+        return hint
         
     def test(self, metamodel, domain, tests, maxnewtokens=512, shots=5):
         outputs = defaultdict(list)
 
         for testcase in tqdm(tests, desc='Iterating test dataset', total=len(tests)):
             nl_description = testcase[self.descr]
-            header = testcase[self.sign]
+            header = testcase[self.headername]
             caseID = testcase['id']
 
-            prompt = """
-                {langint} Produce code only.
-                {metamodel}
-                {commentsign}{nl}
-                {header}
-                """.format(langint=LANGINT[self.lang],
-                           metamodel=metamodel.get_metamodel_info(),
-                           commentsign=LANGCOMMENT[self.lang],nl=nl_description,
-                           header=header)
+            prompt = COMPLETION_QUERY[self.lang].safe_substitute(
+                    metamodel=metamodel.get_metamodel_info(),
+                    description=nl_description,
+                    header=header
+                
+            )
+            if not self.finetune:
+                prompt = f"""
+{self.makeContextHints()}
+{prompt}
+"""
+            
             sample = self.tokenizer([prompt], return_tensors="pt")
     
             with torch.no_grad():
@@ -147,10 +167,11 @@ if __name__ == '__main__':
     dlt = [x for x in tests if x['domain']=='dlt']
     cps = [x for x in tests if x['domain']=='cps']
 
-    llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, signature=f"header_{args.lang}", db=args.db, lang=args.lang)
+    llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, headername=f"header_{args.lang}", db=args.db, lang=args.lang)
 
     # Let's warm the server room
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
     llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
+    
     llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps, maxnewtokens=newtokens)
         
