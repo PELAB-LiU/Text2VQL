@@ -10,7 +10,13 @@ public record CompareSortedJob(Future<List<String>> expected, Future<List<String
     @Override
     public ComparisonResult call() throws Exception {
         List<String> exp = expected.get();
-        List<String> act = actual.get();
+        List<String> act = null;
+        try{
+            act = actual.get();
+        } catch(ExecutionException e){
+            e.printStackTrace(System.out);
+        }
+        
         if(exp.size()!=act.size()){
             return new ComparisonResult(false, this);
         }

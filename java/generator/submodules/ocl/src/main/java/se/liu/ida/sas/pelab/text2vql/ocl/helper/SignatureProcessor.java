@@ -1,7 +1,6 @@
 package se.liu.ida.sas.pelab.text2vql.ocl.helper;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ocl.ecore.PrimitiveType;
 import org.eclipse.ocl.ecore.BagType;
 import org.eclipse.ocl.ecore.SetType;

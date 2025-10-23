@@ -39,9 +39,7 @@ public class JavaJob implements Job {
     private Method method;
     private boolean isTuple;
     private Field[] fields;
-    //private AdvancedViatraQueryEngine engine;
     private Resource resource;
-    private List<String> parameterNames;
     
     public JavaJob(Resource metamodel, Query query, File domainJar) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         this.query = query;

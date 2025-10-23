@@ -1,9 +1,7 @@
 package se.liu.ida.sas.pelab.text2vql.ocl;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
@@ -12,10 +10,7 @@ import org.eclipse.ocl.ParserException;
 import org.eclipse.ocl.Query;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.helper.OCLHelper;
-import org.eclipse.ocl.util.Bag;
-import org.eclipse.ocl.util.Tuple;
 import se.liu.ida.sas.pelab.text2vql.ocl.helper.MatchProcessor;
-import se.liu.ida.sas.pelab.text2vql.utilities.RailwayLoader;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import org.eclipse.ocl.expressions.OCLExpression;
 import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
@@ -23,10 +18,9 @@ import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
-
+@Deprecated
+@SuppressWarnings({"rawtypes","unchecked"})
 public class ValidateWithOCL extends MatchSetEvaluator<Query<?,?,?>,String> {
     private static EPackage railway;
     private final MatchProcessor matchProcessor;

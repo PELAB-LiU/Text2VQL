@@ -34,7 +34,7 @@ class ChaincodeInstance {
     EndorsingNode[0..*] endorsedBy opposite endorses
 }
 
-scope node = 20..40.
+scope node = 20..40, FabricNetwork=1.
 
 
 

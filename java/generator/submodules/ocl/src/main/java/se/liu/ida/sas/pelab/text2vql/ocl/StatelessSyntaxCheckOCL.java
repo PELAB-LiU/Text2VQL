@@ -1,10 +1,7 @@
 package se.liu.ida.sas.pelab.text2vql.ocl;
 
-import java.util.AbstractMap;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
@@ -16,7 +13,8 @@ import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 
-
+@Deprecated
+@SuppressWarnings({"rawtypes","unchecked"})
 public interface StatelessSyntaxCheckOCL {
     public static record OCLParsed(OCL env, OCLExpression expression){
         public Query query(){

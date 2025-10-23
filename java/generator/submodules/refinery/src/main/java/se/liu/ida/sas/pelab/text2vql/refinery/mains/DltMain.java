@@ -3,23 +3,14 @@ package se.liu.ida.sas.pelab.text2vql.refinery.mains;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import java.util.Map;
 
 import com.google.inject.Inject;
 
-import se.liu.ida.sas.pelab.text2vql.refinery.Text2VQLTestGenerator;
 import se.liu.ida.sas.pelab.text2vql.refinery.domain.GeneratorConfig;
-import se.liu.ida.sas.pelab.text2vql.refinery.domain.Problem2Railway;
-import se.liu.ida.sas.pelab.text2vql.refinery.domain.Problem2dlt;
 import se.liu.ida.sas.pelab.text2vql.refinery.domain.Problem2dltV2;
-import se.liu.ida.sas.pelab.text2vql.refinery.util.Text2VQLProjectStructure;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
+import se.liu.ida.sas.pelab.text2vql.utilities.Text2VQLProjectStructure;
 import tools.refinery.generator.ModelGeneratorFactory;
 import tools.refinery.generator.ProblemLoader;
 import tools.refinery.generator.standalone.StandaloneRefinery;
@@ -38,8 +29,8 @@ public class DltMain {
 	private void run() throws IOException, URISyntaxException {
 		File dir = Text2VQLProjectStructure.createIn("results/testmodels", "dlt");
 		GeneratorConfig cfg = GeneratorConfig.def();
-		//var seeded = loader.loadUri(ResourcesHelper.emfURI("railway/railway.problem.seeded"));
-		//run(seeded, cfg.seeded(), "model_sd_%d.xmi");
+		var seeded = loader.loadUri(ResourcesHelper.emfURI("dlt.seeded.problem"));
+		run(seeded, cfg.seeded(), dir, "model_sd_%d.xmi");
 
 		var seedless = loader.loadUri(ResourcesHelper.emfURI("dlt.seedless.problem"));
 		run(seedless, cfg.seedless(), dir, "model_sl_%d.xmi");
@@ -54,6 +45,9 @@ public class DltMain {
 		for(int i = 1; i <= times; i++){
 			System.out.println("Generation started for model "+ i+ " of "+times);
 			generator.generate();
+
+			generator.serialize().eResource().save(System.out, Map.of());
+			
 			var root = mapper.toEMF(generator);
 			mapper.save(root, dir, String.format(name, i));
 		}

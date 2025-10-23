@@ -13,24 +13,29 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
-import org.eclipse.ocl.ParserException;
+import org.eclipse.ocl.pivot.utilities.ParserException;
 import org.eclipse.ocl.types.TupleType;
 import org.eclipse.ocl.util.Tuple;
+import org.eclipse.ocl.xtext.essentialocl.EssentialOCLStandaloneSetup;
 
 import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
-import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL;
-import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckOCL.OCLParsed;
+import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckPivotOCL.OCLParsed;
+import se.liu.ida.sas.pelab.text2vql.ocl.StatelessSyntaxCheckPivotOCL;
 
 
 public class OCLJob implements Job {
     private Query qut;
     private OCLParsed query;
     private Syntax syntax;
-    private Map<TupleType,List<String>> typekeys = new HashMap<>();
+    private Map<TupleType<?,?>,List<String>> typekeys = new HashMap<>();
+    
+    static {
+        EssentialOCLStandaloneSetup.doSetup();
+    }
 
     public OCLJob(Resource metamodel, Query query){
         this.qut = query;
-        StatelessSyntaxCheckOCL checker = new StatelessSyntaxCheckOCL(){};
+        StatelessSyntaxCheckPivotOCL checker = new StatelessSyntaxCheckPivotOCL(){};
         try{
             String fixedQuery = query.query();
             if (fixedQuery.startsWith("The query should return a ")) {
@@ -60,6 +65,7 @@ public class OCLJob implements Job {
         trace.entrySet().forEach(it -> reverse.put(it.getValue(), it.getKey()));
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> call() throws Exception { 
         if(query==null){
@@ -67,7 +73,7 @@ public class OCLJob implements Job {
         }
         query.env().dispose();
         // query() creates a query from the OCLExpression to avoid a caching bug.
-        Object result = query.query().evaluate(instanceModel);
+        Object result = query.query().evaluateUnboxed(instanceModel);
         
         List<String> matches = new LinkedList<>();
         if(result instanceof Collection collection){
@@ -81,7 +87,7 @@ public class OCLJob implements Job {
         return matches;
     }
     
-    public List<String> getSortedTupleKeys(TupleType type){
+    public List<String> getSortedTupleKeys(TupleType<?,?> type){
         List<String> keys = new ArrayList<>(type.oclProperties().size());
         type.oclProperties().forEach(property -> {
             EStructuralFeature attribute = (EStructuralFeature) property;

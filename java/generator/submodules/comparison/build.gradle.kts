@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":vql"))
     implementation(project(":ocl"))
     implementation(project(":java"))
+    implementation(project(":utilities"))
     
     implementation("org.eclipse.viatra:org.eclipse.viatra.query.patternlanguage.emf:2.9.0")
     

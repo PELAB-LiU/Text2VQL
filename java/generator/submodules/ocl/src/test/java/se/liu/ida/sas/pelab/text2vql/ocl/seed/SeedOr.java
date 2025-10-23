@@ -6,9 +6,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.ocl.OCL;
 import org.eclipse.ocl.ParserException;
-import org.eclipse.ocl.ecore.BagType;
 import org.eclipse.ocl.ecore.EcoreEnvironmentFactory;
-import org.eclipse.ocl.ecore.delegate.OCLQueryDelegate;
 import org.eclipse.ocl.expressions.OCLExpression;
 import org.eclipse.ocl.helper.OCLHelper;
 import org.junit.jupiter.api.Test;
@@ -16,13 +14,10 @@ import se.liu.ida.sas.pelab.text2vql.ocl.helper.MatchProcessor;
 import se.liu.ida.sas.pelab.text2vql.ocl.helper.SignatureProcessor;
 import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
 import se.liu.ida.sas.pelab.text2vql.utilities.modeling.PackageHelper;
-import se.liu.ida.sas.pelab.text2vql.utilities.modeling.RailwayRuntimePackageHelper;
 import se.liu.ida.sas.pelab.text2vql.utilities.modeling.YakinduRuntimePackageHelper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
-
+@Deprecated
+@SuppressWarnings({"rawtypes","unchecked","unused"})
 public class SeedOr {
     private static PackageHelper packageHelper = new YakinduRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);

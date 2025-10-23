@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
+@Deprecated
+@SuppressWarnings({"rawtypes","unchecked","unused"})
 public class TestSemaStopGo {
     private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();
     private static MatchProcessor matchProcessor = new MatchProcessor(MatchSetEvaluator.regex_object);

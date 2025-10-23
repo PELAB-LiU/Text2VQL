@@ -10,7 +10,7 @@ include(
         "utilities",
         "comparison",
         "server"
-) 
+)
 for (project in rootProject.children) {
     val projectName = project.name
     project.name = projectName

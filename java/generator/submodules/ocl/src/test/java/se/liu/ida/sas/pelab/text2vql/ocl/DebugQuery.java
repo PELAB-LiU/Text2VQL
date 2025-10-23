@@ -53,6 +53,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 
+@Deprecated
+@SuppressWarnings({"rawtypes","unused"})
 public class DebugQuery extends StandaloneApplication {
     private static PackageHelper packageHelper = new YakinduRuntimePackageHelper();
     //private static PackageHelper packageHelper = new RailwayRuntimePackageHelper();

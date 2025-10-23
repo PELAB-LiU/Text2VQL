@@ -1,13 +1,9 @@
 package se.liu.ida.sas.pelab.text2vql.ocl.helper;
 
 import org.eclipse.emf.ecore.impl.DynamicEObjectImpl;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.ocl.Query;
 import org.eclipse.ocl.util.Bag;
 import org.eclipse.ocl.util.Tuple;
-import se.liu.ida.sas.pelab.text2vql.ocl.ContainerException;
 import se.liu.ida.sas.pelab.text2vql.ocl.DataException;
-import se.liu.ida.sas.pelab.text2vql.utilities.evaluation.MatchSetEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;

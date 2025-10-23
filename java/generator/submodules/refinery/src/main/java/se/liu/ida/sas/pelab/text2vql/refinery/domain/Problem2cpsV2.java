@@ -1,19 +1,12 @@
 package se.liu.ida.sas.pelab.text2vql.refinery.domain;
 
 import org.apache.commons.text.RandomStringGenerator;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
-import se.liu.ida.sas.pelab.text2vql.refinery.util.Text2VQLProjectStructure;
-import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
+import se.liu.ida.sas.pelab.text2vql.utilities.Text2VQLProjectStructure;
 import tools.refinery.generator.ModelGenerator;
-import tools.refinery.logic.term.truthvalue.TruthValue;
-import tools.refinery.store.map.Cursor;
 import tools.refinery.store.tuple.Tuple;
 
 import java.io.File;
@@ -74,16 +67,21 @@ public class Problem2cpsV2 extends Problem2Emf{
 		}
     }
 	private String makeStrings(ModelGenerator generator, Tuple relation){
-		RandomStringGenerator source = new RandomStringGenerator.Builder()
+		var source = new RandomStringGenerator.Builder()
      		.withinRange('a', 'z')
 			.withinRange('A', 'Z')
-			.withinRange('0', '1').get();
+			.withinRange('0', '1');
 
 		if(generator.getProblemTrace().getNodeId("STRING::RANDOM")==relation.get(1)){
-			return source.generate(random.nextInt(3, 10));
+			return source.get().generate(random.nextInt(3, 10));
+		}
+		if(generator.getProblemTrace().getNodeId("STRING::RANDOM_WS")==relation.get(1)){
+			return source.withinRange('\t', '\r')
+					.withinRange(' ', ' ')
+					.withinRange('\u00A0', '\u00A0').get().generate(random.nextInt(3, 10));
 		}
 		if(generator.getProblemTrace().getNodeId("STRING::VALUE1")==relation.get(1)){
-			return "value1";
+			return "value1---";
 		}
 		if(generator.getProblemTrace().getNodeId("STRING::VALUE2")==relation.get(1)){
 			return "2value";

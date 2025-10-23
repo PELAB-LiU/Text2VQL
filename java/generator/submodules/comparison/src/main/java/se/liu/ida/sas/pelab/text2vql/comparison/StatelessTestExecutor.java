@@ -50,6 +50,9 @@ public class StatelessTestExecutor {
         metamodels.getContents().forEach(entry -> metamodelsWithEcore.getContents().add(EcoreUtil.copy(entry)));
         metamodelsWithEcore.getContents().add(EcoreUtil.copy(EcorePackage.eINSTANCE));
 
+        if(1 != metamodels.getContents().size()){
+            throw new RuntimeException("Resource was taken!");
+        }
         VQLJob truth = new VQLJob(metamodels, test.truth());
         
         Map<Integer, EvaluationResult> evresult = new HashMap<>();
@@ -94,11 +97,10 @@ public class StatelessTestExecutor {
                     CompareSortedJob comparison = new CompareSortedJob(result, future);
                     results.put(job, executor.submit(comparison));
                 }
-                
             });
 
 
-            System.err.println("Truth: "+result.get().toString());
+            System.out.println("Truth (#"+result.get().size()+"): "+result.get().toString());
             results.forEach((job, comparison) ->{
                 try{
                     ComparisonResult cr = comparison.get();

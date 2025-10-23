@@ -28,10 +28,10 @@ public class XMIModelCache {
                    .put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
     }
 
-    public List<EObject> getModels(File fileOrDir, File ecore) throws IOException {
+    public List<EObject> getModels(File fileOrDir, Resource ecore) throws IOException {
         return getModels(fileOrDir, ecore, -1);
     }
-    public List<EObject> getModels(File fileOrDir, File ecore, int maxmodels) throws IOException {
+    public List<EObject> getModels(File fileOrDir, Resource ecore, int maxmodels) throws IOException {
         if(cache.containsKey(fileOrDir)){
             return cache.get(fileOrDir);
         }
@@ -43,14 +43,15 @@ public class XMIModelCache {
             .put("ecore", new XMIResourceFactoryImpl());
         
         
-        Resource ecoreResource = resourceSet.getResource(URI.createFileURI(ecore.getAbsolutePath()), true);
-        ecoreResource.getContents().forEach(content ->{
+        //Resource ecoreResource = resourceSet.getResource(URI.createFileURI(ecore.getAbsolutePath()), true);
+        ecore.getContents().forEach(content ->{
             if(content instanceof EPackage ePackage){
                 rs.getPackageRegistry().put(ePackage.getNsURI(), ePackage);
             }
         });
 
         if (fileOrDir.isFile()) {
+            System.out.println(fileOrDir.getAbsolutePath());
             Resource res = rs.getResource(URI.createFileURI(fileOrDir.getAbsolutePath()), true);
             List<EObject> models = new ArrayList<EObject>(res.getContents());
             cache.put(fileOrDir, models);

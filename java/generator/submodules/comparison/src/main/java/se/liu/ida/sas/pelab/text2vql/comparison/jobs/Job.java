@@ -18,7 +18,7 @@ public interface Job extends Callable<List<String>>{
     public static record Syntax(boolean syntax, String[] diagnostics){
         @Override
         public final String toString() {
-            return "Syntax[syntax="+syntax+"true, diagnostics="+Arrays.toString(diagnostics);
+            return "Syntax[syntax="+syntax+", diagnostics="+Arrays.toString(diagnostics);
         }
     };
     public static record Semantics(boolean semantics, boolean nullpointer, String indicator){};

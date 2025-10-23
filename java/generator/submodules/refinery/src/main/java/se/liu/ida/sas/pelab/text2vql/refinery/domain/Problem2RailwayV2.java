@@ -1,18 +1,11 @@
 package se.liu.ida.sas.pelab.text2vql.refinery.domain;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.*;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
-import se.liu.ida.sas.pelab.text2vql.refinery.util.Text2VQLProjectStructure;
-import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
+import se.liu.ida.sas.pelab.text2vql.utilities.Text2VQLProjectStructure;
 import tools.refinery.generator.ModelGenerator;
-import tools.refinery.logic.term.truthvalue.TruthValue;
-import tools.refinery.store.map.Cursor;
 import tools.refinery.store.tuple.Tuple;
 
 import java.io.File;

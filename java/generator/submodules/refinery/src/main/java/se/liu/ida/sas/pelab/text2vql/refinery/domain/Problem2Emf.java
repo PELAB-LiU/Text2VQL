@@ -22,10 +22,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
-import se.liu.ida.sas.pelab.text2vql.refinery.util.Text2VQLProjectStructure;
 import se.liu.ida.sas.pelab.text2vql.utilities.ResourcesHelper;
 import tools.refinery.generator.ModelGenerator;
-import tools.refinery.language.model.problem.Problem;
 import tools.refinery.logic.term.truthvalue.TruthValue;
 import tools.refinery.store.map.Cursor;
 import tools.refinery.store.tuple.Tuple;
@@ -40,6 +38,7 @@ public class Problem2Emf extends HashMap<Integer, Object>{
         this.factory = ePackage.getEFactoryInstance();
     }
     public void map(ModelGenerator generator){
+        clear();
         configureMapping(generator);
 
         getEnums().forEach(it -> makeEnum(generator, it));
@@ -121,14 +120,16 @@ public class Problem2Emf extends HashMap<Integer, Object>{
     public void referenceNotFoundHandler(ModelGenerator generator, EReference reference){
         throw new RuntimeException("Unrecognized clause: "+fqn(reference));
     }
-	private void mapRelations(ModelGenerator generator, EReference reference, Cursor<Tuple, TruthValue> cursor){
+	@SuppressWarnings("unchecked")
+    private void mapRelations(ModelGenerator generator, EReference reference, Cursor<Tuple, TruthValue> cursor){
 		while (cursor.move()){
 			var hostId = cursor.getKey().get(0);
 			var targetId = cursor.getKey().get(1);
 			var feature = ((EObject) get(hostId)).eClass().getEStructuralFeature(reference.getName());
 
 			if(feature.isMany()){
-				var list = (EList) ((EObject) get(hostId)).eGet(feature);
+				@SuppressWarnings("rawtypes")
+                var list = (EList) ((EObject) get(hostId)).eGet(feature);
 				list.add(getReferenceValue(generator, cursor.getKey(), reference));
 				System.out.println("\tInserted to feature: "+hostId+ "(image: "+get(hostId).hashCode()
 						+") ---["+feature.getName()+"]---> "
@@ -164,14 +165,16 @@ public class Problem2Emf extends HashMap<Integer, Object>{
     public void attributeNotFoundHandler(ModelGenerator generator, EAttribute attribute){
         throw new RuntimeException("Unrecognized clause: "+fqn(attribute));
     }
-	private void mapAttribute(ModelGenerator generator, EAttribute attribute, Cursor<Tuple, TruthValue> cursor){
+	@SuppressWarnings("unchecked")
+    private void mapAttribute(ModelGenerator generator, EAttribute attribute, Cursor<Tuple, TruthValue> cursor){
 		while (cursor.move()){
 			var hostId = cursor.getKey().get(0);
 			var targetId = cursor.getKey().get(1);
 			var feature = ((EObject) get(hostId)).eClass().getEStructuralFeature(attribute.getName());
 
 			if(feature.isMany()){
-				var list = (EList) ((EObject) get(hostId)).eGet(feature);
+				@SuppressWarnings("rawtypes")
+                var list = (EList) ((EObject) get(hostId)).eGet(feature);
                 Object value = getAttributeValue(generator, cursor.getKey(),  attribute);
 				list.add(value);
 				System.out.println("\tInserted to feature: "+hostId+ "(image: "+get(hostId).hashCode()

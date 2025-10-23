@@ -86,6 +86,7 @@ class Transition extends Identifiable{
 
 enum STRING{
     RANDOM,
+    RANDOM_WS,
     VALUE1,
     VALUE2,
     EMPTY,

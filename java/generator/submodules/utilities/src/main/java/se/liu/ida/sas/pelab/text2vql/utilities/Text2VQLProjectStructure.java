@@ -1,4 +1,4 @@
-package se.liu.ida.sas.pelab.text2vql.refinery.util;
+package se.liu.ida.sas.pelab.text2vql.utilities;
 
 import java.io.File;
 
