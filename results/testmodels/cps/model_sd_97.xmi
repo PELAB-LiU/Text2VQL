@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="2value" dbUrl="">
+  <appTypes exeType="value1---"/>
+  <appTypes exeType="">
+    <behavior identifier="" initial="//@appTypes.2/@behavior/@states.0">
+      <states identifier="value1---"/>
+      <states identifier="0111"/>
+      <states identifier="2value"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.2/@behavior/@states.1" action=""/>
+        <outgoingTransitions targetState="//@appTypes.2/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.3" action="011"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="2value" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="value1---">
+    <instances identifier="" dbUser="10001111"/>
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.1/@behavior/@states.3">
+      <states identifier="2value">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.3" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.3" action="00101000"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.2/@behavior/@states.2" action="1111001"/>
+      </states>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.2/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+      <states identifier="011"/>
+      <states/>
+    </behavior>
+  </appTypes>
+  <requests identifier="2value"/>
+  <hostTypes identifier="01001">
+    <instances identifier="value1---" nodeIp="" availableHdd="86" totalHdd="-9" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="value1---"/>
+</cps:CyberPhysicalSystem>

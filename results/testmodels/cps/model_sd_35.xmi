@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="2value">
+  <appTypes identifier="value1---" exeFileLocation="00110011" exeType="value1---" zipFileUrl="">
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="value1---">
+        <outgoingTransitions identifier="11011" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+      </states>
+      <states identifier="00100">
+        <outgoingTransitions targetState="//@appTypes.0/@behavior/@states.0"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states identifier="2value"/>
+      <states identifier="2value">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.0" action="2value"/>
+      </states>
+      <states/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="" exeType="" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="12">
+    <instances identifier="" state="Stopped" dbUser="" dbPassword="value1---" dependOn="//@appTypes.1/@instances.0"/>
+    <behavior identifier="000001" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="value1---">
+        <outgoingTransitions/>
+      </states>
+      <states identifier="2value">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="001110110" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="2value" zipFileUrl="1110" exeFileSize="38">
+    <behavior identifier=""/>
+  </appTypes>
+</cps:CyberPhysicalSystem>

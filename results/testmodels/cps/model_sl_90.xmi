@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="">
+  <appTypes exeFileLocation="" exeType="01110" zipFileUrl=""/>
+  <requests identifier="2value"/>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <requirements type="//@appTypes.0">
+      <availablePorts>21</availablePorts>
+    </requirements>
+  </requests>
+  <hostTypes identifier="2value">
+    <instances nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  </hostTypes>
+  <hostTypes identifier="110111000">
+    <instances nodeIp="011"/>
+  </hostTypes>
+  <hostTypes identifier="2value">
+    <instances identifier="10001000" availableHdd="33"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

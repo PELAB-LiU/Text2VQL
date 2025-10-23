@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="" dbUrl="value1---">
+  <appTypes identifier="" exeFileLocation="2value" exeType="&#xa0;&#xa0;&#xa0;" zipFileUrl="">
+    <behavior identifier="value1---"/>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="" exeType="2value" zipFileUrl="11001">
+    <behavior initial="//@appTypes.1/@behavior/@states.0">
+      <states/>
+    </behavior>
+  </appTypes>
+  <requests/>
+  <requests identifier="2value">
+    <requirements identifier="2value" count="-10" type="//@appTypes.1" mandatory="false">
+      <availablePorts>-6</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+    <requirements identifier="value1---" count="-6" type="//@appTypes.0">
+      <availablePorts>-2</availablePorts>
+    </requirements>
+  </requests>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="value1---" nodeIp="" availableHdd="-9" totalRam="27" totalHdd="50" communicateWith="//@hostTypes.1/@instances.2 //@hostTypes.1/@instances.1"/>
+  </hostTypes>
+  <hostTypes identifier="value1---">
+    <instances identifier="" nodeIp="value1---" availableCpu="-5" totalRam="71" communicateWith="//@hostTypes.0/@instances.0 //@hostTypes.1/@instances.1"/>
+    <instances identifier="" nodeIp="2value" availableRam="-10" availableHdd="-2" totalCpu="-10" totalRam="-9" totalHdd="15" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.1/@instances.1 //@hostTypes.1/@instances.2"/>
+    <instances identifier="" nodeIp="2value" availableCpu="97" availableRam="-4" availableHdd="-6" totalCpu="-9" totalRam="89" communicateWith="//@hostTypes.1/@instances.2 //@hostTypes.1/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="011">
+    <instances nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" communicateWith="//@hostTypes.1/@instances.2 //@hostTypes.1/@instances.1"/>
+  </hostTypes>
+  <hostTypes identifier="111101110"/>
+</cps:CyberPhysicalSystem>

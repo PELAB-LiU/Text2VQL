@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="value1---">
+  <appTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="100" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="-2">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" dbUser="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbPassword="&#xa0;&#xa0;&#xa0;" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.0/@instances.1" priority="19"/>
+    <instances identifier="" dbUser="" dbPassword="value1---" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.0/@instances.1" priority="84"/>
+    <behavior identifier="">
+      <states identifier="value1---"/>
+    </behavior>
+  </appTypes>
+  <requests identifier=""/>
+  <requests identifier="">
+    <requirements identifier="value1---" type="//@appTypes.0" applications="//@appTypes.0/@instances.0 //@appTypes.0/@instances.1">
+      <availablePorts>-10</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+    <requirements identifier="value1---" count="18" type="//@appTypes.0" applications="//@appTypes.0/@instances.0 //@appTypes.0/@instances.1" mandatory="false">
+      <availablePorts>-6</availablePorts>
+    </requirements>
+    <requirements identifier="" type="//@appTypes.0" applications="//@appTypes.0/@instances.0" mandatory="false">
+      <availablePorts>0</availablePorts>
+    </requirements>
+  </requests>
+  <requests identifier=""/>
+  <hostTypes identifier="">
+    <instances identifier="110000" nodeIp="010" availableRam="64" totalRam="-4" applications="//@appTypes.0/@instances.0 //@appTypes.0/@instances.1" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;"/>
+</cps:CyberPhysicalSystem>

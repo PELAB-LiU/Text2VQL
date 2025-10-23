@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="&#xa0;&#xa0;&#xa0;">
+  <appTypes identifier="2value" exeFileLocation="" exeType="" zipFileUrl="">
+    <requirements type="//@hostTypes.0"/>
+    <instances identifier="0100" state="Stopped" dbUser="010001" dbPassword="value1---" dependOn="//@appTypes.0/@instances.0" priority="3"/>
+    <behavior identifier=""/>
+  </appTypes>
+  <appTypes identifier="2value" zipFileUrl=""/>
+  <appTypes exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="10001100" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <requests identifier="value1---"/>
+  <requests identifier="">
+    <requirements identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" count="51" type="//@appTypes.0">
+      <availablePorts>-6</availablePorts>
+      <availablePorts>63</availablePorts>
+    </requirements>
+  </requests>
+  <requests identifier="&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="2value"/>
+</cps:CyberPhysicalSystem>

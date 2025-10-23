@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="2value">
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="" zipFileUrl="11000" exeFileSize="82">
+    <instances identifier="value1---" dbUser="0111100" dbPassword="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    <instances identifier="2value" state="Stopped" dbUser="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbPassword="" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.0/@instances.0"/>
+    <behavior identifier="2value" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="">
+        <outgoingTransitions identifier="" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="" exeType="11111010" zipFileUrl="2value" exeFileSize="-4">
+    <behavior identifier="100011001" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions/>
+        <outgoingTransitions/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="0111111"/>
+      </states>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="111000"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.0" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="2value">
+    <instances identifier="value1---" nodeIp="" availableHdd="70" totalRam="29" applications="//@appTypes.0/@instances.1" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

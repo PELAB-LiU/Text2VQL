@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="0011" dbUrl="">
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="" zipFileUrl="2value"/>
+  <requests identifier="value1---"/>
+  <requests identifier="">
+    <requirements identifier="0110" type="//@appTypes.0">
+      <availablePorts>31</availablePorts>
+      <availablePorts>-6</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+  </requests>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;">
+    <requirements identifier="2value" count="52" type="//@appTypes.0">
+      <availablePorts>23</availablePorts>
+      <availablePorts>-3</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+    <requirements identifier="" type="//@appTypes.0">
+      <availablePorts>-6</availablePorts>
+    </requirements>
+  </requests>
+  <requests/>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="value1---" nodeIp="2value" availableCpu="64" availableRam="26" availableHdd="-10" totalRam="74"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

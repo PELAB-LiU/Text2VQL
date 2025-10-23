@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="2value" dbUrl="2value">
+  <appTypes/>
+  <appTypes identifier="value1---" exeFileLocation="10011" exeType="value1---" zipFileUrl="2value" exeFileSize="-5">
+    <behavior identifier="2value"/>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <behavior identifier="2value"/>
+  </appTypes>
+  <requests/>
+</cps:CyberPhysicalSystem>

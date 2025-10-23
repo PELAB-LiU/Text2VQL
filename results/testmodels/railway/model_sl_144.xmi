@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<RailwayContainer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="railway">
+  <routes entry="//@regions.1/@elements.0/@semaphores.0" exit="//@regions.1/@elements.0/@semaphores.0">
+    <follows position="STRAIGHT" target="//@regions.2/@elements.1"/>
+  </routes>
+  <regions>
+    <sensors monitors="//@regions.1/@elements.1"/>
+    <sensors monitors="//@regions.1/@elements.0 //@regions.1/@elements.1"/>
+  </regions>
+  <regions>
+    <sensors/>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.1" connectsTo="//@regions.2/@elements.0 //@regions.2/@elements.2" length="51">
+      <semaphores/>
+    </elements>
+    <elements xsi:type="Segment" monitoredBy="//@regions.0/@sensors.0 //@regions.0/@sensors.1" connectsTo="//@regions.2/@elements.0" length="98"/>
+  </regions>
+  <regions>
+    <sensors/>
+    <sensors/>
+    <elements xsi:type="Segment" length="7"/>
+    <elements xsi:type="Switch" connectsTo="//@regions.1/@elements.1 //@regions.1/@elements.0" currentPosition="STRAIGHT" positions="//@routes.0/@follows.0"/>
+    <elements xsi:type="Segment"/>
+    <elements xsi:type="Segment" length="-2"/>
+  </regions>
+</RailwayContainer>

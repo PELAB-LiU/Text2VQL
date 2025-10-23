@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+  <appTypes identifier="2value" exeFileLocation="" exeType="value1---" zipFileUrl="2value" exeFileSize="69">
+    <instances identifier="" dbPassword="2value" dependOn="//@appTypes.0/@instances.0"/>
+    <behavior identifier="1100101" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier=""/>
+      </states>
+      <states identifier="100110101">
+        <outgoingTransitions action=""/>
+        <outgoingTransitions/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="66">
+    <behavior identifier="" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier="2value">
+        <outgoingTransitions targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.0"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.0" action="1111010"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="2value"/>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+</cps:CyberPhysicalSystem>

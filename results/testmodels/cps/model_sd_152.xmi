@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="">
+  <appTypes identifier="value1---" exeFileLocation="value1---" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="2value" exeFileSize="-4">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    <instances identifier="" dbUser="" dbPassword="&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.2/@behavior/@states.0">
+      <states identifier="2value"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.2/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="011011011" zipFileUrl="" exeFileSize="-2">
+    <behavior/>
+  </appTypes>
+  <appTypes exeType="1011111">
+    <behavior identifier="2value" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier="">
+        <outgoingTransitions identifier="00100" targetState="//@appTypes.0/@behavior/@states.0" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier="&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="value1---">
+    <instances identifier="2value" availableCpu="-2" totalRam="90"/>
+    <instances identifier="2value" totalRam="-8"/>
+  </hostTypes>
+  <hostTypes identifier="10001"/>
+</cps:CyberPhysicalSystem>

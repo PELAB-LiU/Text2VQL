@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="11110100" dbUrl="">
+  <appTypes identifier="value1---" exeFileLocation="100001001" exeType="2value" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="-3">
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+      </states>
+      <states identifier="110">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+      </states>
+      <states identifier="2value"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="0011" exeFileLocation="2value" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="" exeFileSize="88">
+    <instances identifier="" state="Stopped" dbUser="" dbPassword="001110" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.1/@instances.0" priority="-4"/>
+    <instances identifier="" state="Stopped" dbUser="" dbPassword="111" dependOn="//@appTypes.1/@instances.0" priority="95"/>
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier=""/>
+      <states identifier="01101010">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.1" action="value1---"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="10001100"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="1010000" exeType="value1---" zipFileUrl="2value"/>
+  <requests identifier="&#xa0;&#xa0;&#xa0;"/>
+  <requests identifier="value1---"/>
+  <requests identifier="2value"/>
+  <hostTypes identifier="">
+    <instances identifier="01110101" nodeIp="value1---" totalRam="-1" totalHdd="32" applications="//@appTypes.1/@instances.0" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="2value"/>
+  <hostTypes identifier="2value"/>
+</cps:CyberPhysicalSystem>

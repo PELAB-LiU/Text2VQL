@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:RaftFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations/>
+  <organizations>
+    <hosts/>
+    <hosts/>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.0/@chaincodes.4 //@channels.0/@chaincodes.0 //@channels.0/@chaincodes.2"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.0/@chaincodes.5"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+    </hosts>
+  </organizations>
+  <organizations>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.0/@chaincodes.2 //@channels.0/@chaincodes.3"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.0/@chaincodes.5 //@channels.0/@chaincodes.2 //@channels.1/@chaincodes.0 //@channels.1/@chaincodes.1"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+    </hosts>
+  </organizations>
+  <channels>
+    <chaincodes endorsedBy="//@organizations.1/@hosts.2/@nodes.0"/>
+    <chaincodes/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.1/@nodes.0 //@organizations.2/@hosts.0/@nodes.0 //@organizations.1/@hosts.2/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.0/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.1/@hosts.2/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.1/@hosts.3/@nodes.0 //@organizations.2/@hosts.1/@nodes.0"/>
+  </channels>
+  <channels>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.1/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.1/@nodes.0"/>
+  </channels>
+</dlt:RaftFabricNetwork>

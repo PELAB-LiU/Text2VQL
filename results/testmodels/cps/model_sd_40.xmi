@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="2value" dbUrl="">
+  <appTypes exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="2value" exeFileSize="-5">
+    <behavior identifier="1101001" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier="">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.2" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="100101" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.2" action=""/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.1" action="value1---"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action="001"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.2" action=""/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="2value">
+    <instances identifier="111010" dbPassword="01001" priority="2"/>
+    <behavior identifier="2value" initial="//@appTypes.0/@behavior/@states.2">
+      <states/>
+      <states identifier="10100">
+        <outgoingTransitions identifier="101110011" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier="001011001"/>
+  <hostTypes identifier="">
+    <instances identifier="value1---" nodeIp="000100" availableCpu="82" totalCpu="15" totalRam="86" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.0/@instances.0"/>
+    <instances identifier="01101" nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" availableRam="-4" availableHdd="-5" totalHdd="-10" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="001">
+    <instances identifier="" nodeIp="001111100" availableCpu="50" availableHdd="-3" totalHdd="-9" communicateWith="//@hostTypes.0/@instances.1"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

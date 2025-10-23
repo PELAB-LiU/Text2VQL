@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" dbUrl="1000101">
+  <appTypes exeType="101000" zipFileUrl="&#xa0;&#xa0;&#xa0;">
+    <behavior identifier="2value" initial="//@appTypes.0/@behavior/@states.1">
+      <states identifier="001100"/>
+      <states identifier="2value">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="value1---" exeType="" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="01111001" dbUser="2value" dbPassword="value1---"/>
+    <instances dbUser="" dbPassword="0110101" priority="35"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="01101"/>
+      </states>
+      <states identifier="2value"/>
+    </behavior>
+  </appTypes>
+  <requests identifier="value1---"/>
+  <requests/>
+</cps:CyberPhysicalSystem>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="2value">
+  <appTypes identifier="10110" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;" exeType="2value" zipFileUrl="value1---">
+    <requirements type="//@hostTypes.1"/>
+    <instances identifier="value1---" state="Stopped" dbUser="2value" dbPassword="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dependOn="//@appTypes.0/@instances.0 //@appTypes.0/@instances.2" priority="-4"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" state="Stopped" dbUser="" dbPassword="2value" dependOn="//@appTypes.0/@instances.2 //@appTypes.0/@instances.0" priority="21"/>
+    <instances identifier="11111001" dbUser="&#xa0;&#xa0;&#xa0;" dbPassword="10010110" dependOn="//@appTypes.0/@instances.1 //@appTypes.0/@instances.0 //@appTypes.0/@instances.2" priority="60"/>
+    <behavior/>
+  </appTypes>
+  <hostTypes identifier=""/>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="" totalCpu="-6"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

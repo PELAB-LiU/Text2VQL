@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="2value" dbUrl="2value">
+  <hostTypes identifier="">
+    <instances/>
+  </hostTypes>
+  <hostTypes identifier="value1---"/>
+  <hostTypes identifier="001">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="2value" availableCpu="10" totalRam="35" communicateWith="//@hostTypes.2/@instances.0"/>
+    <instances identifier="" nodeIp="value1---" availableCpu="82" availableRam="-6" availableHdd="-3" totalCpu="-3" totalHdd="-6" communicateWith="//@hostTypes.2/@instances.1"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

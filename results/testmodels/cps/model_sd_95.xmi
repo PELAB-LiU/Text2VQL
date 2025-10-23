@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="2value">
+  <appTypes identifier="value1---" exeFileLocation="2value" exeType="" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="-7">
+    <instances identifier="2value" dbUser="value1---" dbPassword="" dependOn="//@appTypes.1/@instances.0 //@appTypes.1/@instances.1"/>
+    <instances dbUser="100" dbPassword="1010" dependOn="//@appTypes.0/@instances.0 //@appTypes.2/@instances.0"/>
+    <behavior identifier="0101010" initial="//@appTypes.2/@behavior/@states.1">
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeType="000011010" zipFileUrl="">
+    <instances/>
+    <instances identifier="2value" dbPassword="11010" dependOn="//@appTypes.0/@instances.1"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states/>
+      <states identifier="">
+        <outgoingTransitions identifier="000001001" targetState="//@appTypes.2/@behavior/@states.0" action="2value"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="101011000" targetState="//@appTypes.2/@behavior/@states.2" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="2value" zipFileUrl="">
+    <instances dbUser="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.2/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      <states identifier="value1---"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="" exeType="&#xa0;&#xa0;&#xa0;" zipFileUrl="110">
+    <instances identifier=""/>
+  </appTypes>
+  <hostTypes/>
+</cps:CyberPhysicalSystem>

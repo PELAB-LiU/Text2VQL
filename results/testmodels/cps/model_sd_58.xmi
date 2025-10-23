@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="11000" dbUrl="">
+  <appTypes identifier="2value" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="011011110" zipFileUrl="2value" exeFileSize="64">
+    <instances identifier="&#xa0;&#xa0;&#xa0;" dbUser="" dbPassword="value1---" priority="86"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUser="2value" dbPassword="1111" dependOn="//@appTypes.0/@instances.1" priority="10"/>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="" exeType="value1---" zipFileUrl="2value">
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.2/@behavior/@states.2">
+      <states identifier="01110"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.2/@behavior/@states.2" action="1101000"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" action=""/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      <states identifier=""/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="value1---" exeType="111" zipFileUrl="value1---" exeFileSize="93">
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.2" action=""/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.2/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states/>
+      <states identifier="&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.2/@behavior/@states.2" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="" exeType="110110">
+    <instances identifier="" dependOn="//@appTypes.0/@instances.0" priority="5"/>
+  </appTypes>
+</cps:CyberPhysicalSystem>

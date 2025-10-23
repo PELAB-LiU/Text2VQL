@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:KafkaFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.1"/>
+    </hosts>
+  </organizations>
+  <organizations>
+    <hosts/>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.2"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.0"/>
+    </hosts>
+    <hosts/>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.1"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+    </hosts>
+  </organizations>
+  <channels orderedBy="//@organizations.1/@hosts.1/@nodes.3"/>
+  <channels orderedBy="//@organizations.0/@hosts.0/@nodes.0"/>
+  <channels orderedBy="//@organizations.1/@hosts.1/@nodes.0">
+    <chaincodes/>
+    <chaincodes endorsedBy="//@organizations.1/@hosts.3/@nodes.0"/>
+  </channels>
+</dlt:KafkaFabricNetwork>

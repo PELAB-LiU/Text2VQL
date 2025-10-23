@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="010001000" dbUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+  <appTypes identifier="" exeFileLocation="value1---" exeType="" zipFileUrl="value1---">
+    <instances identifier="" state="Stopped" dbUser="" dbPassword="2value" dependOn="//@appTypes.0/@instances.0" priority="-2"/>
+    <behavior identifier="10010" initial="//@appTypes.0/@behavior/@states.2">
+      <states identifier="">
+        <outgoingTransitions targetState="//@appTypes.1/@behavior/@states.1"/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.1" action="1010"/>
+      </states>
+      <states identifier="0100100">
+        <outgoingTransitions identifier="100110" targetState="//@appTypes.0/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="">
+    <behavior identifier="value1---" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="">
+        <outgoingTransitions identifier="value1---" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.1"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.1" action="01011101"/>
+      </states>
+      <states identifier="2value">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+      </states>
+      <states identifier="111000"/>
+    </behavior>
+  </appTypes>
+  <requests identifier="value1---"/>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <requests identifier="value1---"/>
+</cps:CyberPhysicalSystem>

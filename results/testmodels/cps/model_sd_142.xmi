@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="00111101" dbUrl="">
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="" zipFileUrl="00001110" exeFileSize="-4">
+    <behavior identifier="00111" initial="//@appTypes.1/@behavior/@states.2">
+      <states identifier="2value">
+        <outgoingTransitions identifier="010" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.2" action=""/>
+      </states>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="01101" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions identifier="10011000"/>
+      </states>
+      <states identifier="value1---">
+        <outgoingTransitions targetState="//@appTypes.1/@behavior/@states.1"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeType="&#xa0;&#xa0;&#xa0;" exeFileSize="-5">
+    <requirements type="//@hostTypes.0"/>
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.0/@behavior/@states.0">
+      <states identifier="001110"/>
+      <states identifier="value1---"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="010"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="111001"/>
+        <outgoingTransitions identifier="110011" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.2" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.2" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier=""/>
+  <hostTypes identifier="2value">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="1100" availableRam="4" availableHdd="83" totalRam="-8"/>
+    <instances availableCpu="7" availableRam="-6"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>
