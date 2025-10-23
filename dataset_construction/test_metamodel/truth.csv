@@ -230,15 +230,16 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){","The query should return a collection of Tuple(o1: Organization, o2: Organization) elements.","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> notCollaboratesWithSymmetric(Resource resource) {",,,,
-22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,Find nodes that endorse multiple chain codes in the same channel. ,"pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
-	Channel.chaincodes(c, i);
-	EndorsingNode.endorses(n, i);
-}
-pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
+22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,Find nodes that endorse multiple chain codes in the same channel. ,"pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
 	find endorsesChaincode(n, c, i1);
 	find endorsesChaincode(n, c, i2);
 	i1 != i2;
-}","pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){","The query should return a collection of Tuple(n: EndorsingNode, c: Channel) elements.","public class Query {
+}
+pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
+	Channel.chaincodes(c, i);
+	EndorsingNode.endorses(n, i);
+}
+","pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){","The query should return a collection of Tuple(n: EndorsingNode, c: Channel) elements.","public class Query {
     public static record Match(EndorsingNode n, Channel c) {}
     public Set<Match> endorsesMultipleChaincodes(Resource resource) {",,,,
 ,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,"Organization and channel pairs, where the there is an other orgnaization that participates in the channel, but the two organizations are not collaborating. Organizations collaborate if they participate in the came channel.","pattern cannotParticipateIn(o1: Organization, c: Channel){
@@ -295,7 +296,8 @@ pattern peerHelper(c: Channel, h: Host, n: Node){
 	Host.nodes(h,n);
 }
 pattern peer(n: Node, c: Channel){
-	find peerHelper(c, _, n);","pattern cannotEndorse(n: Node, i: ChaincodeInstance){","The query should return a collection of Tuple(n: Node, i: ChaincodeInstance) elements.","public class Query {
+	find peerHelper(c, _, n);
+}","pattern cannotEndorse(n: Node, i: ChaincodeInstance){","The query should return a collection of Tuple(n: Node, i: ChaincodeInstance) elements.","public class Query {
     public static record Match(Node n, ChaincodeInstance i) {}
     public Set<Match> cannotEndorse(Resource resource) {",,,,Might not be possible to make a violation
 26,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,"Directly connected channels, chaincodes and endorsing nodes.","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
@@ -320,14 +322,14 @@ private pattern allocatedApplication(app : ApplicationInstance) {
 	check(aCpu > tCpu);
 }",pattern availableGreaterThanTotalCpu(host : HostInstance) {,The query should return a collection of HostInstance elements.,"public class Query { 
     public List<HostInstance> availableGreaterThanTotalCpu(Resource resource){",,,,
-,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,,Hosts where the available HDD of the host is greater than the total HDD.,"pattern availableGreaterThanTotalHdd(host : HostInstance) {
+29,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,,Hosts where the available HDD of the host is greater than the total HDD.,"pattern availableGreaterThanTotalHdd(host : HostInstance) {
 	HostInstance.availableHdd(host, aHdd);
 	HostInstance.totalHdd(host, tHdd);
 
 	check(aHdd > tHdd);
 }",pattern availableGreaterThanTotalHdd(host : HostInstance) {,The query should return a collection of HostInstance elements.,"public class Query { 
     public List<HostInstance> availableGreaterThanTotalHdd(Resource resource){",,,,
-,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,,Hosts where the available RAM of the host is greater than the total RAM.,"pattern availableGreaterThanTotalRam(host : HostInstance) {
+30,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,,Hosts where the available RAM of the host is greater than the total RAM.,"pattern availableGreaterThanTotalRam(host : HostInstance) {
 	HostInstance.availableRam(host, aRam);
 	HostInstance.totalRam(host, tRam);
 

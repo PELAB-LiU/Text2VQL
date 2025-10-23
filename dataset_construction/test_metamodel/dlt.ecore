@@ -17,7 +17,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="orders" lowerBound="1" upperBound="-1" eType="//Channel" eOpposite="//Channel/orderedBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EndorsingNode" eSuperTypes="//Node">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endorses" eType="//ChaincodeInstance" eOpposite="//ChaincodeInstance/endorsedBy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endorses" upperBound="-1" eType="//ChaincodeInstance" eOpposite="//ChaincodeInstance/endorsedBy"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Channel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="chaincodes" lowerBound="1" upperBound="-1" eType="//ChaincodeInstance" containment="true"/>
