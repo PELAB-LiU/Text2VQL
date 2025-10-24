@@ -124,7 +124,7 @@ class LLM:
             with sqlite3.connect(self.db) as conn:
                 for k, new_tokens in enumerate(generated_new_tokens):
                     generated = self.tokenizer.decode(new_tokens, skip_special_tokens=True)
-                    query = (header + '\n' + generated) if sleg.lang!='ocl' else generated
+                    query = (header + '\n' + generated) if self.lang!='ocl' else generated
                     if self.verbose:
                         print(query)
                         print('-' * 100)
@@ -148,6 +148,15 @@ python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b --
 python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b
 python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-vql
 """
+"""
+./promptllm.sh  Qwen/Qwen3-1.7B-Base qwen3-1.7b
+python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-java
+python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b
+python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-ocl
+python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b
+python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-vql
+"""
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run trained models')
     parser.add_argument('--times', type=int, default=5)
