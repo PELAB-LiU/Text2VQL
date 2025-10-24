@@ -1,6 +1,5 @@
 package se.liu.ida.sas.pelab.text2vql.genmodel.genmodel;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.codegen.ecore.genmodel.GenPackage;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 
