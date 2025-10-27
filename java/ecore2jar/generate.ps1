@@ -1,11 +1,11 @@
-# Exit on error
-$ErrorActionPreference = "Stop"
-
 # Check if folder arguments are provided
 param(
     [Parameter(Mandatory=$true)][string]$InputDir,
     [Parameter(Mandatory=$true)][string]$OutputDir
 )
+
+# Exit on error
+$ErrorActionPreference = "Stop"
 
 if (-not (Test-Path $InputDir -PathType Container)) {
     Write-Host "Error: Folder '$InputDir' does not exist."
@@ -37,9 +37,11 @@ foreach ($EcoreFile in $EcoreFiles) {
     $EcorePath = $EcoreFile.FullName
 
     # Check if this file is already in the report
-    if (Select-String -Path $CsvReport -Pattern [regex]::Escape($EcorePath)) {
-        Write-Host "⏩ Skipping $EcorePath (already in build report)"
-        continue
+    if (Test-Path $CsvReport -PathType Leaf) {
+        if (Select-String -Path $CsvReport -Pattern ([regex]::Escape($EcorePath)) -Quiet) {
+            Write-Host "⏩ Skipping $EcorePath (already in build report)"
+            continue
+        }
     }
 
     Write-Host "Processing $EcorePath..."
