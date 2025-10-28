@@ -22,9 +22,9 @@ import java.util.Objects;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 
 import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
+import se.liu.ida.sas.pelab.text2vql.java.ConvertingCopier;
 import se.liu.ida.sas.pelab.text2vql.java.StatelessSyntaxCheckJava;
 import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava;
 import se.liu.ida.sas.pelab.text2vql.java.compiler.CompileJava.CompilerOutput;
@@ -40,7 +40,8 @@ public class JavaJob implements Job {
     private boolean isTuple;
     private Field[] fields;
     private Resource resource;
-    
+    private ConvertingCopier trace2;
+
     public JavaJob(Resource metamodel, Query query, File domainJar) throws MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         this.query = query;
         StatelessSyntaxCheckJava checker = new StatelessSyntaxCheckJava(){};
@@ -58,6 +59,8 @@ public class JavaJob implements Job {
             URLClassLoader.newInstance(new URL[] { compiled.wd().toURI().toURL(), this.domainJar }):
             URLClassLoader.newInstance(new URL[] { compiled.wd().toURI().toURL() });
 
+        trace2 = new ConvertingCopier(classLoader, metamodel);
+
         String mainclassname = CompileJava.extractClassName(query.query());
         mainclass = Class.forName(mainclassname, true, classLoader);
         method = mainclass.getMethod(query.entry(), Resource.class);
@@ -73,6 +76,7 @@ public class JavaJob implements Job {
                 
                 fields = ((Class<?>) dataType).getDeclaredFields();
                 Arrays.sort(fields, (f1, f2) -> f1.getName().compareTo(f2.getName()));
+
             }
         } else {
             isTuple = false; 
@@ -82,18 +86,19 @@ public class JavaJob implements Job {
     public boolean syntaxOk(){
         return !(this.compiled==null || this.compiled.classFiles()==null || this.compiled.classFiles().length==0);
     }
-    private Copier trace = new Copier();
+    
+    //private Copier trace = new Copier();
     private Map<EObject, EObject> reverse = new HashMap<>();
     public void configureInstanceModel(EObject model){
        if(!syntaxOk()){
             return;
         }
 
-        trace.clear();
+        trace2.clear();
         reverse.clear();
-        EObject instanceModel = trace.copy(model);
-        trace.copyReferences();
-        trace.entrySet().forEach(it -> reverse.put(it.getValue(), it.getKey()));
+        EObject instanceModel = trace2.copy(model);
+        trace2.copyReferences();
+        trace2.entrySet().forEach(it -> reverse.put(it.getValue(), it.getKey()));
         resource.getContents().clear();
         resource.getContents().add(instanceModel);
     }
@@ -106,7 +111,6 @@ public class JavaJob implements Job {
 
         Object instance = mainclass.getDeclaredConstructor().newInstance();
         Object result = method.invoke(instance, resource);
-
         List<String> matches =  processResult(result);
         Collections.sort(matches);
         return matches;
