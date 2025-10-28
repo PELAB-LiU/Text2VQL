@@ -1,5 +1,92 @@
 id,domain,source,construct_vql,description,truth_vql,header_vql,header_ocl,header_java,,,,notes
-0,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,"pattern goRouteMisalignedSwitch(route: Route){
+0,railway,text2vql,or,Semaphores with STOP or GO signals.,"pattern stopOrGo(semaphore: Semaphore){
+    Semaphore.signal(semaphore, Signal::GO);
+} or {
+    Semaphore.signal(semaphore, Signal::STOP);
+}",pattern stopOrGo(semaphore: Semaphore){,Bag(Semaphore),"public class Query { 
+    public List<Semaphore> stopOrGo(Resource resource){",,,,
+1,railway,text2vql,or,TrackElements that are either connected or monitored by the same sensor.,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+    TrackElement.monitoredBy(track1, sensor);
+    TrackElement.monitoredBy(track2, sensor);
+} or {
+    TrackElement.connectsTo(track1,track2);
+}","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","Bag(Tuple(track1: TrackElement, track2: TrackElement))","public class Query {
+    public static record Match(TrackElement track1, TrackElement track2) {}
+    public Set<Match> relatedTrackElements(Resource resource) {",,,,"If check is used, EPL passes all combination of parameters as correct. (2)Patterns can contain anything in the body without having syntax errors… (3) Enforce different"
+2,railway,text2vql,agg,Total length of segments.,"pattern totalLength(length: java Integer){
+    length == sum find segmentLength(_,#);
+}
+pattern segmentLength(segment: Segment, length: java Integer){
+    Segment.length(segment, length);
+}",pattern totalLength(length: java Integer){,Number,"public class Query { 
+    public int totalLength(Resource resource){",,,,
+3,railway,text2vql,agg,Track elements monitored by at lest two sensors.,"pattern monitoredBy2Sensors(track: TrackElement){
+    cnt == count find trackMonitoredBy(track, _);
+    check(cnt >= 2);
+}
+pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
+    TrackElement.monitoredBy(track, sensor);
+}",pattern monitoredBy2Sensors(track: TrackElement){,Bag(TrackElement),"public class Query { 
+    public List<TrackElement> monitoredBy2Sensors(Resource resource){",,,,"Check if EMF allows duplicates in links, like monitoredBy has the same sensor multiple times. (VIATRA and OCL is expected to behave differently. Decide on how to proceed.) Answer: No, this is not relevant."
+4,railway,text2vql,type,RailwayElements that are either Switches or SwitchPositions.,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+    Switch(raliway);
+} or {
+    SwitchPosition(raliway);
+}",pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){,Bag(RailwayElement),"public class Query { 
+    public List<RailwayElement> switchOrSwitchPositionRailwayElemements(Resource resource){",,,,
+5,railway,text2vql,type,Railway elements that are Switches.,"pattern switchRailwayElements(railway: RailwayElement){
+    Switch(railway);
+}",pattern switchRailwayElements(railway: RailwayElement){,Bag(RailwayElement),"public class Query { 
+    public List<RailwayElement> switchRailwayElements(Resource resource){",,,,
+6,railway,text2vql,normal,Active routes with entry GO semaphore.,"pattern goActiveRoute(route: Route){
+    Route.active(route,true);
+    Route.entry(route, semaphore);
+    Semaphore.signal(semaphore, Signal::GO);    
+}",pattern goActiveRoute(route: Route){,Bag(Route),"public class Query { 
+    public List<Route> goActiveRoute(Resource resource){",,,,
+7,railway,text2vql,normal,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,"pattern misalignedSwitchPosition(swP : SwitchPosition){
+    SwitchPosition.target(swP, sw);
+    SwitchPosition.position(swP, swpPosition);
+    Switch.currentPosition(sw, swCurrentPosition);
+    swpPosition != swCurrentPosition;
+}",pattern misalignedSwitchPosition(swP : SwitchPosition){,Bag(SwitchPosition),"public class Query { 
+    public List<SwitchPosition> misalignedSwitchPosition(Resource resource){",,,,"In OCL, there seems to be an issue with null safety when a chain of relation is null at some point. Evaluation criteria might need to be adjusted."
+8,railway,text2vql,mix,"Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.","pattern bigRegion(region: Region){
+    length == sum find trackLengthInRegion(region, _,#);
+    check(length >= 50);
+} or {
+    cnt == count find sensorInRegion(region, _);
+    check(cnt >= 10);
+}
+pattern trackLengthInRegion(region: Region, track: Segment, length: EInt){
+    Region.elements(region,track);
+    Segment.length(track,length);
+}
+pattern sensorInRegion(region:Region, sensor: Sensor){
+    Region.sensors(region,sensor);
+}",pattern bigRegion(region: Region){,Bag(Region),"public class Query { 
+    public List<Region> bigRegion(Resource resource){",,,,
+9,railway,text2vql,mix,Segments that are at least 7 units long or are switches.,"pattern sevenSegmentOrSwitch(track: TrackElement){
+    Switch(track);
+} or {
+    Segment.length(track, length);
+    check(length >= 7);
+}",pattern sevenSegmentOrSwitch(track: TrackElement){,Bag(TrackElement),"public class Query { 
+    public List<TrackElement> sevenSegmentOrSwitch(Resource resource){",,,,
+10,railway,text2vql,mix,Active route whose entry is a GO semaphore but not monitored by any sensor.,"pattern dangerousRoute(route: Route){
+        find activeRouteWithGO(route);
+        neg find routeMonitroedBy(route,_);
+}
+pattern routeMonitroedBy(route: Route, sensor: Sensor){
+    Route.requires(route, sensor);
+}
+pattern activeRouteWithGO(route: Route){
+    Route.active(route, true);
+    Route.entry(route, entry);
+    Semaphore.signal(entry, ::GO);
+}",pattern dangerousRoute(route: Route){,Bag(Route),"public class Query { 
+    public List<Route> dangerousRoute(Resource resource){",,,,Slight inference is required to resolve the description but should be doable.
+11,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,"pattern goRouteMisalignedSwitch(route: Route){
  find goRoute(route);
  Route.follows(route, swP);
  find misalignedSwitchPosition(swP);
@@ -18,7 +105,7 @@ pattern misalignedSwitchPosition(swP : SwitchPosition){
 	swpPosition != swCurrentPosition;
 }",pattern goRouteMisalignedSwitch(route: Route){,Bag(Route),"public class Query { 
     public List<Route> goRouteMisalignedSwitch(Resource resource){",,,,
-1,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,,Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+12,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,,Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
     find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
     find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
     find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
@@ -33,21 +120,7 @@ pattern connectedSegmentWithSameMonitor(segment1: Segment, segment2: Segment, se
 }","pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){","Bag(Tuple(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment))","public class Query {
     public static record Match(Sensor sensor, Segment segment1, Segment segment2, Segment segment3, Segment segment4, Segment segment5, Segment segment6) {}
     public Set<Match> connectedSegments6(Resource resource) {",,,,(?) Update to reflect the requirement (or not) for same/different tracks
-2,railway,text2vql,or,Semaphores with STOP or GO signals.,"pattern stopOrGo(semaphore: Semaphore){
-    Semaphore.signal(semaphore, Signal::GO);
-} or {
-    Semaphore.signal(semaphore, Signal::STOP);
-}",pattern stopOrGo(semaphore: Semaphore){,Bag(Semaphore),"public class Query { 
-    public List<Semaphore> stopOrGo(Resource resource){",,,,
-3,railway,text2vql,or,TrackElements that are either connected or monitored by the same sensor.,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
-    TrackElement.monitoredBy(track1, sensor);
-    TrackElement.monitoredBy(track2, sensor);
-} or {
-    TrackElement.connectsTo(track1,track2);
-}","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","Bag(Tuple(track1: TrackElement, track2: TrackElement))","public class Query {
-    public static record Match(TrackElement track1, TrackElement track2) {}
-    public Set<Match> relatedTrackElements(Resource resource) {",,,,"If check is used, EPL passes all combination of parameters as correct. (2)Patterns can contain anything in the body without having syntax errors… (3) Enforce different"
-4,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchMonitored.vql,,Switches not monitored by a sensor.,"pattern switchNotMonitored(sw : Switch){
+13,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchMonitored.vql,,Switches not monitored by a sensor.,"pattern switchNotMonitored(sw : Switch){
     neg find hasSensor(sw);
 }
 //auxiliary pattern
@@ -55,7 +128,7 @@ pattern hasSensor(sw : Switch){
     TrackElement.monitoredBy(sw, _);
 }",pattern switchNotMonitored(sw : Switch){,Bag(Switch),"public class Query { 
     public List<Switch> switchNotMonitored(Resource resource){",,,,
-5,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+14,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
     Route.follows(route, swP);
     SwitchPosition.target(swP, sw);
     TrackElement.monitoredBy(sw, sensor);
@@ -67,84 +140,11 @@ pattern required(sensor : Sensor, route : Route){
 }","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","Bag(Tuple(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch))","public class Query {
     public static record Match(Route route, Sensor sensor, SwitchPosition swP, Switch sw) {}
     public Set<Match> notRequiredRouteSensor(Resource resource) {",,,,Bit messy NL definition
-6,railway,text2vql,agg,Total length of segments.,"pattern totalLength(length: java Integer){
-    length == sum find segmentLength(_,#);
-}
-pattern segmentLength(segment: Segment, length: java Integer){
-    Segment.length(segment, length);
-}",pattern totalLength(length: java Integer){,Number,"public class Query { 
-    public int totalLength(Resource resource){",,,,
-7,railway,text2vql,agg,Track elements monitored by at lest two sensors.,"pattern monitoredBy2Sensors(track: TrackElement){
-    cnt == count find trackMonitoredBy(track, _);
-    check(cnt >= 2);
-}
-pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
-    TrackElement.monitoredBy(track, sensor);
-}",pattern monitoredBy2Sensors(track: TrackElement){,Bag(TrackElement),"public class Query { 
-    public List<TrackElement> monitoredBy2Sensors(Resource resource){",,,,"Check if EMF allows duplicates in links, like monitoredBy has the same sensor multiple times. (VIATRA and OCL is expected to behave differently. Decide on how to proceed.) Answer: No, this is not relevant."
-8,railway,text2vql,type,RailwayElements that are either Switches or SwitchPositions.,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
-    Switch(raliway);
-} or {
-    SwitchPosition(raliway);
-}",pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){,Bag(RailwayElement),"public class Query { 
-    public List<RailwayElement> switchOrSwitchPositionRailwayElemements(Resource resource){",,,,
-9,railway,text2vql,type,Railway elements that are Switches.,"pattern switchRailwayElements(railway: RailwayElement){
-    Switch(railway);
-}",pattern switchRailwayElements(railway: RailwayElement){,Bag(RailwayElement),"public class Query { 
-    public List<RailwayElement> switchRailwayElements(Resource resource){",,,,
-10,railway,text2vql,normal,Active routes with entry GO semaphore.,"pattern goActiveRoute(route: Route){
-    Route.active(route,true);
-    Route.entry(route, semaphore);
-    Semaphore.signal(semaphore, Signal::GO);    
-}",pattern goActiveRoute(route: Route){,Bag(Route),"public class Query { 
-    public List<Route> goActiveRoute(Resource resource){",,,,
-11,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,,Retrieve all segments whose lengths are less or equal than zero.,"pattern negativeLength(segment : Segment){
+15,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,,Retrieve all segments whose lengths are less or equal than zero.,"pattern negativeLength(segment : Segment){
     Segment.length(segment, length);
     check(length <= 0);
 }",pattern negativeLength(segment : Segment){,Bag(Segment),"public class Query { 
     public List<Segment> negativeLength(Resource resource){",,,,
-12,railway,text2vql,normal,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,"pattern misalignedSwitchPosition(swP : SwitchPosition){
-    SwitchPosition.target(swP, sw);
-    SwitchPosition.position(swP, swpPosition);
-    Switch.currentPosition(sw, swCurrentPosition);
-    swpPosition != swCurrentPosition;
-}",pattern misalignedSwitchPosition(swP : SwitchPosition){,Bag(SwitchPosition),"public class Query { 
-    public List<SwitchPosition> misalignedSwitchPosition(Resource resource){",,,,"In OCL, there seems to be an issue with null safety when a chain of relation is null at some point. Evaluation criteria might need to be adjusted."
-13,railway,text2vql,mix,"Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.","pattern bigRegion(region: Region){
-    length == sum find trackLengthInRegion(region, _,#);
-    check(length >= 50);
-} or {
-    cnt == count find sensorInRegion(region, _);
-    check(cnt >= 10);
-}
-pattern trackLengthInRegion(region: Region, track: Segment, length: EInt){
-    Region.elements(region,track);
-    Segment.length(track,length);
-}
-pattern sensorInRegion(region:Region, sensor: Sensor){
-    Region.sensors(region,sensor);
-}",pattern bigRegion(region: Region){,Bag(Region),"public class Query { 
-    public List<Region> bigRegion(Resource resource){",,,,
-14,railway,text2vql,mix,Segments that are at least 7 units long or are switches.,"pattern sevenSegmentOrSwitch(track: TrackElement){
-    Switch(track);
-} or {
-    Segment.length(track, length);
-    check(length >= 7);
-}",pattern sevenSegmentOrSwitch(track: TrackElement){,Bag(TrackElement),"public class Query { 
-    public List<TrackElement> sevenSegmentOrSwitch(Resource resource){",,,,
-15,railway,text2vql,mix,Active route whose entry is a GO semaphore but not monitored by any sensor.,"pattern dangerousRoute(route: Route){
-        find activeRouteWithGO(route);
-        neg find routeMonitroedBy(route,_);
-}
-pattern routeMonitroedBy(route: Route, sensor: Sensor){
-    Route.requires(route, sensor);
-}
-pattern activeRouteWithGO(route: Route){
-    Route.active(route, true);
-    Route.entry(route, entry);
-    Semaphore.signal(entry, ::GO);
-}",pattern dangerousRoute(route: Route){,Bag(Route),"public class Query { 
-    public List<Route> dangerousRoute(Resource resource){",,,,Slight inference is required to resolve the description but should be doable.
 16,railway,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,,"Two different routes where the exit semaphore of route1 is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
        Route.exit(route1, semaphore);
 	Route.requires(route1, sensor1);
@@ -429,3 +429,9 @@ pattern reachableAppInstance(sourceHostInstance : HostInstance, app : Applicatio
 }","pattern multipleApplicationInstanceInCommunicationGroup(sourceHostInstance : HostInstance, app : ApplicationType) {","Bag(Tuple(sourceHostInstance : HostInstance, app : ApplicationType))","public class Query {
     public static record Match(HostInstance sourceHostInstance, ApplicationType app) {}
     public Set<Match> multipleApplicationInstanceInCommunicationGroup(Resource resource) {",,,,Uses transitive closure that was not mentioned in the finetuning dataset.
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
+,,,,,,,,,,,,
