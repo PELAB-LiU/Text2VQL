@@ -29,9 +29,9 @@ public class VQLJob implements Job {
     public VQLJob(Resource metamodel, Query query){
         this.query = query;
         StatelessVQLSyntaxCheck checker = new StatelessVQLSyntaxCheck(){};
-        this.patterns = checker.parse(metamodel, query.query());
+        this.patterns = checker.safeParse(metamodel, query.query());
 
-        if(!this.patterns.hasError()){
+        if(this.patterns!=null && !this.patterns.hasError()){
             this.main = this.patterns.getQuerySpecification(query.entry()).orElseGet(()-> null);
             if(this.main==null){
                 return;
@@ -93,7 +93,7 @@ public class VQLJob implements Job {
     }
     @Override
     public boolean hasSyntaxError() {
-        return this.patterns.hasError();
+        return this.patterns==null || this.patterns.hasError();
     }
     @Override
     public Query getQuery() {
@@ -102,6 +102,9 @@ public class VQLJob implements Job {
     @Override
     public Syntax getSyntaxResult() {
         List<String> diag = new ArrayList<>();
+        if(this.patterns == null){
+            return new Syntax(false, new String[]{"Parse failed likely with exception."});    
+        }
         patterns.getAllDiagnostics().iterator().forEachRemaining(e -> diag.add(e.toString()));
         return new Syntax(!this.patterns.hasError(),
             diag.toArray(String[]::new)

@@ -215,7 +215,7 @@ public class ConvertingCopier extends LinkedHashMap<EObject, EObject> {
         EClass sourceClass = sourceEStructuralFeature.getEContainingClass();
 
         EPackage sourcePackage = sourceClass.getEPackage();
-        EFactory targetFactory = factories.getOrDefault(sourcePackage.getNsURI(), sourcePackage.getEFactoryInstance());
+        EFactory targetFactory = factories.getOrDefault(sourcePackage.getName(), sourcePackage.getEFactoryInstance());
 
         EPackage targetPackage = targetFactory.getEPackage();
         EClass targetClass = (EClass) targetPackage.getEClassifier(sourceClass.getName());

@@ -19,7 +19,7 @@ public class ServerMain {
         
         // Create an HTTP server on port 8000
         HttpServer server = HttpServer.create(new InetSocketAddress(63028), 0);
-        server.setExecutor(Executors.newFixedThreadPool(10));
+        server.setExecutor(Executors.newFixedThreadPool(16));
         
         // Define a context (URL path) and handler
         server.createContext("/vql", new SyntaxVQLHandler());
