@@ -44,6 +44,7 @@ CREATE TABLE chatgpt (
 	pattern TEXT NOT NULL,
     generation INTEGER NOT NULL,
 	syntax BOOLEAN,
+    diagnostics TEXT,
 	FOREIGN KEY (metamodel) REFERENCES metamodels (model)
 );
 
