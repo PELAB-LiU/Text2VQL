@@ -6,3 +6,7 @@ repo-ecore-all/
 
 # Generated queries
 dataset.db
+
+# Local data files
+text2vql_*_train.jsonl
+text2vql_*_test.jsonl
