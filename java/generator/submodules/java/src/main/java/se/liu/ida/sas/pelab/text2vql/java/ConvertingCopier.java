@@ -49,6 +49,7 @@ public class ConvertingCopier extends LinkedHashMap<EObject, EObject> {
      */
     private final Map<String, EFactory> factories = new HashMap<>();
 
+    @SuppressWarnings("unlikely-arg-type")
     public ConvertingCopier(URLClassLoader classLoader, Resource metamodels) {
         metamodels.getContents().forEach(eObject -> {
             if (eObject instanceof EPackage ePackage) {
@@ -60,7 +61,14 @@ public class ConvertingCopier extends LinkedHashMap<EObject, EObject> {
                     //        "Factory (registered): " + EPackage.Registry.INSTANCE.getEFactory(ePackage.getNsURI()));
                     Class<?> pkgClass = classLoader.loadClass(packageName + "." + packageClassName);
                     System.err.println("java.lang.ClassCastException is expected for the next line for Factories.");
+
+                    // Do a bit of temporary global package manipulation so that the loading does not replace the global (original) epagake
+                    // If global package is replaced, VIATRA will surely return incorrect results
+                    EPackage old = (EPackage) EPackage.Registry.INSTANCE.remove(ePackage.getNsURI());
                     EPackage compiledPackage = (EPackage) pkgClass.getField("eINSTANCE").get(null);
+                    EPackage.Registry.INSTANCE.remove(compiledPackage);
+                    EPackage.Registry.INSTANCE.put(old.getNsURI(), old);
+                    
                     //System.out.println("Factory (loaded): " + compiledPackage.getEFactoryInstance());
                     factories.put(packageName, compiledPackage.getEFactoryInstance());
                 } catch (ClassNotFoundException | IllegalArgumentException | IllegalAccessException

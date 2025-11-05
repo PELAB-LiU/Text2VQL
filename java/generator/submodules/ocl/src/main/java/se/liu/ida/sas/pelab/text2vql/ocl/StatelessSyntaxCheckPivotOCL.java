@@ -43,8 +43,6 @@ public interface StatelessSyntaxCheckPivotOCL {
         registry.put(EcorePackage.eNS_URI, EcorePackage.eINSTANCE);
         getMetamodelsOfResource(metamodel).forEach(epackage -> {
             registry.put(epackage.getNsURI(), epackage);
-            System.out.println("\tRegistering: "+epackage.getNsURI());
-            
         });
 
         EObject context = getMetamodelsOfResource(metamodel).getFirst().getEClassifiers().getFirst();

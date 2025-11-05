@@ -1,7 +1,6 @@
 package se.liu.ida.sas.pelab.text2vql.comparison;
 
 import java.io.File;
-import java.lang.module.Configuration;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
@@ -12,9 +11,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -22,7 +21,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 import se.liu.ida.sas.pelab.text2vql.comparison.input.EvaluationResult;
 import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
-import se.liu.ida.sas.pelab.text2vql.comparison.input.Request;
 import se.liu.ida.sas.pelab.text2vql.comparison.input.TestCase;
 import se.liu.ida.sas.pelab.text2vql.comparison.jobs.CompareSortedJob;
 import se.liu.ida.sas.pelab.text2vql.comparison.jobs.CompareSortedJob.ComparisonResult;
@@ -36,15 +34,6 @@ import se.liu.ida.sas.pelab.text2vql.comparison.jobs.Job.Semantics;
 public class StatelessTestExecutor {
     private ExecutorService executor = Executors.newFixedThreadPool(10);
 
-    public void serveRequest(Request request){
-
-        //for()
-
-    }
-    public void serveDomain(Configuration domain, Stream<TestCase> tests){
-
-        //tests.forEach(test -> serveTest(List<File> instances, test));
-    }
     public Map<Integer, Result> serveTest(Resource metamodels, List<EObject> instances, TestCase test, File domainjar) throws InterruptedException, ExecutionException, MalformedURLException, ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
         Resource metamodelsWithEcore = new ResourceImpl();
         metamodels.getContents().forEach(entry -> metamodelsWithEcore.getContents().add(EcoreUtil.copy(entry)));
@@ -53,8 +42,13 @@ public class StatelessTestExecutor {
         if(1 != metamodels.getContents().size()){
             throw new RuntimeException("Resource was taken!");
         }
+        metamodels.getContents().forEach(it -> {
+            if(it instanceof EPackage ep){
+                System.out.println(ep.getName());
+            }
+        });
         VQLJob truth = new VQLJob(metamodels, test.truth());
-        
+
         Map<Integer, EvaluationResult> evresult = new HashMap<>();
         
         Map<Integer, Job> jobs = new HashMap<Integer, Job>(test.vql().length+test.ocl().length+test.java().length);
@@ -87,20 +81,20 @@ public class StatelessTestExecutor {
             }
 
             truth.configureInstanceModel(instance);
-            Future<List<String>> result = executor.submit(truth);
+            Future<Job.MatchSet> result = executor.submit(truth);
 
             Map<Job, Future<ComparisonResult>> results = new HashMap<>();
             jobs.forEach((id, job) -> {
                 if(evresult.get(id).canProceedWithEvaluation()){
                     job.configureInstanceModel(instance);
-                    Future<List<String>> future = executor.submit(job);
+                    Future<Job.MatchSet> future = executor.submit(job);
                     CompareSortedJob comparison = new CompareSortedJob(result, future);
                     results.put(job, executor.submit(comparison));
                 }
             });
 
 
-            System.out.println("Truth (#"+result.get().size()+"): "+result.get().toString());
+            System.out.println("Truth (#"+result.get().matches().size()+"): "+result.get().toString());
             results.forEach((job, comparison) ->{
                 try{
                     ComparisonResult cr = comparison.get();

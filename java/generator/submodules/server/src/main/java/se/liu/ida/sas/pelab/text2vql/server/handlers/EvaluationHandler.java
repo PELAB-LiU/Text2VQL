@@ -47,7 +47,7 @@ public class EvaluationHandler implements HttpHandler{
             Map<Integer, Result> result = tester.serveTest(meta, models, request.testcase(), request.getJar());
 
             String response = objectMapper.writeValueAsString(result);
-            System.out.println(response);
+            //System.out.println(response);
             
             exchange.sendResponseHeaders(200, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {

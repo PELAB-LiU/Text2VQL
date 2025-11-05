@@ -54,7 +54,7 @@ public interface StatelessVQLSyntaxCheck {
         try{
             PatternParsingResults result = parse(metamodels, baseQuery);
             if(result.hasError()){
-                return null;
+                return result;//Still pass it for diagnostics insight
             }
             return result;
         } catch (Exception e){
