@@ -336,7 +336,7 @@ private pattern allocatedApplication(app : ApplicationInstance) {
 	check(aRam > tRam);
 }",pattern availableGreaterThanTotalRam(host : HostInstance) {,Bag(HostInstance),"public class Query { 
     public List<HostInstance> availableGreaterThanTotalRam(Resource resource){",,,,
-31,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,"normal,neg?",Host where its IP address is not unique,"pattern nodeIpIsNotUnique(host : HostInstance){
+31,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Host where its IP address is not unique,"pattern nodeIpIsNotUnique(host : HostInstance){
 	find nodeIpOfHost(host, ip);
 	find nodeIpOfHost(otherHost, ip);
 	host != otherHost;
