@@ -89,6 +89,8 @@ public class VQLJob implements Job {
 
             Collections.sort(matches);
             return new Job.MatchSet(this.query.id(), matches, null);
+        } catch(IllegalArgumentException e) {
+            return new Job.MatchSet(this.query.id(), List.of("E_"+e.toString()), null);
         } catch (Exception e) {
             return new Job.MatchSet(this.query.id(), null, e);
         }
