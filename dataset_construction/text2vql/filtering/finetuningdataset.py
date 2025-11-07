@@ -26,14 +26,14 @@ class FinetuningDatasetGenerator:
 
             return pd.read_sql_query(query, conn, params=args)
 
-    def saveDataset(self, basename, split=0.2, seed=1373): # Bonus point for figuring out the origin of this seed
+    def saveDataset(self, basename, split=0.2, seed=123):
         df = self.getSamples()
         dataset = Dataset.from_pandas(df)
         
         #dataset.to_json(args.output)
         #dataset.to_csv(args.output_csv)
 
-        dataset = dataset.train_test_split(test_size=0.2, seed=123)
+        dataset = dataset.train_test_split(test_size=split, seed=seed)
 
         dataset["train"].to_json(f"{basename}_{self.lang}_train.jsonl")
         dataset["test"].to_json(f"{basename}_{self.lang}_test.jsonl")
