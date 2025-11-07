@@ -60,7 +60,6 @@ public class ConvertingCopier extends LinkedHashMap<EObject, EObject> {
                     //System.out.println(
                     //        "Factory (registered): " + EPackage.Registry.INSTANCE.getEFactory(ePackage.getNsURI()));
                     Class<?> pkgClass = classLoader.loadClass(packageName + "." + packageClassName);
-                    System.err.println("java.lang.ClassCastException is expected for the next line for Factories.");
 
                     // Do a bit of temporary global package manipulation so that the loading does not replace the global (original) epagake
                     // If global package is replaced, VIATRA will surely return incorrect results
