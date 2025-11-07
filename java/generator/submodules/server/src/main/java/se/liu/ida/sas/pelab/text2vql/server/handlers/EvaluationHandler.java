@@ -55,7 +55,7 @@ public class EvaluationHandler implements HttpHandler{
             }
         } catch(Exception e){
             e.printStackTrace(System.out);
-            //throw e;
+            throw new RuntimeException(e);
         }
     }
 
