@@ -12,7 +12,7 @@ id,domain,source,construct_vql,description,truth_vql,header_vql,header_ocl,heade
     TrackElement.connectsTo(track1,track2);
 }","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","Bag(Tuple(track1: TrackElement, track2: TrackElement))","public class Query {
     public static record Match(TrackElement track1, TrackElement track2) {}
-    public Set<Match> relatedTrackElements(Resource resource) {",,,,"If check is used, EPL passes all combination of parameters as correct. (2)Patterns can contain anything in the body without having syntax errors… (3) Enforce different"
+    public Set<Match> relatedTrackElements(Resource resource) {",,,,
 2,railway,text2vql,agg,Total length of segments.,"pattern totalLength(length: java Integer){
     length == sum find segmentLength(_,#);
 }
@@ -27,7 +27,7 @@ pattern segmentLength(segment: Segment, length: java Integer){
 pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
     TrackElement.monitoredBy(track, sensor);
 }",pattern monitoredBy2Sensors(track: TrackElement){,Bag(TrackElement),"public class Query { 
-    public List<TrackElement> monitoredBy2Sensors(Resource resource){",,,,"Check if EMF allows duplicates in links, like monitoredBy has the same sensor multiple times. (VIATRA and OCL is expected to behave differently. Decide on how to proceed.) Answer: No, this is not relevant."
+    public List<TrackElement> monitoredBy2Sensors(Resource resource){",,,,
 4,railway,text2vql,"type,or",RailwayElements that are either Switches or SwitchPositions.,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
     Switch(raliway);
 } or {
@@ -128,7 +128,7 @@ pattern hasSensor(sw : Switch){
     TrackElement.monitoredBy(sw, _);
 }",pattern switchNotMonitored(sw : Switch){,Bag(Switch),"public class Query { 
     public List<Switch> switchNotMonitored(Resource resource){",,,,
-14,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,neg,Retrieve sensors that monitor a switch. The switch position that target that switch is followed by a route. That sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+14,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,neg,Retrieve sensors that monitor a switch. The switch position that targets the switch is followed by a route. The sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
     Route.follows(route, swP);
     SwitchPosition.target(swP, sw);
     TrackElement.monitoredBy(sw, sensor);
@@ -139,7 +139,7 @@ pattern required(sensor : Sensor, route : Route){
     Route.requires(route, sensor);
 }","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","Bag(Tuple(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch))","public class Query {
     public static record Match(Route route, Sensor sensor, SwitchPosition swP, Switch sw) {}
-    public Set<Match> notRequiredRouteSensor(Resource resource) {",,,,Bit messy NL definition
+    public Set<Match> notRequiredRouteSensor(Resource resource) {",,,,
 15,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,normal,Retrieve all segments whose lengths are less or equal than zero.,"pattern negativeLength(segment : Segment){
     Segment.length(segment, length);
     check(length <= 0);
@@ -164,12 +164,12 @@ pattern entrySemaphore(route: Route, semaphore: Semaphore)
 }","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){","Bag(Tuple(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement))","public class Query {
     public static record Match(Semaphore semaphore, Route route1, Route route2, Sensor sensor1, Sensor sensor2, TrackElement te1, TrackElement te2) {}
     public Set<Match> semaphoreNeighbor(Resource resource) {",,,,
-17,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,neg,All channels in a Kafka network that are not ordered. // Enumerate all unordered channels in a kafka-based network.,"pattern channelInKafkaNetworkWithoutOrderer(channel: Channel){
+17,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,neg,Channels in a Kafka network that are not ordered.,"pattern channelInKafkaNetworkWithoutOrderer(channel: Channel){
 	KafkaFabricNetwork.channels(_, channel);
 	neg Channel.orderedBy(channel, _);
 }",pattern channelInKafkaNetworkWithoutOrderer(channel: Channel){,Bag(Channel),"public class Query { 
     public List<Channel> channelInKafkaNetworkWithoutOrderer(Resource resource){",,,,
-18,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,neg",All orderer organizations that are not part of a karfka network.,"pattern ordererOrganization(o: Organization){
+18,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,neg",Orderer organizations that are not part of a kafka network.,"pattern ordererOrganization(o: Organization){
 	Organization.hosts(o, h);
 	Host.nodes(h, n);
 	OrderingNode(n);
@@ -179,7 +179,7 @@ pattern invalidOrdererOrganization(o: Organization){
 	neg KafkaFabricNetwork.organizations(_, o);
 }",pattern invalidOrdererOrganization(o: Organization){,Bag(Organization),"public class Query { 
     public List<Organization> invalidOrdererOrganization(Resource resource){",,,,
-19,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,or,"Triples of a host, channel and node, where node and its host  participate in the same channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
+19,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,or,"A host, channel and node, where the host either orders the channel via the node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
 	OrderingNode.orders(n,c);
 	Host.nodes(h,n);
 } or {
@@ -189,7 +189,7 @@ pattern invalidOrdererOrganization(o: Organization){
 }","pattern peerHelper(c: Channel, h: Host, n: Node){","Bag(Tuple(c: Channel, h: Host, n: Node))","public class Query {
     public static record Match(Channel c, Host h, Node n) {}
     public Set<Match> peerHelper(Resource resource) {",,,,I think it is complex enough to justify an standalone query
-20,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or","Match pairs of collaborating organizations, where the both organizations participate in a common channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
+20,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or","Two different organizations that participate in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
 	OrderingNode.orders(n,c);
 	Host.nodes(h,n);
 } or {
@@ -208,7 +208,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern collaboratesWith(o1: Organization, o2: Organization){","Bag(Tuple(o1: Organization, o2: Organization))","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> collaboratesWith(Resource resource) {",,,,
-21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,find,or","Match pairs of collaborating organizations, where the organizations don't participate in a common channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
+21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,find,or","Two organizations that do not participate in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
 	neg find collaboratesWith(o1, o2);
 }
 pattern peerHelper(c: Channel, h: Host, n: Node){
@@ -230,7 +230,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){","Bag(Tuple(o1: Organization, o2: Organization))","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> notCollaboratesWithSymmetric(Resource resource) {",,,,
-22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,find,Find nodes that endorse multiple chain codes in the same channel. ,"pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
+22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,find,Node that endorses multiple chaincode instances in the channel.,"pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
 	find endorsesChaincode(n, c, i1);
 	find endorsesChaincode(n, c, i2);
 	i1 != i2;
@@ -242,7 +242,7 @@ pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
 ","pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){","Bag(Tuple(n: EndorsingNode, c: Channel))","public class Query {
     public static record Match(EndorsingNode n, Channel c) {}
     public Set<Match> endorsesMultipleChaincodes(Resource resource) {",,,,
-,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,"Organization and channel pairs, where the there is an other orgnaization that participates in the channel, but the two organizations are not collaborating. Organizations collaborate if they participate in the came channel.","pattern cannotParticipateIn(o1: Organization, c: Channel){
+,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,,"Organization and channel, where the there is another organization that participates in a channel, and the two organizations do not collaborate. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel. Two organizations collaborate if they participate in a common channel.","pattern cannotParticipateIn(o1: Organization, c: Channel){
 	find participatesIn(o2, c);
 	neg find collaboratesWith(o1, o2);// same as neg find participatesIn(o1, c)???
 	o1 != o2;
@@ -264,7 +264,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 	find participatesIn(o1, c);
 	find participatesIn(o2, c);
 }",,,,,,,This makes little sense compared to notCollaborateWithSymmetry
-24,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg","Pairs of a node and channel, where the organization that owns the node does not participate in the channel.","pattern cannotBePeerOf(n: Node, c: Channel){
+24,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg","Node and channel, where the organization that hosts the host that has the node does not participate in the channel.  An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern cannotBePeerOf(n: Node, c: Channel){
 	Host.nodes(h, n);
 	Organization.hosts(o, h);
 	neg find participatesIn(o, c);
@@ -283,7 +283,7 @@ pattern participatesIn(o: Organization, c: Channel){
 }","pattern cannotBePeerOf(n: Node, c: Channel){","Bag(Tuple(n: Node, c: Channel))","public class Query {
     public static record Match(Node n, Channel c) {}
     public Set<Match> cannotBePeerOf(Resource resource) {",,,,
-25,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg",Unrelated nodes and chaincodes. A chain code is not related to a node if the containing channel is not a peer of the channel. A channel and a node are peers if they are directly connected or connected via a chaincode.,"pattern cannotEndorse(n: Node, i: ChaincodeInstance){
+25,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg","Node and chaincode instance where the channel of the chaincode instance is not related to the node. A node and channel are related if the node either orders the channel, or the node endorses a chaincode instance in the channel.","pattern cannotEndorse(n: Node, i: ChaincodeInstance){
 	Channel.chaincodes(c, i);
 	neg find peer(n, c);
 }
@@ -300,7 +300,7 @@ pattern peer(n: Node, c: Channel){
 }","pattern cannotEndorse(n: Node, i: ChaincodeInstance){","Bag(Tuple(n: Node, i: ChaincodeInstance))","public class Query {
     public static record Match(Node n, ChaincodeInstance i) {}
     public Set<Match> cannotEndorse(Resource resource) {",,,,
-26,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,normal,"Directly connected channels, chaincodes and endorsing nodes.","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
+26,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,normal,"Endorsing node, channel and chaincode, where the node endorses the chaincode and the chaincode belongs to the channel.","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
 	Channel.chaincodes(c, i);
 	EndorsingNode.endorses(n, i);
 }","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){","Bag(Tuple(n: EndorsingNode, c: Channel, i: ChaincodeInstance))","public class Query {
