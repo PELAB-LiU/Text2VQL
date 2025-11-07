@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Text2VQL 
+# Text2VQL
 ## Teaching a Model Query Language to Open-Source Language Models with ChatGPT
 
 While large language models (LLMs) like ChatGPT has demonstrated impressive capabilities in addressing various software engineering tasks, their use in a model-driven engineering (MDE) context is still in an early stage. Since the technology is proprietary and accessible solely through an API, its use may be incompatible with the strict protection of intellectual properties in industrial models. While there are open-source LLM alternatives, they often lack the power of proprietary models and require extensive data fine-tuning to realize their full potential. Furthermore, open-source datasets tailored for MDE tasks are scarce, posing challenges for training such models effectively.
