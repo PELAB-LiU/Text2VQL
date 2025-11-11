@@ -5,3 +5,6 @@ qwen*/
 deepseek*/
 codellama*/
 
+#Do not track temporary databases
+evaluation-*.db
+evaluation_*.db
