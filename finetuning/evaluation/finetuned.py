@@ -13,6 +13,7 @@ import torch
 from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import StoppingCriteria, StoppingCriteriaList
 
 # Must import evaluation.external before in order to ensure proper operation
 # evaluation.external finds the text2vql root folder and adds the text2vql python module to the system module path.
@@ -41,7 +42,7 @@ def findCheckpoint(base: str) -> str | None:
     except FileNotFoundError:
         return None
     return checkpoint
-
+        
 class LLM:
     def __init__(self, basemodel, checkpoint=None, verbose=False, description='nl', headername='header_vql', db='evaluation.db', lang='vql'):
         self.basename = basemodel
@@ -98,14 +99,15 @@ class LLM:
                     header=header
                 
             )
+            print('=' * 100)
             if not self.finetune:
                 prompt = f"""
 {self.makeContextHints()}
 {prompt}
 """
-            
+            print(prompt)
             sample = self.tokenizer([prompt], return_tensors="pt")
-    
+
             with torch.no_grad():
                 generated_sequences = self.model.generate(
                     input_ids=sample["input_ids"].cuda(),
@@ -124,10 +126,11 @@ class LLM:
             with sqlite3.connect(self.db) as conn:
                 for k, new_tokens in enumerate(generated_new_tokens):
                     generated = self.tokenizer.decode(new_tokens, skip_special_tokens=True)
-                    query = (header + '\n' + generated) if self.lang!='ocl' else generated
+                    query = f'```{self.lang}\n{header}{generated}' if self.lang!='ocl' else f'```ocl\n{generated}'
                     if self.verbose:
-                        print(query)
                         print('-' * 100)
+                        print(query)
+                        
                     self.save(conn, caseID, domain, k, query)
 
 
@@ -140,21 +143,20 @@ def loadCSV(file):
     return data
 
 # Code to generate the evaluation shots
+
 """
-python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b
-python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-java
-python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b
-python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-ocl
-python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b
-python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-vql
-"""
-"""
-./promptllm.sh  Qwen/Qwen3-1.7B-Base qwen3-1.7b
-python -m evaluation.finetuned --lang java --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-java
-python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b
-python -m evaluation.finetuned --lang ocl --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-ocl
-python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b
-python -m evaluation.finetuned --lang vql --basemodel qwen/qwen2.5-coder-1.5b --checkpoint qwen-1.5-vql
+Running:
+
+Planned:
+./promptllm.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
+
+Done:
+./promptllm.sh codellama/CodeLlama-7b-hf codellama-7b
+./promptllm.sh deepseek-ai/deepseek-coder-7b-base-v1.5 deepseek-coder-7b
+./promptllm.sh Qwen/Qwen2.5-Coder-1.5B qwen2.5-coder-1.5b
+./promptllm.sh Qwen/Qwen3-8B-Base qwen3-8b 
+./promptllm.sh Qwen/Qwen2.5-Coder-7B qwen2.5-coder-7b
+./promptllm.sh Qwen/Qwen3-1.7B-Base qwen3-1.7b
 """
 
 if __name__ == '__main__':
@@ -179,8 +181,8 @@ if __name__ == '__main__':
     llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, headername=f"header_{args.lang}", db=args.db, lang=args.lang)
 
     # Let's warm the server room
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
-    
     llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps, maxnewtokens=newtokens)
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
+    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
+    
         

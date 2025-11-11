@@ -170,7 +170,6 @@ def train(model_args, data_args, training_args):
     else:
         raise ValueError(f"{data_args.where_data} not supported")
 
-    print(dataset)
     model, tokenizer = load_model_and_tokenizer(model_args)
 
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
@@ -198,16 +197,20 @@ def main():
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     train(model_args, data_args, training_args)
 
-"""
-#qwen-1.5 java: 
-python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang java --output_dir qwen-1.5-java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl --max_input_length 2048 --max_target_length 1024
-#qwen-1.5 ocl: 
-python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang ocl --output_dir qwen-1.5-ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl --max_input_length 2048 --max_target_length 1024
-#qwen-1.5 vql: 
-python finetunellm.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang vql --output_dir qwen-1.5-vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl --max_input_length 2048 --max_target_length 1024
-"""
+
 
 """
+Running:
+./finetune.sh  meta-llama/Llama-2-7b-hf llama-2-7b
+
+
+Planned:
+
+    
+Done:
+./finetune.sh codellama/CodeLlama-7b-hf codellama-7b
+./finetune.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
+./finetune.sh deepseek-ai/deepseek-coder-7b-base-v1.5 deepseek-coder-7b
 ./finetune.sh Qwen/Qwen3-1.7B-Base qwen3-1.7b
 ./finetune.sh Qwen/Qwen3-8B-Base qwen3-8b
 ./finetune.sh Qwen/Qwen2.5-Coder-7B qwen2.5-coder-7b
