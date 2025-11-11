@@ -4,22 +4,31 @@ import os
 import re
 import csv
 import random 
+import json
+import time
+import pickle
 
 import argparse
 from collections import defaultdict
 import sqlite3
 import pandas as pd
 import torch
+from datetime import datetime
 from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import StoppingCriteria, StoppingCriteriaList
 
+from openai import OpenAI
+
 # Must import evaluation.external before in order to ensure proper operation
 # evaluation.external finds the text2vql root folder and adds the text2vql python module to the system module path.
 from text2vql.util.metamodel import MetaModel
+from text2vql.datasetgen.batchpull import Puller
+
 from evaluation.templates import COMPLETION_QUERY, QUERY
 from text2vql.seed.seed_yakindu import SEED
+from text2vql.seed.util import AttrDict
 
 from transformers.trainer_utils import set_seed
 
@@ -50,7 +59,8 @@ class LLM:
         self.lang = lang
         self.db = db
         
-        self.model = AutoModelForCausalLM.from_pretrained(basemodel,
+        if basemodel is not None:
+            self.model = AutoModelForCausalLM.from_pretrained(basemodel,
                                                  trust_remote_code=True,
                                                  dtype=torch.float16,
                                                  device_map="auto")
@@ -133,6 +143,129 @@ class LLM:
                         
                     self.save(conn, caseID, domain, k, query)
 
+class ChatGPT:
+    def __init__(self, effort="minimal", description=None, lang=None, tokens=0):
+        self.client = OpenAI()
+        self.effort = effort
+        self.descr = description
+        self.lang = lang
+        self.tokens=newtokens
+        self.random = random.Random(42)
+        self.expertise = SEED.language[lang]
+
+    def makeContextHints(self):
+        hint = f"""
+```
+{SEED.metamodel.get_metamodel_info()}
+```
+"""
+        types = ['normal','find','disjunction','negation','aggregate','type']
+        for feature in types:
+            queryhint = self.random.choice(SEED[feature].examples)
+            if self.lang=='ocl':
+                hint = f"{hint}{queryhint.description}\n{queryhint[self.lang].signature}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
+            else:
+                hint = f"{hint}{queryhint.description}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
+        return hint
+
+    def test(self, metamodel, domain, testcases):
+        requests = []
+        for testcase in testcases:
+            for shot in range(5):
+                rq = self.makeRequest(metamodel, testcase[self.descr], testcase[f"header_{self.lang}"], testcase['id'], shot, self.tokens)
+                requests.append(rq)
+        return requests
+
+    def makeRequest(self, metamodel, description, header, case, shot, maxnewtokens):
+        prompt = COMPLETION_QUERY[self.lang].safe_substitute(
+                metamodel=metamodel.get_metamodel_info(),
+                description=description,
+                header=header        
+        )
+        prompt = f"""
+{self.makeContextHints()}
+{prompt}
+"""
+
+        return {
+            "custom_id": f"eval_{case}_{self.lang}_{shot}", 
+            "method": "POST", 
+            "url": "/v1/responses", 
+            "body": {
+                "model": "gpt-5-2025-08-07",
+                "instructions": f"You are an expert in {self.expertise}. Complete the last query. Follow the format of the examples for the completion.",
+                "input": prompt,
+                "reasoning": {
+                    "effort": self.effort #minimal, low, medium
+                }, 
+                "max_output_tokens": maxnewtokens
+            }
+        }
+    
+    def submit(self, file, requests):
+        base, ext = os.path.splitext(file)
+        if ext != ".jsonl":
+            raise ValueError("File must have a .jsonl extension")
+        
+        with open(file, 'w') as outfile:
+            for entry in requests:
+                json.dump(entry, outfile)
+                outfile.write('\n')
+        
+        batch_input_file = self.client.files.create(
+                file=open(file, "rb"),
+                purpose="batch"
+        )
+
+        new_file = f"{base}_{batch_input_file.id}{ext}"
+        os.rename(file, new_file)
+
+        batchobject = self.client.batches.create(
+            input_file_id=batch_input_file.id,
+            endpoint="/v1/responses",
+            completion_window="24h",
+            metadata={
+                "description": "Evaluation of Text2VQL test queries."
+            }
+        )
+        with open(f"chatgpt/batchobj_{batchobject.id}.pkl", "wb") as f:
+            pickle.dump(batchobject, f)
+
+
+def processLine(line, db="evaluation.db", verbose=False):
+    params = line.custom_id.split("_")#"eval_{case}_{self.lang}_{shot}"
+    caseID = params[1]
+    lang = params[2]
+    shotID = params[3]
+
+    message = next((msg for msg in line.response.body.output if msg.type=="message"), None)
+    text = message.content[0].text
+    #print(text)
+
+    # VQL is aither in code block or just the whole prompt
+    query_match = re.search(r'```[^\n]*\n(.*?)```', text, re.DOTALL)
+    if query_match:
+        text = query_match.group(1).strip()
+
+    domain = None
+    if params[1]=='':
+        doamin = "dlt"
+    else:
+        if int(caseID) in range(0, 16+1):
+            domain = 'railway'
+        if int(caseID) in range(17, 26+1):
+            domain = 'dlt'
+        if int(caseID) in range(27, 38+1):
+            domain = 'cps'
+    if verbose:
+        print("=======================================================================")
+        print(text)
+    with sqlite3.connect(db) as conn:
+        cursor = conn.cursor()
+        #cursor.execute("INSERT OR REPLACE INTO evaluation (llm, finetune, caseid, domain, lang, shotid, query) VALUES (ChatGPT, 0, ?, ?, ?, ?, ?)", (caseID, domain, lang, shotID, text))
+        #conn.commit() 
+
+        
 
 def loadCSV(file):
     data = []
@@ -170,6 +303,7 @@ if __name__ == '__main__':
     parser.add_argument('--description', default="description")
     parser.add_argument('--verbose', default=True)
     parser.add_argument('--truth', default='../dataset_construction/test_metamodel/truth.csv')
+    parser.add_argument('--files', default='', help='Coma separated list of output files')
     args = parser.parse_args()
 
     newtokens = 512 if args.lang!='java' else 1024
@@ -178,11 +312,31 @@ if __name__ == '__main__':
     dlt = [x for x in tests if x['domain']=='dlt']
     cps = [x for x in tests if x['domain']=='cps']
 
-    llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, headername=f"header_{args.lang}", db=args.db, lang=args.lang)
+    if args.basemodel in ['ChatGPT--prompt','ChatGPT--process']:
+        if args.basemodel=='ChatGPT--prompt':
+            llm = ChatGPT(description=args.description, lang=args.lang, tokens=newtokens)
+            rq_railway = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'railway', railway)
+            rq_dlt = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt)
+            rq_cps = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'cps', cps)
+            
+            combined = rq_railway+rq_dlt+rq_cps
+            llm.submit(f"chatgpt/eval_{args.lang}.jsonl",combined)
+        else:
+            puller = Puller()
+            time = datetime.now().isoformat()
+            
+            with open(f"chatgpt/response_{time}.jsonl", "w") as f:
+                for file in args.files.split(','):
+                    results = puller.pulloutput(file)
+                    f.write(results)
+            with open(f"chatgpt/response_{time}.jsonl", 'r') as f:
+                for line in f:
+                    processLine(AttrDict(json.loads(line)), verbose=True)# Do something with the record
+    else:
+        llm = LLM(args.basemodel, args.checkpoint, verbose=args.verbose, description=args.description, headername=f"header_{args.lang}", db=args.db, lang=args.lang)
 
-    # Let's warm the server room
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps, maxnewtokens=newtokens)
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
-    llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
-    
+        # Let's warm the server room
+        llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt, maxnewtokens=newtokens)
+        llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway, maxnewtokens=newtokens)
+        llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps, maxnewtokens=newtokens)
         

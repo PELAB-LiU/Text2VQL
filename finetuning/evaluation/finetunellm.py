@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+import math
+
 import torch
 import transformers
 from datasets import load_dataset
@@ -83,6 +85,37 @@ def load_model_and_tokenizer(args):
     tokenizer.padding_side = "left"
 
     return model, tokenizer
+
+def compute_max_lengths(dataset, tokenizer, lang, round_to_power_of_2: bool = False):
+    """
+    Computes the maximum lengths for inputs and targets in the dataset.
+    Optionally rounds up lengths to the next power of 2.
+    """
+    max_input_len = 0
+    max_target_len = 0
+
+    for split in dataset:
+        for example in dataset[split]:
+            target = QUERY.safe_substitute(lang=lang, query=example['pattern'])
+            tokenized_target = tokenizer(target, add_special_tokens=False)
+            max_target_len = max(max_target_len, len(tokenized_target["input_ids"]) + 1)  # +1 for EOS
+
+            prompt = PROMPT_QUERY[lang].safe_substitute(
+                metamodel=example['definition'],
+                description=example['descript'],
+                signature=example['signat']
+            )
+            tokenized_prompt = tokenizer(prompt, add_special_tokens=False)
+            max_input_len = max(max_input_len, len(tokenized_prompt["input_ids"]))
+
+    if round_to_power_of_2:
+        def next_power_of_2(x):
+            return 1 if x == 0 else 2 ** math.ceil(math.log2(x))
+
+        max_input_len = next_power_of_2(max_input_len)
+        max_target_len = next_power_of_2(max_target_len)
+
+    return max_input_len, max_target_len
 
 
 @dataclass
@@ -172,6 +205,12 @@ def train(model_args, data_args, training_args):
 
     model, tokenizer = load_model_and_tokenizer(model_args)
 
+    max_input_len, max_target_len = compute_max_lengths(dataset, tokenizer, data_args.lang)
+    print(f"Computed max_input_length: {max_input_len}, max_target_length: {max_target_len}")
+
+    if not torch.cuda.is_available():
+        raise RuntimeError("No GPU available. Finetuning without a GPU is practically impossible.")
+    
     dataset = dataset.map(lambda x: preprocess_function(x, tokenizer,
                                                         data_args.max_target_length,
                                                         data_args.max_input_length,
