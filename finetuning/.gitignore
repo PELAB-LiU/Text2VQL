@@ -2,4 +2,6 @@ adapter-*/
 text2vql*train.jsonl
 text2vql*test.jsonl
 qwen*/
+deepseek*/
+codellama*/
 
