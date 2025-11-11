@@ -240,11 +240,8 @@ def main():
 
 """
 Running:
-./finetune.sh  meta-llama/Llama-2-7b-hf llama-2-7b
-
 
 Planned:
-
     
 Done:
 ./finetune.sh codellama/CodeLlama-7b-hf codellama-7b
