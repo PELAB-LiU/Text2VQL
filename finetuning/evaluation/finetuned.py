@@ -281,9 +281,9 @@ def loadCSV(file):
 Running:
 
 Planned:
-./promptllm.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
 
 Done:
+./promptllm.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
 ./promptllm.sh codellama/CodeLlama-7b-hf codellama-7b
 ./promptllm.sh deepseek-ai/deepseek-coder-7b-base-v1.5 deepseek-coder-7b
 ./promptllm.sh Qwen/Qwen2.5-Coder-1.5B qwen2.5-coder-1.5b
