@@ -109,7 +109,7 @@ class Evaluator:
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parse dataset')
-    parser.add_argument('--db', type=str, default='../finetuning/evaluation(5).db')
+    parser.add_argument('--db', type=str, default='../finetuning/evaluation.db')
     parser.add_argument('--truth', type=str, default='test_metamodel/truth.csv')
     parser.add_argument('--id', type=int, default=None)
     args = parser.parse_args()
@@ -122,5 +122,10 @@ if __name__ == "__main__":
         for i in range(0, 38+1):
             if i==23:
                 continue
-            result = eval.process(i)
-            eval.update(result.keys(), result)
+            try:
+                result = eval.process(i)
+                eval.update(result.keys(), result)
+            except Exception as e:
+                print(f"Error at index {i}: {e}")
+                continue
+            
