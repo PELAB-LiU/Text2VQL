@@ -11,12 +11,19 @@ if [ -z "$MODEL_NAME" ] || [ -z "$OUTPUT_PREFIX" ]; then
   exit 1
 fi
 
-LANGS=("java" "ocl" "vql")
+LANGS=("ocl" "vql" "java")
 
 for LANG in "${LANGS[@]}"; do
   echo "=============================="
   echo "Running fine-tuning for $LANG"
   echo "=============================="
+
+  # Set max_target_length based on language
+  if [ "$LANG" == "java" ]; then
+    MAX_TARGET_LENGTH=1024
+  else
+    MAX_TARGET_LENGTH=512
+  fi
   
   python -m evaluation.finetunellm \
     --model_name_or_path "$MODEL_NAME" \
@@ -25,7 +32,7 @@ for LANG in "${LANGS[@]}"; do
     --data_path_local_train "text2vql_${LANG}_${LANG}_train.jsonl" \
     --data_path_local_test "text2vql_${LANG}_${LANG}_test.jsonl" \
     --max_input_length 2048 \
-    --max_target_length 1024
+    --max_target_length $MAX_TARGET_LENGTH
   
   echo ""
 done
