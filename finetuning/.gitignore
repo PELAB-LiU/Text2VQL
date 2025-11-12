@@ -6,4 +6,5 @@ deepseek*/
 codellama*/
 
 # Do not track databases (too large for GitHub)
+evaluation.db
 evaluation*.db
