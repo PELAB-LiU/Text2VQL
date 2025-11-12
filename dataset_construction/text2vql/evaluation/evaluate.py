@@ -48,7 +48,7 @@ class Evaluator:
     def extractQuery(self, string):
         pattern = r"```(?:vql|java|ocl)([\s\S]*?)(?:```|$)"
         match = re.search(pattern, string, re.IGNORECASE)
-        return match.group(1).strip() if match else None
+        return match.group(1).strip() if match else string
 
     def getTest(self, caseid):
         with sqlite3.connect(self.db) as conn:
@@ -109,7 +109,7 @@ class Evaluator:
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Parse dataset')
-    parser.add_argument('--db', type=str, default='../finetuning/evaluation(5).db')
+    parser.add_argument('--db', type=str, default='../finetuning/evaluation(8).db')
     parser.add_argument('--truth', type=str, default='test_metamodel/truth.csv')
     parser.add_argument('--id', type=int, default=None)
     args = parser.parse_args()
@@ -117,7 +117,7 @@ if __name__ == "__main__":
     eval = Evaluator(args.db, args.truth)
     if args.id is not None:
         result = eval.process(args.id)
-        eval.update(result.keys(), result)
+        #eval.update(result.keys(), result)
     else:
         for i in range(0, 38+1):
             if i==23:
