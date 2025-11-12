@@ -5,6 +5,6 @@ qwen*/
 deepseek*/
 codellama*/
 
-#Do not track temporary databases
-evaluation-*.db
-evaluation_*.db
+# Do not track databases (too large for GitHub)
+evaluation.db
+evaluation*.db

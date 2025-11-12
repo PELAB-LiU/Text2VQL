@@ -249,7 +249,7 @@ def processLine(line, db="evaluation.db", verbose=False):
 
     domain = None
     if params[1]=='':
-        doamin = "dlt"
+        domain = "dlt"
     else:
         if int(caseID) in range(0, 16+1):
             domain = 'railway'
@@ -262,8 +262,8 @@ def processLine(line, db="evaluation.db", verbose=False):
         print(text)
     with sqlite3.connect(db) as conn:
         cursor = conn.cursor()
-        #cursor.execute("INSERT OR REPLACE INTO evaluation (llm, finetune, caseid, domain, lang, shotid, query) VALUES (ChatGPT, 0, ?, ?, ?, ?, ?)", (caseID, domain, lang, shotID, text))
-        #conn.commit() 
+        cursor.execute("INSERT OR REPLACE INTO evaluation (llm, finetune, caseid, domain, lang, shotid, query) VALUES (?, ?, ?, ?, ?, ?, ?)", ("ChatGPT", 0, caseID, domain, lang, shotID, text))
+        conn.commit() 
 
         
 
@@ -283,6 +283,7 @@ Running:
 Planned:
 
 Done:
+#./promptllm.sh ChatGPT--prompt
 ./promptllm.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
 ./promptllm.sh codellama/CodeLlama-7b-hf codellama-7b
 ./promptllm.sh deepseek-ai/deepseek-coder-7b-base-v1.5 deepseek-coder-7b
@@ -315,9 +316,9 @@ if __name__ == '__main__':
     if args.basemodel in ['ChatGPT--prompt','ChatGPT--process']:
         if args.basemodel=='ChatGPT--prompt':
             llm = ChatGPT(description=args.description, lang=args.lang, tokens=newtokens)
-            rq_railway = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'railway', railway)
+            rq_railway = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/railway.ecore')), 'railway', railway)
             rq_dlt = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'dlt', dlt)
-            rq_cps = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/dlt.ecore')), 'cps', cps)
+            rq_cps = llm.test(MetaModel(os.path.join(ROOT, 'dataset_construction/test_metamodel/cps.ecore')), 'cps', cps)
             
             combined = rq_railway+rq_dlt+rq_cps
             llm.submit(f"chatgpt/eval_{args.lang}.jsonl",combined)
