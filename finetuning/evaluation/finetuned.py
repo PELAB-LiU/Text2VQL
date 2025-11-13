@@ -34,6 +34,16 @@ from transformers.trainer_utils import set_seed
 
 set_seed(123)
 
+RND = random.Random(1373)
+RANDOM_HINT_ID = {
+    'normal': RND.choice(SEED['normal'].examples),
+    'find': RND.choice(SEED['find'].examples),
+    'disjunction': RND.choice(SEED['disjunction'].examples),
+    'negation': RND.choice(SEED['negation'].examples),
+    'aggregate': RND.choice(SEED['aggregate'].examples),
+    'type':RND.choice(SEED['type'].examples)
+}
+
 def findCheckpoint(base: str) -> str | None:
     pattern = re.compile(r"^checkpoint-(\d+)$")
     max_num = -1
@@ -73,7 +83,6 @@ class LLM:
         self.verbose = verbose
         self.descr = description
         self.headername = headername
-        self.random = random.Random(42)
         
     def save(self, conn, caseID, domain, shotID, query):
         cursor = conn.cursor()
@@ -88,7 +97,7 @@ class LLM:
 """
         types = ['normal','find','disjunction','negation','aggregate','type']
         for feature in types:
-            queryhint = self.random.choice(SEED[feature].examples)
+            queryhint = RANDOM_HINT_ID[feature]
             if self.lang=='ocl':
                 hint = f"{hint}{queryhint.description}\n{queryhint[self.lang].signature}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
             else:
@@ -96,8 +105,6 @@ class LLM:
         return hint
         
     def test(self, metamodel, domain, tests, maxnewtokens=512, shots=5):
-        outputs = defaultdict(list)
-
         for testcase in tqdm(tests, desc='Iterating test dataset', total=len(tests)):
             nl_description = testcase[self.descr]
             header = testcase[self.headername]
@@ -150,7 +157,6 @@ class ChatGPT:
         self.descr = description
         self.lang = lang
         self.tokens=newtokens
-        self.random = random.Random(42)
         self.expertise = SEED.language[lang]
 
     def makeContextHints(self):
@@ -161,7 +167,7 @@ class ChatGPT:
 """
         types = ['normal','find','disjunction','negation','aggregate','type']
         for feature in types:
-            queryhint = self.random.choice(SEED[feature].examples)
+            queryhint = RANDOM_HINT_ID[feature]
             if self.lang=='ocl':
                 hint = f"{hint}{queryhint.description}\n{queryhint[self.lang].signature}\n{QUERY.safe_substitute(lang=self.lang, query=queryhint[self.lang].query)}"
             else:
@@ -203,6 +209,7 @@ class ChatGPT:
         }
     
     def submit(self, file, requests):
+        pass
         base, ext = os.path.splitext(file)
         if ext != ".jsonl":
             raise ValueError("File must have a .jsonl extension")
@@ -240,7 +247,6 @@ def processLine(line, db="evaluation.db", verbose=False):
 
     message = next((msg for msg in line.response.body.output if msg.type=="message"), None)
     text = message.content[0].text
-    #print(text)
 
     # VQL is aither in code block or just the whole prompt
     query_match = re.search(r'```[^\n]*\n(.*?)```', text, re.DOTALL)
@@ -281,8 +287,6 @@ def loadCSV(file):
 Running:
 
 Planned:
-
-Done:
 #./promptllm.sh ChatGPT--prompt
 ./promptllm.sh deepseek-ai/deepseek-coder-1.3b-base deepseek-coder-1.3b
 ./promptllm.sh codellama/CodeLlama-7b-hf codellama-7b
@@ -291,6 +295,9 @@ Done:
 ./promptllm.sh Qwen/Qwen3-8B-Base qwen3-8b 
 ./promptllm.sh Qwen/Qwen2.5-Coder-7B qwen2.5-coder-7b
 ./promptllm.sh Qwen/Qwen3-1.7B-Base qwen3-1.7b
+
+Done:
+
 """
 
 if __name__ == '__main__':
