@@ -3,6 +3,8 @@ package se.liu.ida.sas.pelab.text2vql.comparison.jobs;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public record CompareSortedJob(Future<Job.MatchSet> expected, Future<Job.MatchSet> actual) implements Callable<CompareSortedJob.ComparisonResult>{
     
@@ -10,7 +12,7 @@ public record CompareSortedJob(Future<Job.MatchSet> expected, Future<Job.MatchSe
     public ComparisonResult call() throws Exception {
         Job.MatchSet exp = expected.get();
         try{
-            Job.MatchSet act = actual.get();
+            Job.MatchSet act = actual.get(30, TimeUnit.MINUTES);
             if(act.hasError()){
                 throw new ExecutionException(act.e());
             }
@@ -25,6 +27,9 @@ public record CompareSortedJob(Future<Job.MatchSet> expected, Future<Job.MatchSe
 
             return new ComparisonResult(true, this);
 
+        } catch(TimeoutException e) {
+            actual.cancel(true);
+            return new ComparisonResult(false, this);
         } catch(ExecutionException e){
             System.out.println(actual.get().id());
             e.getCause().printStackTrace(System.out);
