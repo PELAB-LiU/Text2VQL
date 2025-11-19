@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="">
+  <appTypes exeFileLocation="" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="23">
+    <behavior identifier="1000">
+      <states>
+        <outgoingTransitions identifier="1010" targetState="//@appTypes.1/@behavior/@states.0" action="2value"/>
+      </states>
+      <states>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions identifier="value1---" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="2value" exeType="" zipFileUrl="">
+    <behavior identifier="01111">
+      <states identifier="">
+        <outgoingTransitions/>
+      </states>
+      <states identifier=""/>
+      <states identifier=""/>
+    </behavior>
+  </appTypes>
+</cps:CyberPhysicalSystem>

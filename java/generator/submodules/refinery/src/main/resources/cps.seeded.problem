@@ -1,0 +1,144 @@
+abstract class Identifiable {
+    STRING[0..1] identifier
+}
+
+class CyberPhysicalSystem extends Identifiable{
+    contains Request[0..*] requests
+    contains ApplicationType[0..*] appTypes opposite cps
+    contains HostType[0..*] hostTypes opposite cps
+    STRING[0..1] dbUrl
+}
+
+class Request extends Identifiable{
+    contains Requirement[0..*] requirements opposite request
+}
+
+class Requirement extends Identifiable{
+    ApplicationType[1] type
+    container Request request opposite requirements
+    ApplicationInstance[0..*] applications
+    INT count
+    BOOLEAN mandatory
+    INT[0..*] availablePorts
+}
+
+class ApplicationType extends Identifiable{
+    container CyberPhysicalSystem cps opposite appTypes
+    contains StateMachine[0..1] behavior
+    contains ResourceRequirement[0..*] requirements
+    contains ApplicationInstance[0..*] instances opposite type
+    STRING exeFileLocation
+    STRING exeType
+    STRING zipFileUrl
+    INT exeFileSize
+}
+
+class ApplicationInstance extends Identifiable {
+    container ApplicationType type opposite instances
+    ApplicationInstance[0..*] dependOn
+    HostInstance[0..1] allocatedTo opposite applications
+    AppState state
+    STRING dbUser
+    STRING dbPassword
+    INT priority
+}
+
+class ResourceRequirement{
+    HostType[1] type
+    INT requiredCpu
+    INT requiredRam
+    INT requiredHdd
+}
+
+class HostType extends Identifiable{
+    container CyberPhysicalSystem cps opposite hostTypes
+    contains HostInstance[0..*] instances
+    INT defaultCpu
+    INT defaultRam
+    INT defaultHdd
+}
+
+class HostInstance extends Identifiable{
+    ApplicationInstance[0..*] applications opposite allocatedTo
+    HostInstance[0..*] communicateWith
+    STRING nodeIp
+    INT availableCpu
+    INT availableRam
+    INT availableHdd
+    INT totalCpu
+    INT totalRam
+    INT totalHdd
+}
+
+class StateMachine extends Identifiable{
+    State[0..1] initial
+    contains State[0..*] states
+}
+
+class State extends Identifiable{
+    contains Transition[0..*] outgoingTransitions
+}
+
+class Transition extends Identifiable{
+    STRING action
+    State[0..1] targetState
+}
+
+enum STRING{
+    RANDOM,
+    RANDOM_WS,
+    VALUE1,
+    VALUE2,
+    EMPTY,
+    QQ
+}
+enum INT{
+    POSITIVE,
+    NEGATIVE,
+    ZERO
+}
+enum BOOLEAN{
+    TRUE,
+    FALSE
+}
+enum AppState{
+    Running,
+    Stopped
+}
+
+Transition(t1).
+Transition(t2).
+
+pred constantString(STRING s)<->
+    s==STRING::VALUE1;
+    s==STRING::VALUE2;
+    s==STRING::EMPTY.
+
+pred transition37(State state)<->
+    outgoingTransitions(state, t1),
+    outgoingTransitions(state, t2),
+    t1!=t2,
+    action(t1,a),
+    action(t1,a),
+    constantString(a).
+
+transition37(s1).
+!transition37(s2).
+
+pred crossStateMachineTransition(Transition t)<->
+    states(sm1, s1),
+    states(sm2, s2),
+    outgoingTransitions(s1, t),
+    targetState(t, s2),
+    sm1!=sm2.
+StateMachine(sm1).
+states(sm1, s1).
+StateMachine(sm2).
+states(sm2, s2).
+
+crossStateMachineTransition(t1).
+!crossStateMachineTransition(t2).
+
+scope node = 20..40, CyberPhysicalSystem = 1. 
+
+

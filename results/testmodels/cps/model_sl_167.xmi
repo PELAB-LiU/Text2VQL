@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUrl="001">
+  <appTypes identifier="" exeFileLocation="000010" exeType="value1---" zipFileUrl=""/>
+  <requests identifier="">
+    <requirements identifier="" count="-2" type="//@appTypes.0">
+      <availablePorts>28</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+  </requests>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="11010">
+    <instances identifier="1101010" nodeIp="" availableCpu="93" availableRam="-9" totalCpu="-10" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.3/@instances.0"/>
+    <instances identifier="100111011"/>
+  </hostTypes>
+  <hostTypes identifier="value1---">
+    <instances identifier="value1---" nodeIp="010001001" availableCpu="-8" availableHdd="-2" totalRam="-3" totalHdd="27" communicateWith="//@hostTypes.2/@instances.1 //@hostTypes.1/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="0010">
+    <instances availableRam="-4" availableHdd="63" totalHdd="-8" communicateWith="//@hostTypes.0/@instances.0"/>
+    <instances identifier="2value" nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" availableRam="-1" availableHdd="-10" totalCpu="-5" totalHdd="32" communicateWith="//@hostTypes.3/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="" nodeIp="value1---" availableRam="58" availableHdd="-8" totalRam="-10" totalHdd="50"/>
+  </hostTypes>
+  <hostTypes identifier="value1---"/>
+  <hostTypes identifier="value1---"/>
+  <hostTypes identifier="">
+    <instances nodeIp="0011"/>
+  </hostTypes>
+  <hostTypes/>
+</cps:CyberPhysicalSystem>

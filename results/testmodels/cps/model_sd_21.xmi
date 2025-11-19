@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="">
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="value1---" zipFileUrl="value1---">
+    <instances identifier="value1---" state="Stopped" dbUser="2value" dbPassword="2value" allocatedTo="//@hostTypes.3/@instances.0" priority="53"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="111" exeType="" zipFileUrl="2value" exeFileSize="91">
+    <instances identifier="" dbUser="" dbPassword="value1---" allocatedTo="//@hostTypes.1/@instances.1" dependOn="//@appTypes.1/@instances.0 //@appTypes.0/@instances.0" priority="-8"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+      </states>
+      <states identifier="value1---"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;"/>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="value1---">
+    <instances identifier="2value" nodeIp="value1---" availableCpu="-3" availableHdd="-10" totalCpu="-1" totalRam="78" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.3/@instances.0 //@hostTypes.4/@instances.0 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2"/>
+    <instances identifier="value1---" nodeIp="110001" availableRam="-5" availableHdd="-3" totalHdd="-8" communicateWith="//@hostTypes.1/@instances.2 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.1 //@hostTypes.1/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="value1---">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="" availableCpu="-3" availableRam="-8" availableHdd="-5" totalRam="-9" communicateWith="//@hostTypes.0/@instances.1 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2 //@hostTypes.4/@instances.0 //@hostTypes.1/@instances.0"/>
+    <instances identifier="2value" nodeIp="0110001" availableCpu="53" availableRam="-9" availableHdd="-9" totalCpu="15" totalRam="7" totalHdd="-7" applications="//@appTypes.1/@instances.0" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.0/@instances.1 //@hostTypes.1/@instances.2 //@hostTypes.1/@instances.1 //@hostTypes.4/@instances.0"/>
+    <instances identifier="" nodeIp="" availableRam="6" availableHdd="36" totalCpu="-9" totalRam="29" totalHdd="-1" communicateWith="//@hostTypes.0/@instances.1 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2"/>
+  </hostTypes>
+  <hostTypes identifier=""/>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="" nodeIp="&#xa0;&#xa0;&#xa0;" availableCpu="-2" availableRam="-7" availableHdd="-5" totalCpu="-4" totalRam="66" totalHdd="-6" applications="//@appTypes.0/@instances.0" communicateWith="//@hostTypes.0/@instances.1 //@hostTypes.1/@instances.2 //@hostTypes.0/@instances.0 //@hostTypes.3/@instances.0 //@hostTypes.4/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier="">
+    <instances identifier="101000100" nodeIp="2value" totalCpu="61" totalRam="66" totalHdd="1" communicateWith="//@hostTypes.3/@instances.0 //@hostTypes.0/@instances.1 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2 //@hostTypes.4/@instances.0 //@hostTypes.1/@instances.1 //@hostTypes.1/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

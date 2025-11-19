@@ -2,15 +2,16 @@ package se.liu.ida.sas.pelab.text2vql.utilities.evaluation;
 
 import org.apache.commons.csv.CSVRecord;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import se.liu.ida.sas.pelab.text2vql.utilities.csv.CSVHandler;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Evaluates queries specified in a CSV file
@@ -23,60 +24,129 @@ import java.util.*;
  * @param <Query>
  */
 public abstract class MatchSetEvaluator<Query, Result> {
+    public final static Pattern regex_object = Pattern.compile("DynamicEObjectImpl@[0-9a-f]+");
+    private static final String id = "id";
+    private static final String parse = "parse";
+    private static final String compare = "compare";
+    private static final String pass = "pass";
+    private static final String count = "match_count";
+    private static final String matches = "matches";
     protected final String truth;
     protected final String regex;
     private final List<File> models;
     private final Iterable<CSVRecord> csv;
-    public MatchSetEvaluator(String truth, String regex, File csv, File modelsir) throws IOException {
+
+    protected final CSVHandler output;
+    public MatchSetEvaluator(String truth, String regex, File csv, File modelsDir, File output) throws IOException {
         this.truth = truth;
         this.regex = regex;
-        System.err.println(modelsir.getAbsolutePath());
-        models = Arrays.stream(modelsir.listFiles(f -> f.getName().endsWith(".xmi"))).toList();
-        if(csv.isDirectory()){
-
+        if(modelsDir.isDirectory()){
+            models = Arrays.stream(modelsDir.listFiles(f -> f.getName().endsWith(".xmi"))).toList();
         } else {
-
+            models = Arrays.asList(modelsDir);
         }
         this.csv = CSVHandler.loadCSV(csv);
+
+        this.output = new CSVHandler(output, id, parse, compare, pass, count, matches);
     }
-    public void run(){
+    public void run() {
         csv.forEach(line -> {
-            int id = Integer.parseInt(line.get("id"));
-            System.out.println("[CSV ROW ID "+id+" ]");
-            Query truth = parse(line.get(this.truth));
-            List<AbstractMap.SimpleEntry<String,Query>> queries = line.toMap().entrySet().stream()
-                    .filter(entry -> entry.getKey().matches(regex))
-                    .map(entry -> new AbstractMap.SimpleEntry<String, Query>(
-                            entry.getKey(),
-                            parse(entry.getValue())))
-                    .toList();
-            ComparisonResult result = new ComparisonResult(line.get("id"), queries.size());
-            AbortFlag[] flags = AbortFlag.of(queries.size());
-            ResourceSet resourceSet = new ResourceSetImpl();
-            resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
-                    "xmi", new EcoreResourceFactoryImpl());
-            models.forEach(model -> {
-                System.out.println("[CSV ROW ID="+id+" MODEL="+model.getName()+"]");
-                EObject root = resourceSet.getResource(URI.createFileURI(model.getPath()),true).getContents().getFirst();
-
-                List<Result> baseline = evaluate(truth, root);
-
-                for (int idx=0; idx< queries.size(); idx++){
-                    if(flags[idx].shouldContinue()){
-                        Query query = queries.get(idx).getValue();
-
-                        List<Result> matches = evaluate(query, root);
-
-                        //TODO compare
+            try{
+                output.put(id, line.get("id"));
+                int id = Integer.parseInt(line.get("id"));
+                String name = line.get("name");
+                /*
+                 * Parse queries
+                 */
+                Query truth = parse(line.get(this.truth), name);
+                List<AbstractMap.SimpleEntry<String,Query>> queries = line.toMap().entrySet().stream()
+                        .filter(entry -> entry.getKey().matches(regex))
+                        .map(entry -> new AbstractMap.SimpleEntry<String, Query>(
+                                entry.getKey(),
+                                parse(entry.getValue(), name)))
+                        .toList();
+                /*
+                 * Check parsing results
+                 */
+                ComparisonResult result = new ComparisonResult(line.get("id"), queries.size());
+                for(int i=0; i<queries.size(); i++){
+                    if(queries.get(i).getValue()!=null){
+                        result.parsed(i);
                     }
                 }
-            });
+                /*
+                 * Setup query evaluation
+                 */
+                AbortFlag[] flags = AbortFlag.of(queries.size());
+                ResourceSet resourceSet = new ResourceSetImpl();
+                //XMIResourceFactory generates identical IDs when loading the same model.
+                resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(
+                        "xmi", new XMIResourceFactoryImpl());
+                StringBuilder builder = new StringBuilder();
+                builder.append("{");
+                /*
+                 * Evaluate queries over models
+                 */
+                models.forEach(model -> {
+                    System.out.println("[CSV ROW ID="+id+" MODEL="+model.getName()+"]");
+                    Resource resource = resourceSet.getResource(URI.createFileURI(model.getPath()),true);//.getContents().getFirst();
+
+                    List<Result> baseline = evaluate(truth, resource);
+                    builder.append(model.getName());
+                    builder.append(":");
+                    builder.append(baseline);
+                    builder.append(",");
+                    builder.append(System.lineSeparator());
+                    result.increment(baseline.size());
+                    //FIXME what if query is null?
+                    for (int idx=0; idx< queries.size(); idx++){
+                        if(flags[idx].shouldContinue()){
+                            Query query = queries.get(idx).getValue();
+
+                            List<Result> matches = evaluate(query, resource);
+
+                            boolean equal = matches!=null && compare(baseline, matches);
+
+                            if(!equal){
+                                result.different(idx);
+                                flags[idx].abort();
+                            }
+                        }
+                    }
+                });
+                builder.append("}");
+                /*
+                 * Write data
+                 */
+                output.put(parse, result.getParse());
+                output.put(compare, result.getCompare());
+                output.put(pass, result.getPass());
+                output.put(count, result.getCount());
+                output.put(matches, builder.toString());
+            } catch (NumberFormatException e){
+                System.out.println("Unable to parse ID as integer. Skipping row. ("+line.get("id")+")");
+            } finally {
+                output.commit();
+            }
         });
     }
-    abstract protected List<Result> evaluate(Query query, EObject model);
+    public static boolean isEqual(List<String> l1, List<String> l2){
+        Collections.sort(l1);
+        Collections.sort(l2);
+        if(l1.size()!=l2.size()){
+            return false;
+        }
+        for (int i=0; i<l1.size(); i++){
+            if(!l1.get(i).equals(l2.get(i))){
+                return false;
+            }
+        }
+        return true;
+    }
+    abstract protected List<Result> evaluate(Query query, Resource resource);
 
 
-    abstract protected boolean compare(Result truth, Result got);
+    abstract protected boolean compare(List<Result> truth, List<Result> got);
 
-    abstract protected Query parse(String query);
+    abstract protected Query parse(String query, String top);
 }

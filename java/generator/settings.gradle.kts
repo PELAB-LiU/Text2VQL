@@ -4,14 +4,16 @@ plugins {
 }
 include(
         "refinery",
-        "epsilon",
         "ocl",
         "vql",
-        "utilities"
+        "java",
+        "utilities",
+        "comparison",
+        "server"
 )
 for (project in rootProject.children) {
     val projectName = project.name
     project.name = projectName
     project.projectDir = file("submodules/$projectName")
-}
+} 
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:RaftFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations/>
+  <organizations>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.2"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.1"/>
+    </hosts>
+  </organizations>
+  <organizations>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.3"/>
+      <nodes xsi:type="dlt:EndorsingNode"/>
+    </hosts>
+    <hosts/>
+  </organizations>
+  <channels/>
+  <channels orderedBy="//@organizations.1/@hosts.1/@nodes.2"/>
+  <channels orderedBy="//@organizations.1/@hosts.0/@nodes.0"/>
+  <channels orderedBy="//@organizations.2/@hosts.0/@nodes.0"/>
+</dlt:RaftFabricNetwork>

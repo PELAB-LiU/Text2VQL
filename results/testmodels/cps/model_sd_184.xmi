@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="&#xa0;&#xa0;&#xa0;" dbUrl="2value">
+  <appTypes identifier="" exeFileLocation="0111" exeType="" zipFileUrl="2value">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbUser="value1---" dbPassword="0111100" allocatedTo="//@hostTypes.0/@instances.1" dependOn="//@appTypes.0/@instances.2" priority="-2"/>
+    <instances dbUser="" allocatedTo="//@hostTypes.0/@instances.1"/>
+    <instances identifier="value1---" dbUser="2value" allocatedTo="//@hostTypes.0/@instances.1" dependOn="//@appTypes.0/@instances.2"/>
+    <behavior identifier="1001" initial="//@appTypes.1/@behavior/@states.1">
+      <states/>
+      <states identifier=""/>
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action="01100100"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="2value"/>
+        <outgoingTransitions identifier="10010100" targetState="//@appTypes.0/@behavior/@states.2" action="2value"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="011101"/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="value1---"/>
+      <states identifier="">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier=""/>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" totalHdd="-2"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;" nodeIp="2value" availableCpu="-5" availableHdd="-1" applications="//@appTypes.0/@instances.0 //@appTypes.0/@instances.2 //@appTypes.0/@instances.1" communicateWith="//@hostTypes.0/@instances.1"/>
+  </hostTypes>
+  <hostTypes identifier="">
+    <instances availableHdd="-3"/>
+    <instances/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

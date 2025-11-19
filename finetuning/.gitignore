@@ -1,0 +1,10 @@
+adapter-*/
+text2vql*train.jsonl
+text2vql*test.jsonl
+qwen*/
+deepseek*/
+codellama*/
+
+# Do not track databases (too large for GitHub)
+evaluation.db
+evaluation*.db

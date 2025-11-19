@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="">
+  <appTypes>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="100010001">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action="value1---"/>
+      </states>
+      <states identifier="2value"/>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.4" action=""/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+      </states>
+      <states identifier="10110">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.0/@behavior/@states.4" action=""/>
+        <outgoingTransitions/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions identifier="11011111" targetState="//@appTypes.0/@behavior/@states.3" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.3" action="2value"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.0" action="100"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="" exeType="2value" zipFileUrl="1011">
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.0/@behavior/@states.0">
+      <states identifier="2value"/>
+      <states identifier=""/>
+    </behavior>
+  </appTypes>
+  <requests identifier=""/>
+  <hostTypes identifier="2value">
+    <instances identifier="010100101" availableHdd="-2"/>
+  </hostTypes>
+  <hostTypes identifier="2value">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" availableRam="-6"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

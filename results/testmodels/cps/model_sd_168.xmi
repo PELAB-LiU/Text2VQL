@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="100100" dbUrl="2value">
+  <appTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileLocation="2value" exeType="value1---" zipFileUrl="value1---">
+    <behavior identifier="0111011" initial="//@appTypes.1/@behavior/@states.0"/>
+  </appTypes>
+  <appTypes identifier="1110011" exeFileLocation="2value" exeType="" zipFileUrl="" exeFileSize="96">
+    <behavior identifier="1001001" initial="//@appTypes.1/@behavior/@states.2">
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+        <outgoingTransitions/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.2/@behavior/@states.0"/>
+      </states>
+      <states identifier="2value">
+        <outgoingTransitions/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.2" action="1011110"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.2" action="100111011"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="value1---">
+    <behavior identifier="" initial="//@appTypes.2/@behavior/@states.0">
+      <states identifier="2value">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.2" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.2/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier="value1---"/>
+  <hostTypes identifier="2value"/>
+</cps:CyberPhysicalSystem>

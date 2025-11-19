@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Text2VQL',
-  tagline: 'Teaching a Model Query Language to Open-Source Language Models with ChatGPT',
+  tagline: 'Teaching a Model Query Language to Open-Source Language Models with ChatGPT. [This site is work in progress.]',
 
   // Set the production url of your site here
   url: 'https://pelab-liu.github.io',
@@ -21,7 +21,11 @@ const config: Config = {
   projectName: 'Text2VQL', // Usually your repo name.
 
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: 'warn', // or 'throw' / 'ignore'
+    },
+  },
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you

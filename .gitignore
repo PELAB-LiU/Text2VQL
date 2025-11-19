@@ -168,6 +168,10 @@ cython_debug/
 /gptneo/
 /opt-125-vql2text/
 
+# VSCode
+.vscode/
+
+# Other that ignore something (legacy from Models 24 version). 
 /repo-ecore-all/
 /repo-atlanmod/
 

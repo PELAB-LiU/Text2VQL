@@ -1,14 +1,11 @@
 package se.liu.ida.sas.pelab.text2vql.vql.syntax;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
-import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.InputOutput;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -17,6 +14,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
+@Deprecated
 public class EvaluateDatabase {
     private static final String JDBC_URL = ("jdbc:sqlite:" + System.getenv("JDBC_URL"));
 
@@ -43,7 +41,6 @@ public class EvaluateDatabase {
 
         ArrayList<Integer> list_ids = new ArrayList<>();
         while (resultSet.next()) {
-            String nl = resultSet.getString("nl");
             String pattern = resultSet.getString("pattern");
             String metamodel = resultSet.getString("metamodel");
             try {

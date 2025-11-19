@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="11000001" dbUrl="2value">
+  <appTypes exeFileLocation="" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="" exeFileSize="52">
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1"/>
+  </appTypes>
+  <appTypes identifier="2value" exeFileLocation="value1---" exeFileSize="27">
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.4">
+      <states identifier=""/>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="0101001" targetState="//@appTypes.2/@behavior/@states.0" action=""/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions targetState="//@appTypes.2/@behavior/@states.0"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.3" action="10100"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.0" action="01111011"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.4" action="value1---"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="2value" exeType="1110" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="-6">
+    <behavior identifier="001" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="2value">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="2value"/>
+        <outgoingTransitions/>
+      </states>
+    </behavior>
+  </appTypes>
+  <requests identifier=""/>
+  <requests identifier="100101"/>
+  <hostTypes identifier=""/>
+</cps:CyberPhysicalSystem>

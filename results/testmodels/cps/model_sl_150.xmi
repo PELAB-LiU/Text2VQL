@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="2value">
+  <appTypes identifier="" exeFileLocation="1011" exeType="2value" zipFileUrl="value1---" exeFileSize="-4">
+    <requirements type="//@hostTypes.0"/>
+    <instances identifier="01011" dbUser="2value" dbPassword="" dependOn="//@appTypes.1/@instances.3 //@appTypes.1/@instances.0 //@appTypes.0/@instances.0" priority="1"/>
+    <behavior identifier="&#xa0;&#xa0;&#xa0;&#xa0;" initial="//@appTypes.1/@behavior/@states.0"/>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="011" exeType="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" zipFileUrl="2value" exeFileSize="-4">
+    <requirements type="//@hostTypes.0"/>
+    <instances identifier="" dbUser="" dbPassword="" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.3/@instances.1 //@appTypes.1/@instances.3" priority="-7"/>
+    <instances/>
+    <instances identifier="" state="Stopped" dbUser="" dbPassword="2value" dependOn="//@appTypes.3/@instances.1 //@appTypes.2/@instances.0 //@appTypes.1/@instances.2 //@appTypes.1/@instances.3" priority="28"/>
+    <instances identifier="2value" state="Stopped" dbUser="1110100" dbPassword="2value" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.2/@instances.0 //@appTypes.1/@instances.2 //@appTypes.1/@instances.3" priority="63"/>
+    <instances dbUser="" dbPassword="2value"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="2value"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="0100" exeType="value1---" zipFileUrl="value1---" exeFileSize="15">
+    <instances identifier="" state="Stopped" dbUser="11010" dbPassword="" dependOn="//@appTypes.2/@instances.0 //@appTypes.3/@instances.1 //@appTypes.1/@instances.3"/>
+    <behavior identifier="">
+      <states identifier="00100101"/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;" exeFileLocation="value1---" exeType="" zipFileUrl="" exeFileSize="-4">
+    <instances identifier="1010111"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" dbUser="2value" dbPassword="2value" allocatedTo="//@hostTypes.0/@instances.0" dependOn="//@appTypes.1/@instances.2 //@appTypes.2/@instances.0"/>
+  </appTypes>
+  <requests identifier="1011001"/>
+  <requests identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <requests identifier=""/>
+  <requests identifier="100"/>
+  <hostTypes identifier="01000">
+    <instances identifier="" nodeIp="&#xa0;&#xa0;&#xa0;&#xa0;" availableCpu="84" availableRam="-2" totalCpu="52" totalRam="-2" applications="//@appTypes.1/@instances.3 //@appTypes.3/@instances.1 //@appTypes.1/@instances.0" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

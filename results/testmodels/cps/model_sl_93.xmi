@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="001101111" dbUrl="100000000">
+  <appTypes identifier="" exeFileLocation="value1---" exeType=""/>
+  <appTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileLocation="11100" exeType=""/>
+  <requests identifier="1001111"/>
+  <requests identifier="">
+    <requirements identifier="value1---" count="18" type="//@appTypes.0">
+      <availablePorts>83</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+    <requirements identifier="1100100" count="-6" type="//@appTypes.0">
+      <availablePorts>-2</availablePorts>
+      <availablePorts>86</availablePorts>
+      <availablePorts>0</availablePorts>
+    </requirements>
+  </requests>
+  <hostTypes identifier="">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="&#xa0;&#xa0;&#xa0;" availableCpu="96" availableHdd="56" totalCpu="75" totalHdd="-1" communicateWith="//@hostTypes.0/@instances.0 //@hostTypes.1/@instances.0 //@hostTypes.0/@instances.1"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="value1---" availableRam="16" availableHdd="83" totalCpu="-8" communicateWith="//@hostTypes.0/@instances.1 //@hostTypes.1/@instances.0 //@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2"/>
+  </hostTypes>
+  <hostTypes identifier="value1---">
+    <instances identifier="2value" nodeIp="value1---" availableCpu="-4" availableRam="13" totalCpu="-9" totalHdd="45" communicateWith="//@hostTypes.1/@instances.0"/>
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;" nodeIp="value1---" availableCpu="65" totalCpu="-9" totalRam="-4" communicateWith="//@hostTypes.0/@instances.0 //@hostTypes.1/@instances.2 //@hostTypes.1/@instances.0"/>
+    <instances identifier="value1---" availableCpu="-7" totalCpu="-4" communicateWith="//@hostTypes.1/@instances.0 //@hostTypes.1/@instances.2"/>
+    <instances/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

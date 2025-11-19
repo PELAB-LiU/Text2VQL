@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="">
+  <appTypes>
+    <behavior identifier="01101" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="">
+        <outgoingTransitions identifier="011" targetState="//@appTypes.1/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.0" action="11100101"/>
+        <outgoingTransitions action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="2value" exeType="" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;">
+    <behavior identifier="2value" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="2value">
+        <outgoingTransitions identifier="" action=""/>
+        <outgoingTransitions identifier="value1---" action="2value"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.2/@behavior/@states.2" action="value1---"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;" exeType="" zipFileUrl="2value" exeFileSize="-5">
+    <behavior identifier="&#xa0;&#xa0;&#xa0;" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="value1---"/>
+      <states identifier="">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.2/@behavior/@states.1" action="2value"/>
+      </states>
+      <states identifier=""/>
+    </behavior>
+  </appTypes>
+  <requests identifier="2value"/>
+  <requests identifier="2value"/>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;"/>
+  <hostTypes identifier="2value">
+    <instances identifier="" nodeIp="" availableRam="-10" totalCpu="-3" totalRam="24" communicateWith="//@hostTypes.2/@instances.0"/>
+    <instances nodeIp="1110011"/>
+  </hostTypes>
+  <hostTypes identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+    <instances identifier="0001111" nodeIp="" totalCpu="-5" communicateWith="//@hostTypes.1/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

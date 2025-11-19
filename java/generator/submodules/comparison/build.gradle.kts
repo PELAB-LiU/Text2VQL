@@ -1,0 +1,33 @@
+plugins {
+    id("java")
+    id("org.xtext.xtend") version "4.0.0"
+}
+
+group = "se.liu.ida.sas.pelab.text2vql"
+version = "1.0-SNAPSHOT"
+
+dependencies {
+    implementation(project(":vql"))
+    implementation(project(":ocl"))
+    implementation(project(":java"))
+    implementation(project(":utilities"))
+    
+    implementation("org.eclipse.viatra:org.eclipse.viatra.query.patternlanguage.emf:2.9.0")
+    
+    compileOnly("org.eclipse.xtext:org.eclipse.xtext:2.36.0")
+    implementation("org.eclipse.emf:org.eclipse.emf.codegen.ecore:2.39.0")
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.register<JavaExec>("startServer") {
+    group = "syntax check"
+    description = "Starts HTTP Server for syntax check"
+
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("se.liu.ida.sas.pelab.text2vql.server.ServerMain")
+}

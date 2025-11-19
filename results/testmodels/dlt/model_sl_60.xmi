@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:RaftFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations/>
+  <channels>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+  </channels>
+</dlt:RaftFabricNetwork>

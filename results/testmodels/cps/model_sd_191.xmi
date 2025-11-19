@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="2value">
+  <appTypes identifier="010110011" exeFileLocation="value1---" exeType="2value" exeFileSize="94">
+    <behavior identifier="0111" initial="//@appTypes.0/@behavior/@states.2">
+      <states identifier="">
+        <outgoingTransitions identifier="1001" targetState="//@appTypes.0/@behavior/@states.2" action="2value"/>
+      </states>
+      <states identifier="&#xa0;&#xa0;&#xa0;"/>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.1" action="00010011"/>
+        <outgoingTransitions identifier="0101100" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="" exeType="2value" zipFileUrl="value1---">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" state="Stopped" dbUser="" allocatedTo="//@hostTypes.1/@instances.0"/>
+    <behavior identifier="2value" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="&#xa0;&#xa0;&#xa0;&#xa0;">
+        <outgoingTransitions targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="0100010" targetState="//@appTypes.1/@behavior/@states.0" action="11011010"/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="value1---"/>
+  <hostTypes identifier="value1---">
+    <instances identifier="100" nodeIp="010110" availableCpu="-3" availableHdd="-2" totalCpu="-5" totalRam="16" applications="//@appTypes.1/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

@@ -14,8 +14,9 @@ import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParserBuilder;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Guice;
-import se.liu.ida.sas.pelab.text2vql.vql.matchset.CSVHandler;
 
+@Deprecated
+@SuppressWarnings("null")
 public class ProfileMain {
 	static final String MODE = System.getenv("MODE");
 	static final String CSV = System.getenv("CSV");
@@ -37,8 +38,9 @@ public class ProfileMain {
 		}
 	}
 	
+	
 	private static void csv_aggregate_proofile() {
-		var input = (Iterable<CSVRecord>) CSVHandler.parse(CSV);
+		Iterable<CSVRecord> input = null;//(Iterable<CSVRecord>) CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 
@@ -68,7 +70,7 @@ public class ProfileMain {
 		System.out.println(profiler);
 	}
 	private static void csv_individual_proofile() throws IOException {
-		var input = (Iterable<CSVRecord>) CSVHandler.parse(CSV);
+		Iterable<CSVRecord> input = null;//(Iterable<CSVRecord>) CSVHandler.parse(CSV);
 		
 		EMFPatternLanguageStandaloneSetup.doSetup();
 		StandaloneParserWithSeparateModules runtimeModule = new StandaloneParserWithSeparateModules(); 

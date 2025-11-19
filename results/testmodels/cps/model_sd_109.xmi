@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="1110010" dbUrl="value1---">
+  <appTypes identifier="2value" exeFileLocation="" exeType="0011" zipFileUrl="" exeFileSize="-5">
+    <behavior identifier="" initial="//@appTypes.0/@behavior/@states.0">
+      <states identifier="">
+        <outgoingTransitions identifier="000010010" targetState="//@appTypes.0/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions/>
+      </states>
+      <states identifier="01100">
+        <outgoingTransitions targetState="//@appTypes.0/@behavior/@states.0" action="value1---"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+      </states>
+      <states/>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="110110100" exeType="" zipFileUrl="01110">
+    <instances dbPassword="10010001"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="00101001">
+        <outgoingTransitions identifier="" targetState="//@appTypes.1/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+      <states identifier="2value"/>
+      <states identifier=""/>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.4" action=""/>
+      </states>
+      <states identifier=""/>
+      <states identifier="">
+        <outgoingTransitions identifier="0001100" targetState="//@appTypes.0/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions targetState="//@appTypes.1/@behavior/@states.4"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.1" action="110111010"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="value1---"/>
+</cps:CyberPhysicalSystem>

@@ -2,6 +2,7 @@ package se.liu.ida.sas.pelab.text2vql.refinery.transformation;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.*;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -18,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings({"rawtypes","unchecked","unused"})
 public class Problem2VQL {
     //private ProblemTrace trace;
     private final BiMap<String, String> namemap = HashBiMap.create();

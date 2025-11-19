@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="value1---" dbUrl="value1---">
+  <appTypes exeFileLocation="011" zipFileUrl="&#xa0;&#xa0;&#xa0;">
+    <instances identifier="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" dbPassword="111011"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="1011010">
+        <outgoingTransitions/>
+      </states>
+      <states identifier="2value">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action=""/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes identifier="value1---" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;" exeType="11010" zipFileUrl="value1---">
+    <instances identifier="0111" dbUser="" dbPassword="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="2value">
+        <outgoingTransitions identifier="" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.0" action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.0" action="0011"/>
+        <outgoingTransitions action=""/>
+        <outgoingTransitions identifier="" targetState="//@appTypes.0/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+      <states>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.1/@behavior/@states.1" action="2value"/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.0" action="value1---"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="">
+    <instances identifier="2value" nodeIp="" availableCpu="-6" totalCpu="45" totalHdd="-7" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+  <hostTypes identifier=""/>
+</cps:CyberPhysicalSystem>

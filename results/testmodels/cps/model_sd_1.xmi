@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="1111" dbUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;">
+  <appTypes identifier="" exeFileLocation="" exeType="2value" zipFileUrl="" exeFileSize="-8">
+    <instances identifier="" dbUser="value1---" dbPassword="2value"/>
+    <behavior identifier="00111000" initial="//@appTypes.1/@behavior/@states.0">
+      <states identifier="2value">
+        <outgoingTransitions action="2value"/>
+        <outgoingTransitions/>
+      </states>
+      <states identifier="0110111">
+        <outgoingTransitions identifier="11101110" targetState="//@appTypes.0/@behavior/@states.2" action="2value"/>
+      </states>
+      <states identifier="2value">
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.0/@behavior/@states.0" action="2value"/>
+      </states>
+    </behavior>
+  </appTypes>
+  <appTypes exeFileSize="-1">
+    <behavior identifier="" initial="//@appTypes.1/@behavior/@states.1">
+      <states identifier="101110010">
+        <outgoingTransitions identifier="&#xa0;&#xa0;&#xa0;" targetState="//@appTypes.1/@behavior/@states.2" action="2value"/>
+      </states>
+      <states identifier="">
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.1" action=""/>
+        <outgoingTransitions identifier="value1---" targetState="//@appTypes.1/@behavior/@states.1" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+      </states>
+      <states identifier="value1---">
+        <outgoingTransitions identifier="000101001" targetState="//@appTypes.0/@behavior/@states.0" action="111110"/>
+        <outgoingTransitions identifier="2value" targetState="//@appTypes.0/@behavior/@states.0" action="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;"/>
+        <outgoingTransitions/>
+      </states>
+    </behavior>
+  </appTypes>
+  <hostTypes identifier="2value">
+    <instances nodeIp="value1---" availableCpu="90" totalCpu="54" totalRam="-1" totalHdd="72"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

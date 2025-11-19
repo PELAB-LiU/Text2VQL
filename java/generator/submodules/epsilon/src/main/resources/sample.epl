@@ -1,9 +1,0 @@
-pattern LongSegment
-    segment: Segment {
-
-    match: segment.length > 0
-
-    do {
-        segment.length.println();
-    }
-}

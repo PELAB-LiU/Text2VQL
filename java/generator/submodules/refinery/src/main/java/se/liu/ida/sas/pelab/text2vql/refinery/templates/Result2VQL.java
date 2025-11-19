@@ -5,6 +5,7 @@ import tools.refinery.logic.term.truthvalue.TruthValue;
 import tools.refinery.store.map.Cursor;
 import tools.refinery.store.tuple.Tuple;
 
+@SuppressWarnings("unused")
 public class Result2VQL {
     private final ModelGenerator generator;
 

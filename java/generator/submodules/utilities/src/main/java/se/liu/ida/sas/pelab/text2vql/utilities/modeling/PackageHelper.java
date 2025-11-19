@@ -1,0 +1,68 @@
+package se.liu.ida.sas.pelab.text2vql.utilities.modeling;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.*;
+import org.eclipse.emf.ecore.resource.Resource;
+
+public class PackageHelper {
+    public final Resource resource;
+    public final EPackage epackage;
+    public final EFactory factory;
+
+    public PackageHelper(EPackage epackage){
+        this(epackage, (Resource) epackage.eResource());
+    }
+    public PackageHelper(EPackage epackage, Resource resource){
+        this.epackage = epackage;
+        this.resource = resource;
+        factory = epackage.getEFactoryInstance();
+        
+    }
+
+    public EObject make(String eClass){
+        EClass cls = (EClass) epackage.getEClassifier(eClass);
+        return factory.create(cls);
+    }
+
+    public EObject make(EObject parent, String relation, String eClass){
+        EClass cls = (EClass) epackage.getEClassifier(eClass);
+        EObject instance = factory.create(cls);
+        link(parent, relation, instance);
+        return instance;
+    }
+
+    public Object makeEnum(String eEnum){
+        String[] data = eEnum.split("::", 2);
+        EEnum etype = (EEnum) epackage.getEClassifier(data[0]);
+        return factory.createFromString(etype, data[1]);
+    }
+
+    public Object makeEnum(EObject parent, String relation, String eEnum){
+        String[] data = eEnum.split("::", 2);
+        EEnum etype = (EEnum) epackage.getEClassifier(data[0]);
+        Object value = factory.createFromString(etype, data[1]);
+        link(parent, relation, value);
+        return value;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void link(EObject object, String feature, T value){
+        EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
+        if(object.eGet(relation) instanceof EList list){
+            list.add(value);
+        } else {
+            object.eSet(relation, value);
+        }
+    }
+    public <T> void set(EObject object, String feature, T value){
+        EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
+        object.eSet(relation, value);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public <T> void add(EObject object, String feature, T value){
+        EStructuralFeature relation = object.eClass().getEStructuralFeature(feature);
+        ((EList) object.eGet(relation)).add(value);
+    }
+
+}

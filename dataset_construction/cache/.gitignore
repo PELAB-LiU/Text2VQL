@@ -1,0 +1,3 @@
+# Ignore every cache cvs
+*.csv
+*.pkl

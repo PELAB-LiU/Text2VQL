@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:KafkaFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations/>
+  <organizations/>
+  <organizations>
+    <hosts/>
+  </organizations>
+  <organizations>
+    <hosts/>
+  </organizations>
+  <channels/>
+  <channels/>
+  <channels/>
+  <channels>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+    <chaincodes/>
+  </channels>
+  <channels>
+    <chaincodes/>
+  </channels>
+</dlt:KafkaFabricNetwork>

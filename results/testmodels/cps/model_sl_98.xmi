@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cps:CyberPhysicalSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:cps="http://org.eclipse.viatra/model/cps" identifier="2value" dbUrl="2value">
+  <appTypes identifier="" exeFileLocation="2value" exeType="value1---" zipFileUrl="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeFileSize="-7">
+    <behavior identifier="2value"/>
+  </appTypes>
+  <appTypes identifier="" exeFileLocation="&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;" exeType="0010" zipFileUrl="2value">
+    <requirements type="//@hostTypes.0"/>
+    <instances dbUser="1000"/>
+    <instances identifier="value1---" dbUser="111101" dbPassword="value1---" dependOn="//@appTypes.1/@instances.0 //@appTypes.1/@instances.1"/>
+  </appTypes>
+  <requests identifier="01101"/>
+  <hostTypes identifier="2value">
+    <instances identifier="10100" nodeIp="1000" availableHdd="48"/>
+    <instances totalHdd="-9" communicateWith="//@hostTypes.0/@instances.0"/>
+  </hostTypes>
+</cps:CyberPhysicalSystem>

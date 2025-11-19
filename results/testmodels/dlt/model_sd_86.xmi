@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ASCII"?>
+<dlt:KafkaFabricNetwork xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dlt="http://pelab.liu.se/text2vql/dlt">
+  <organizations>
+    <hosts/>
+  </organizations>
+  <organizations>
+    <hosts/>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.3/@chaincodes.1 //@channels.2/@chaincodes.1 //@channels.2/@chaincodes.0 //@channels.3/@chaincodes.0"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.3/@chaincodes.1 //@channels.0/@chaincodes.1 //@channels.0/@chaincodes.2 //@channels.0/@chaincodes.0 //@channels.2/@chaincodes.1 //@channels.2/@chaincodes.0"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.0 //@channels.3/@chaincodes.0 //@channels.0/@chaincodes.1"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.0 //@channels.2/@chaincodes.1 //@channels.0/@chaincodes.0"/>
+      <nodes xsi:type="dlt:OrderingNode"/>
+    </hosts>
+    <hosts/>
+  </organizations>
+  <organizations>
+    <hosts/>
+    <hosts>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.0 //@channels.0/@chaincodes.1 //@channels.0/@chaincodes.2 //@channels.0/@chaincodes.0 //@channels.2/@chaincodes.1"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.3/@chaincodes.1 //@channels.3/@chaincodes.0 //@channels.2/@chaincodes.1 //@channels.0/@chaincodes.0"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.0 //@channels.3/@chaincodes.0 //@channels.3/@chaincodes.1 //@channels.2/@chaincodes.1 //@channels.0/@chaincodes.0"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.0 //@channels.3/@chaincodes.0 //@channels.0/@chaincodes.2 //@channels.0/@chaincodes.1 //@channels.3/@chaincodes.1 //@channels.2/@chaincodes.1 //@channels.0/@chaincodes.0"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.0/@chaincodes.2 //@channels.0/@chaincodes.1 //@channels.3/@chaincodes.1 //@channels.0/@chaincodes.0 //@channels.3/@chaincodes.0 //@channels.2/@chaincodes.0"/>
+    </hosts>
+    <hosts>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.0 //@channels.1"/>
+      <nodes xsi:type="dlt:OrderingNode" orders="//@channels.3 //@channels.2"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.2/@chaincodes.1 //@channels.0/@chaincodes.0 //@channels.2/@chaincodes.0 //@channels.0/@chaincodes.1 //@channels.3/@chaincodes.1 //@channels.0/@chaincodes.2"/>
+      <nodes xsi:type="dlt:EndorsingNode" endorses="//@channels.3/@chaincodes.1 //@channels.3/@chaincodes.0 //@channels.2/@chaincodes.0 //@channels.0/@chaincodes.1 //@channels.2/@chaincodes.1"/>
+    </hosts>
+    <hosts/>
+  </organizations>
+  <channels orderedBy="//@organizations.2/@hosts.3/@nodes.0">
+    <chaincodes endorsedBy="//@organizations.2/@hosts.3/@nodes.2 //@organizations.1/@hosts.2/@nodes.1 //@organizations.2/@hosts.2/@nodes.1 //@organizations.2/@hosts.2/@nodes.3 //@organizations.2/@hosts.1/@nodes.1 //@organizations.2/@hosts.2/@nodes.2 //@organizations.1/@hosts.1/@nodes.1 //@organizations.2/@hosts.1/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.2/@nodes.3 //@organizations.2/@hosts.2/@nodes.2 //@organizations.1/@hosts.1/@nodes.1 //@organizations.1/@hosts.2/@nodes.0 //@organizations.2/@hosts.1/@nodes.0 //@organizations.2/@hosts.3/@nodes.2 //@organizations.2/@hosts.3/@nodes.3"/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.2/@nodes.3 //@organizations.2/@hosts.2/@nodes.2 //@organizations.1/@hosts.1/@nodes.1 //@organizations.2/@hosts.1/@nodes.0 //@organizations.2/@hosts.3/@nodes.2"/>
+  </channels>
+  <channels orderedBy="//@organizations.2/@hosts.3/@nodes.0"/>
+  <channels orderedBy="//@organizations.2/@hosts.3/@nodes.1">
+    <chaincodes endorsedBy="//@organizations.1/@hosts.2/@nodes.1 //@organizations.2/@hosts.2/@nodes.1 //@organizations.2/@hosts.1/@nodes.0 //@organizations.2/@hosts.2/@nodes.2 //@organizations.1/@hosts.1/@nodes.0 //@organizations.1/@hosts.2/@nodes.0 //@organizations.2/@hosts.2/@nodes.3 //@organizations.2/@hosts.3/@nodes.3 //@organizations.2/@hosts.3/@nodes.2 //@organizations.1/@hosts.1/@nodes.1"/>
+    <chaincodes endorsedBy="//@organizations.2/@hosts.3/@nodes.2 //@organizations.1/@hosts.2/@nodes.1 //@organizations.1/@hosts.1/@nodes.0 //@organizations.2/@hosts.2/@nodes.1 //@organizations.2/@hosts.1/@nodes.1 //@organizations.2/@hosts.2/@nodes.2 //@organizations.1/@hosts.1/@nodes.1 //@organizations.2/@hosts.3/@nodes.3 //@organizations.2/@hosts.1/@nodes.0"/>
+  </channels>
+  <channels orderedBy="//@organizations.2/@hosts.3/@nodes.1">
+    <chaincodes endorsedBy="//@organizations.2/@hosts.2/@nodes.1 //@organizations.2/@hosts.1/@nodes.1 //@organizations.2/@hosts.2/@nodes.2 //@organizations.2/@hosts.3/@nodes.3 //@organizations.1/@hosts.1/@nodes.0 //@organizations.2/@hosts.2/@nodes.3 //@organizations.1/@hosts.2/@nodes.0"/>
+    <chaincodes endorsedBy="//@organizations.1/@hosts.1/@nodes.0 //@organizations.2/@hosts.2/@nodes.1 //@organizations.2/@hosts.1/@nodes.1 //@organizations.2/@hosts.2/@nodes.3 //@organizations.2/@hosts.2/@nodes.2 //@organizations.2/@hosts.3/@nodes.3 //@organizations.1/@hosts.1/@nodes.1 //@organizations.2/@hosts.3/@nodes.2"/>
+  </channels>
+</dlt:KafkaFabricNetwork>

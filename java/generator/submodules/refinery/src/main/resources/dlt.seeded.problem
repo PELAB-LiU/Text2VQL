@@ -1,0 +1,75 @@
+abstract class FabricNetwork {
+    contains Organization[1..*] organizations
+    contains Channel[1..*] channels
+}
+
+class KafkaFabricNetwork extends FabricNetwork.
+
+class RaftFabricNetwork extends FabricNetwork.
+
+class Organization {
+    contains Host[0..*] hosts
+}
+
+class Host {
+    contains Node[0..4] nodes
+}
+
+abstract class Node.
+
+class OrderingNode extends Node {
+    Channel[0..*] orders opposite orderedBy
+}
+
+class EndorsingNode extends Node {
+    ChaincodeInstance[0..*] endorses opposite endorsedBy
+}
+
+class Channel {
+    contains ChaincodeInstance[0..*] chaincodes
+    OrderingNode[0..*] orderedBy opposite orders
+}
+
+class ChaincodeInstance {
+    EndorsingNode[0..*] endorsedBy opposite endorses
+}
+
+
+% Auxiliary predicate for derived features
+pred peerHelper(Channel c, Host h, Node n) <->
+    orders(n, c),
+    nodes(h, n)
+;
+    chaincodes(c, i),
+    endorses(n, i),
+    nodes(h, n).
+
+pred peer(n, c) <-> peerHelper(c, _, n).
+
+pred participatesIn(o, c) <->
+    hosts(o, h),
+    peerHelper(c, h, _).
+
+%pred collaboratesWith(Organization o1, Organization o2) <->
+%    o1 != o2,
+%    participatesIn(o1, c),
+%    participatesIn(o2, c).
+%pred collaboratesWithNot(Organization o1, Organization o2) <->
+%    !collaboratesWith(o1, o2).
+
+Organization(o1).
+Organization(o2).
+participatesIn(o1,c1).
+
+pred endorsesChaincode(EndorsingNode n, Channel c, ChaincodeInstance i) <->
+    chaincodes(c, i),
+    endorses(n, i).
+
+pred endorsesMultipleChaincodes(EndorsingNode n, Channel c) <->
+    endorsesChaincode(n, c, i1),
+    endorsesChaincode(n, c, i2),
+    i1 != i2.
+
+endorsesMultipleChaincodes(n1, c2).
+
+scope node = 20..40, FabricNetwork=1, Organization +=1..4.
