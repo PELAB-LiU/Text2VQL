@@ -5,6 +5,8 @@ qwen*/
 deepseek*/
 codellama*/
 
+.ipynb_checkpoints/
+
 # Do not track databases (too large for GitHub)
 evaluation.db
 evaluation*.db
