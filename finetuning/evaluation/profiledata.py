@@ -65,6 +65,9 @@ class DataArguments:
                                       metadata={"help": "Path to the training data."})
     lang: str = field(default="vql", metadata={"help": "Target language"})
 
+def precentile(array, cutoff, prefix='Input'):
+    print(f"{prefix} (<={cutoff}): {sum(1 for v in array if v <= cutoff) / len(array) * 100}%")
+
 def profile(model_args, data_args):
     if data_args.where_data == "hf":
         dataset = load_dataset(data_args.data_path)
@@ -82,7 +85,12 @@ def profile(model_args, data_args):
     print(f"Number of examples: {len(input_lengths)}")
 
     # Plot histograms
+    precentile(input_lengths, 2048)
     plot_histogram(input_lengths, "Histogram of Input Lengths", "Input Length", output_file=f"input_lengths_{data_args.lang}.png")
+    if data_args.lang == 'java':
+        precentile(target_lengths, 1024, prefix='Output')
+    else:
+        precentile(target_lengths, 512, prefix='Output')
     plot_histogram(target_lengths, "Histogram of Target Lengths", "Target Length", output_file=f"target_lengths_{data_args.lang}.png")
 
 def main():
@@ -92,18 +100,12 @@ def main():
 
 """
 #qwen-1.5 java: 
-python profiledata.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl --max_input_length 2048 --max_target_length 1024
+python -m evaluation.profiledata --model_name_or_path qwen/qwen2.5-coder-1.5b --lang java --data_path_local_train text2vql_java_java_train.jsonl --data_path_local_test text2vql_java_java_test.jsonl
 #qwen-1.5 ocl: 
-python profiledata.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl --max_input_length 2048 --max_target_length 1024
+python profiledata.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang ocl --data_path_local_train text2vql_ocl_ocl_train.jsonl --data_path_local_test text2vql_ocl_ocl_test.jsonl
 #qwen-1.5 vql: 
-python profiledata.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl --max_input_length 2048 --max_target_length 1024
+python profiledata.py --model_name_or_path qwen/qwen2.5-coder-1.5b --lang vql --data_path_local_train text2vql_vql_vql_train.jsonl --data_path_local_test text2vql_vql_vql_test.jsonl
 """
 
-"""
-./finetune.sh Qwen/Qwen3-1.7B-Base qwen3-1.7b
-./finetune.sh Qwen/Qwen3-8B-Base qwen3-8b
-./finetune.sh Qwen/Qwen2.5-Coder-7B qwen2.5-coder-7b
-./finetune.sh Qwen/Qwen2.5-Coder-1.5B qwen2.5-coder-1.5b
-"""
 if __name__ == '__main__':
     main()
