@@ -117,7 +117,7 @@ if __name__ == "__main__":
     eval = Evaluator(args.db, args.truth)
     if args.id is not None:
         result = eval.process(args.id)
-        #eval.update(result.keys(), result)
+        eval.update(result.keys(), result)
     else:
         for i in range(0, 38+1):
             if i==23:
