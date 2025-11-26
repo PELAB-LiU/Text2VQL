@@ -15,6 +15,7 @@ import org.eclipse.viatra.query.patternlanguage.emf.util.PatternParsingResults;
 import org.eclipse.viatra.query.runtime.api.AdvancedViatraQueryEngine;
 import org.eclipse.viatra.query.runtime.api.IQuerySpecification;
 import org.eclipse.viatra.query.runtime.emf.EMFScope;
+import org.eclipse.viatra.query.runtime.matchers.planning.QueryProcessingException;
 
 import se.liu.ida.sas.pelab.text2vql.comparison.input.Query;
 import se.liu.ida.sas.pelab.text2vql.vql.StatelessVQLSyntaxCheck;
@@ -90,6 +91,8 @@ public class VQLJob implements Job {
             Collections.sort(matches);
             return new Job.MatchSet(this.query.id(), matches, null);
         } catch(IllegalArgumentException e) {
+            return new Job.MatchSet(this.query.id(), List.of("E_"+e.toString()), null);
+        } catch(QueryProcessingException e) {
             return new Job.MatchSet(this.query.id(), List.of("E_"+e.toString()), null);
         } catch (Exception e) {
             return new Job.MatchSet(this.query.id(), null, e);
