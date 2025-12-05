@@ -35,6 +35,9 @@ def classify(row):
     else:
         return "Correct"
 
+def remapDictionary(dictionary, function):
+    return {key: function(value) for key, value in dfs.items()}
+    
 ############################
 # Load generated responses #
 ############################
@@ -178,6 +181,81 @@ def inplaceRemapTable(df, mapper, exclude=['llm']):
         if not col in exclude:
             df[col] = df[col].apply(mapper)
 
+############################
+# Make grouped improvemnts #
+############################
+LLM_ORDER = ['GPT-5','CodeLlama 7B','DeepSeek Coder 1.3B','DeepSeek Coder 7B','Qwen2.5 Coder 1.5B','Qwen2.5 Coder 7B','Qwen3 1.7B','Qwen3 8B']
+CFG_CUFFIX = ["\\ic{}", "\\ft{}", "$\\Delta$"]
+
+def aggregateResultCount(column):
+    accu_ic = 0
+    accu_ft = 0;
+    for ic, ft in column:
+        if ic['Correct']>=1:
+            accu_ic+=1
+        if ft and ft['Correct']>=1:
+            accu_ft+=1
+    delta = (accu_ft-accu_ic)
+    return accu_ic, accu_ft , f"+{delta}" if delta>=0 else f"{delta}"
+    
+def label(df):
+    df = df.merge(TRUTH[['id','domain','source']], left_index=True, right_on="id", how="left")
+    df["group"] = df["domain"]  # default
+    df.loc[(df["domain"] == "railway") & (df["source"] == "text2vql"), "group"] = "text2vql"
+    df.loc[(df["domain"] == "railway") & (df["source"] != "text2vql"), "group"] = "railway"
+    df = df.groupby('group')[LLM_ORDER].aggregate(aggregateResultCount).reset_index()
+    return df
+
+def explode(df, group_col="group", row_suffixes=CFG_CUFFIX, aggregate_name=None):
+    expanded_df = df.set_index(group_col).apply(pd.Series.explode).reset_index()
+    new_labels = []
+    for group in df[group_col]:
+        for suffix in row_suffixes:
+            new_labels.append(f"{group} {suffix}")
+    expanded_df['group'] = new_labels
+    
+    if aggregate_name is None:
+        return expanded_df
+    
+    agg_rows = []
+    for suffix in row_suffixes:
+        mask = expanded_df["group"].str.endswith(f" {suffix}")
+        subset = expanded_df.loc[mask].drop(columns=["group"])
+
+        row = {}
+
+        for col in subset.columns:
+            s = subset[col]
+
+            # remember original type
+            is_string = s.dtype == object
+
+            # numeric processing
+            nums = pd.to_numeric(s, errors="coerce").fillna(0)
+            total = nums.sum()
+
+            if suffix == "$\\Delta$":
+                row[col] = f"{int(total):+d}" 
+            else:
+                row[col] = total
+
+        row["group"] = f"{aggregate_name} {suffix}"
+        agg_rows.append(row)
+
+    expanded_df = pd.concat(
+        [expanded_df, pd.DataFrame(agg_rows)],
+        ignore_index=True
+    )
+    return expanded_df
+
+def makeGroupCountTable(aggregate_name=None):
+    dfs = makeCountTable()
+    return {
+        'vql': explode(label(dfs['vql']), aggregate_name=aggregate_name),
+        'ocl': explode(label(dfs['ocl']), aggregate_name=aggregate_name),
+        'java': explode(label(dfs['java']), aggregate_name=aggregate_name)
+    }
+    
 ######################
 # Latex helper stuff #
 ######################
@@ -200,6 +278,52 @@ def replaceFirstCell(content, lang, hline=None, hdashline=None):
     else:
         return content
 
+def dictionaryToTabluar(tables: dict, group_col="group", group_order=None, drop_columns=None):
+    # Determine base group order
+    if group_order is None:
+        first_key = next(iter(tables))
+        base_groups = tables[first_key][group_col]
+    else:
+        base_groups = pd.Series(group_order)
+
+    aligned_tables = []
+    column_tuples = []
+    lang_offsets = []
+    offset = 2
+    for lang, df in tables.items():
+        df = df.copy()
+        if drop_columns is not None:
+            df = df.drop(drop_columns, axis=1)
+        df = df.set_index(group_col).apply(pd.Series.explode).reset_index()
+        df = df.set_index(group_col).loc[base_groups]
+        
+        # Build MultiIndex columns: (Language, LLM)
+        for col in df.columns:
+            rotated_col = f"\\rotatebox{{90}}{{{col}}}"
+            column_tuples.append((lang.upper(), rotated_col))
+        lang_offsets.append((offset, offset+len(df.columns)-1))
+        offset += len(df.columns)
+        aligned_tables.append(df)
+
+    # ---- 2. Concatenate horizontally with MultiIndex columns ----
+    merged = pd.concat(aligned_tables, axis=1)
+    merged.columns = pd.MultiIndex.from_tuples(
+        column_tuples, names=["Language", "LLM"]
+    )
+
+    # ---- 3. Reinsert group column as first column ----
+    merged.insert(0, ("", group_col), base_groups.values)
+
+    # ---- 4. Export to LaTeX with multicolumn headers ----
+    latex = merged.to_latex(
+        index=False,
+        multicolumn=True,
+        multicolumn_format="c",
+        column_format="l|"+'|'.join(["c"*(1+e-s) for s, e in lang_offsets]),
+        escape=False
+    )
+
+    return latex, lang_offsets
 ################################
 # Dataset Construction Helpers #
 ################################
