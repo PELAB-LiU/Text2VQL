@@ -208,7 +208,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern collaboratesWith(o1: Organization, o2: Organization){","Bag(Tuple(o1: Organization, o2: Organization))","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> collaboratesWith(Resource resource) {",,,,
-21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,find,or","Two organizations that do not participate in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
+21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,find,or","Two organizations that do not collaborate. Two different organizations collaborate if the organizations participates in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
 	neg find collaboratesWith(o1, o2);
 }
 pattern peerHelper(c: Channel, h: Host, n: Node){
