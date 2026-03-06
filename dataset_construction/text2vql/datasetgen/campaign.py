@@ -1,5 +1,5 @@
 
-from text2vql.datasetgen. chatgpt import ChatGPTAgent
+from text2vql.datasetgen.chatgpt import ChatGPTAgent
 from text2vql.seed.seed_yakindu import SEED
 from text2vql.util.args import makeParser
 from text2vql.util.metamodel import MetaModel
