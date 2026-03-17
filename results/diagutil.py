@@ -9,7 +9,66 @@ import numpy as np
 import re
 import glob
 import json
+from collections.abc import Iterable
+from collections import ChainMap
 
+################
+# Plot helpers #
+################
+COLUMN_WIDTH_IN = 2.99213 #in, (76mm)
+TEXT_WIDTH_IN = 6.29921 #in, (160 mm)
+
+# Settings for matplotlib
+PTL_BASE = {
+    "axes.titlesize": 10,
+    "axes.labelsize": 8,
+    "xtick.labelsize": 6,
+    "ytick.labelsize": 6,
+    "figure.constrained_layout.use": True,
+    'mathtext.default':  'regular'
+}
+
+PLT_COL = ChainMap({
+    "figure.figsize": (COLUMN_WIDTH_IN,  (6/10)*COLUMN_WIDTH_IN)
+}, PTL_BASE)
+
+PLT_PG = ChainMap({
+    "figure.figsize": (TEXT_WIDTH_IN,  (6/10)*TEXT_WIDTH_IN)
+}, PTL_BASE)
+
+# Settings for seaborn
+SNS_BASE = {
+    #"context": "notebook",
+    "style": "whitegrid",
+    "palette": "muted",
+    "font": "DejaVu Sans",
+    "font_scale": 1.0,
+}
+COLW = ChainMap({
+},{"rc": PLT_COL}, SNS_BASE)
+
+TEXTW = ChainMap({
+}, {"rc": PLT_PG}, SNS_BASE)
+
+def sns_col():
+    sns.set_theme(**COLW)
+def sns_page():
+    sns.set_theme(**TEXTW)
+
+def toSize(w=1,h=1, scale=1):
+    figwidth, _ = plt.rcParams["figure.figsize"]
+    figwidth *= scale   
+    figheight = (h/w)*figwidth
+    return {"figsize": (figwidth,figheight)}
+
+def oneCol(w=1,h=1, scale=1, pagewidth=False):
+    figwidth = COLUMN_WIDTH_IN
+    if pagewidth:
+        figwidth = TEXT_WIDTH_IN #in, (160 mm)
+    figwidth *= scale   
+    #w, h = aspect_ratio
+    figheight = (h/w)*figwidth
+    return (figwidth,figheight)
 #########################
 # Project file settings #
 #########################
@@ -23,24 +82,9 @@ while True:
         raise FileNotFoundError("Could not find a parent directory named 'Text2VQL'.")
     TEXT2VQL_ROOT = new
 
-#####################
-# Utility functions #
-#####################
-def classify(row):
-    # Use pd.isna() to handle missing values
-    if pd.isna(row["syntax"]) or not row["syntax"]:
-        return "Syntax Error"
-    elif pd.isna(row["semantics"]) or not row["semantics"]:
-        return "Semantic Error"
-    else:
-        return "Correct"
-
-def remapDictionary(dictionary, function):
-    return {key: function(value) for key, value in dfs.items()}
-    
-############################
-# Load generated responses #
-############################
+#############
+# Constants #
+#############
 EVAL_TYPE_MAPPING = {
     "id": "Int64",
     "llm": str,
@@ -65,6 +109,37 @@ LLM_NAME_MAPPING = {
     'deepseek-ai/deepseek-coder-7b-base-v1.5': 'DeepSeek Coder 7B',
     'ChatGPT': 'GPT-5'
 }
+LLM_ORDER = ['GPT-5','DeepSeek Coder 1.3B','Qwen2.5 Coder 1.5B','Qwen3 1.7B','CodeLlama 7B','DeepSeek Coder 7B','Qwen2.5 Coder 7B','Qwen3 8B']
+CFG_CUFFIX = ["\\ic{}", "\\ft{}", "$\\Delta$"]
+
+
+#####################
+# Utility functions #
+#####################
+def classify(row):
+    # Use pd.isna() to handle missing values
+    if pd.isna(row["syntax"]) or not row["syntax"]:
+        return "Syntax Error"
+    elif pd.isna(row["semantics"]) or not row["semantics"]:
+        return "Semantic Error"
+    else:
+        return "Correct"
+
+def remapDictionary(dictionary, function):
+    return {key: function(value) for key, value in dictionary.items()}
+    
+def reorderColumns(df: pd.DataFrame, order: list=LLM_ORDER) -> pd.DataFrame:
+    order = list(order)
+    # Columns not in the provided order (preserve original order)
+    front = [c for c in df.columns if c not in order]
+    # Columns in the provided order that actually exist in the DataFrame
+    back = [c for c in order if c in df.columns]
+    return df[front + back]
+    
+############################
+# Load generated responses #
+############################
+
 def loadPrompts(path='finetuning/evaluation.db'):
     with sqlite3.connect(os.path.join(TEXT2VQL_ROOT,path)) as conn:
         prompts = pd.read_sql_query("SELECT * FROM evaluation", conn)
@@ -140,6 +215,9 @@ def fillContent(df_lang, llm, caseid):
     return (in_counts, ft_counts)
 
 def move_to_front(arr, values):
+    """
+    Rearrange the arr array such that the resulting lists starts with elements that are present in both arr and values, and ends with elements only present in arr.
+    """
     return [x for x in arr if x in values] + [x for x in arr if not x in values]
 
 def make_tables(df):
@@ -184,8 +262,7 @@ def inplaceRemapTable(df, mapper, exclude=['llm']):
 ############################
 # Make grouped improvemnts #
 ############################
-LLM_ORDER = ['GPT-5','CodeLlama 7B','DeepSeek Coder 1.3B','DeepSeek Coder 7B','Qwen2.5 Coder 1.5B','Qwen2.5 Coder 7B','Qwen3 1.7B','Qwen3 8B']
-CFG_CUFFIX = ["\\ic{}", "\\ft{}", "$\\Delta$"]
+
 
 def aggregateResultCount(column):
     accu_ic = 0
@@ -251,9 +328,9 @@ def explode(df, group_col="group", row_suffixes=CFG_CUFFIX, aggregate_name=None)
 def makeGroupCountTable(aggregate_name=None):
     dfs = makeCountTable()
     return {
-        'vql': explode(label(dfs['vql']), aggregate_name=aggregate_name),
-        'ocl': explode(label(dfs['ocl']), aggregate_name=aggregate_name),
-        'java': explode(label(dfs['java']), aggregate_name=aggregate_name)
+        'vql': reorderColumns(explode(label(dfs['vql']), aggregate_name=aggregate_name)),
+        'ocl': reorderColumns(explode(label(dfs['ocl']), aggregate_name=aggregate_name)),
+        'java': reorderColumns(explode(label(dfs['java']), aggregate_name=aggregate_name))
     }
     
 ######################
@@ -278,7 +355,7 @@ def replaceFirstCell(content, lang, hline=None, hdashline=None):
     else:
         return content
 
-def dictionaryToTabluar(tables: dict, group_col="group", group_order=None, drop_columns=None):
+def dictionaryToTabluar(tables: dict, group_col="group", group_order=None, drop_columns=None, excel=None):
     # Determine base group order
     if group_order is None:
         first_key = next(iter(tables))
@@ -322,7 +399,9 @@ def dictionaryToTabluar(tables: dict, group_col="group", group_order=None, drop_
         column_format="l|"+'|'.join(["c"*(1+e-s) for s, e in lang_offsets]),
         escape=False
     )
-
+    if excel is not None:
+        merged.to_excel(excel)
+    
     return latex, lang_offsets
 ################################
 # Dataset Construction Helpers #
