@@ -1,7 +1,7 @@
 {
   "name": "Docusaurus",
 
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+  "image": "node:lts",
   
   "customizations": {
     "vscode": {
