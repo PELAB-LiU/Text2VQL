@@ -1,11 +1,11 @@
 id,domain,source,construct_vql,description,truth_vql,header_vql,header_ocl,header_java,,,,notes
-0,railway,text2vql,or,Semaphores with STOP or GO signals.,"pattern stopOrGo(semaphore: Semaphore){
+0,railway,text2vql,disj,Semaphores with STOP or GO signals.,"pattern stopOrGo(semaphore: Semaphore){
     Semaphore.signal(semaphore, Signal::GO);
 } or {
     Semaphore.signal(semaphore, Signal::STOP);
 }",pattern stopOrGo(semaphore: Semaphore){,Bag(Semaphore),"public class Query { 
     public List<Semaphore> stopOrGo(Resource resource){",,,,
-1,railway,text2vql,or,TrackElements that are either connected or monitored by the same sensor.,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
+1,railway,text2vql,disj,TrackElements that are either connected or monitored by the same sensor.,"pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){
     TrackElement.monitoredBy(track1, sensor);
     TrackElement.monitoredBy(track2, sensor);
 } or {
@@ -13,14 +13,14 @@ id,domain,source,construct_vql,description,truth_vql,header_vql,header_ocl,heade
 }","pattern relatedTrackElements(track1: TrackElement, track2: TrackElement){","Bag(Tuple(track1: TrackElement, track2: TrackElement))","public class Query {
     public static record Match(TrackElement track1, TrackElement track2) {}
     public Set<Match> relatedTrackElements(Resource resource) {",,,,
-2,railway,text2vql,agg,Total length of segments.,"pattern totalLength(length: java Integer){
+2,railway,text2vql,aggr,Total length of segments.,"pattern totalLength(length: java Integer){
     length == sum find segmentLength(_,#);
 }
 pattern segmentLength(segment: Segment, length: java Integer){
     Segment.length(segment, length);
 }",pattern totalLength(length: java Integer){,Number,"public class Query { 
     public int totalLength(Resource resource){",,,,
-3,railway,text2vql,agg,Track elements monitored by at lest two sensors.,"pattern monitoredBy2Sensors(track: TrackElement){
+3,railway,text2vql,aggr,Track elements monitored by at lest two sensors.,"pattern monitoredBy2Sensors(track: TrackElement){
     cnt == count find trackMonitoredBy(track, _);
     check(cnt >= 2);
 }
@@ -28,7 +28,7 @@ pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
     TrackElement.monitoredBy(track, sensor);
 }",pattern monitoredBy2Sensors(track: TrackElement){,Bag(TrackElement),"public class Query { 
     public List<TrackElement> monitoredBy2Sensors(Resource resource){",,,,
-4,railway,text2vql,"type,or",RailwayElements that are either Switches or SwitchPositions.,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
+4,railway,text2vql,"type,disj",RailwayElements that are either Switches or SwitchPositions.,"pattern switchOrSwitchPositionRailwayElemements(raliway: RailwayElement){
     Switch(raliway);
 } or {
     SwitchPosition(raliway);
@@ -38,20 +38,20 @@ pattern trackMonitoredBy(track: TrackElement, sensor: Sensor){
     Switch(railway);
 }",pattern switchRailwayElements(railway: RailwayElement){,Bag(RailwayElement),"public class Query { 
     public List<RailwayElement> switchRailwayElements(Resource resource){",,,,
-6,railway,text2vql,normal,Active routes with entry GO semaphore.,"pattern goActiveRoute(route: Route){
+6,railway,text2vql,conj,Active routes with entry GO semaphore.,"pattern goActiveRoute(route: Route){
     Route.active(route,true);
     Route.entry(route, semaphore);
     Semaphore.signal(semaphore, Signal::GO);    
 }",pattern goActiveRoute(route: Route){,Bag(Route),"public class Query { 
     public List<Route> goActiveRoute(Resource resource){",,,,
-7,railway,text2vql,normal,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,"pattern misalignedSwitchPosition(swP : SwitchPosition){
+7,railway,text2vql,conj,SwitchPositions where the target Switch's current position is different from the SwitchPosition's position.,"pattern misalignedSwitchPosition(swP : SwitchPosition){
     SwitchPosition.target(swP, sw);
     SwitchPosition.position(swP, swpPosition);
     Switch.currentPosition(sw, swCurrentPosition);
     swpPosition != swCurrentPosition;
 }",pattern misalignedSwitchPosition(swP : SwitchPosition){,Bag(SwitchPosition),"public class Query { 
     public List<SwitchPosition> misalignedSwitchPosition(Resource resource){",,,,"In OCL, there seems to be an issue with null safety when a chain of relation is null at some point. Evaluation criteria might need to be adjusted."
-8,railway,text2vql,"agg,find,or","Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.","pattern bigRegion(region: Region){
+8,railway,text2vql,"aggr,comp,disj","Regions where the sum of segments lengths is at least 50, or regions with at least 10 sensors.","pattern bigRegion(region: Region){
     length == sum find trackLengthInRegion(region, _,#);
     check(length >= 50);
 } or {
@@ -66,14 +66,14 @@ pattern sensorInRegion(region:Region, sensor: Sensor){
     Region.sensors(region,sensor);
 }",pattern bigRegion(region: Region){,Bag(Region),"public class Query { 
     public List<Region> bigRegion(Resource resource){",,,,
-9,railway,text2vql,"normal,or",Segments that are at least 7 units long or are switches.,"pattern sevenSegmentOrSwitch(track: TrackElement){
+9,railway,text2vql,"disj,type",Segments that are at least 7 units long or are switches.,"pattern sevenSegmentOrSwitch(track: TrackElement){
     Switch(track);
 } or {
     Segment.length(track, length);
     check(length >= 7);
 }",pattern sevenSegmentOrSwitch(track: TrackElement){,Bag(TrackElement),"public class Query { 
     public List<TrackElement> sevenSegmentOrSwitch(Resource resource){",,,,
-10,railway,text2vql,"neg,find",Active route whose entry is a GO semaphore but not monitored by any sensor.,"pattern dangerousRoute(route: Route){
+10,railway,text2vql,"neg,comp",Active route whose entry is a GO semaphore but not monitored by any sensor.,"pattern dangerousRoute(route: Route){
         find activeRouteWithGO(route);
         neg find routeMonitroedBy(route,_);
 }
@@ -86,7 +86,7 @@ pattern activeRouteWithGO(route: Route){
     Semaphore.signal(entry, ::GO);
 }",pattern dangerousRoute(route: Route){,Bag(Route),"public class Query { 
     public List<Route> dangerousRoute(Resource resource){",,,,Slight inference is required to resolve the description but should be doable.
-11,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,find,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,"pattern goRouteMisalignedSwitch(route: Route){
+11,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SwitchSet.vql,comp,Active route with GO entry semaphore and misaligned switch position. Misaligned means switch position where the target Switch's current position is different from the SwitchPosition's position.,"pattern goRouteMisalignedSwitch(route: Route){
  find goRoute(route);
  Route.follows(route, swP);
  find misalignedSwitchPosition(swP);
@@ -105,7 +105,7 @@ pattern misalignedSwitchPosition(swP : SwitchPosition){
 	swpPosition != swCurrentPosition;
 }",pattern goRouteMisalignedSwitch(route: Route){,Bag(Route),"public class Query { 
     public List<Route> goRouteMisalignedSwitch(Resource resource){",,,,
-12,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,"normal,find",Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
+12,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/ConnectedSegments.vql,"conj,comp",Six segments monitored by with the same sensor. Each segment is connected to the next one.,"pattern connectedSegments6(sensor : Sensor, segment1 : Segment, segment2 : Segment, segment3 : Segment, segment4 : Segment, segment5 : Segment, segment6 : Segment){
     find connectedSegmentWithSameMonitor(segment1, segment2, sensor);
     find connectedSegmentWithSameMonitor(segment2, segment3, sensor);
     find connectedSegmentWithSameMonitor(segment3, segment4, sensor);
@@ -128,7 +128,7 @@ pattern hasSensor(sw : Switch){
     TrackElement.monitoredBy(sw, _);
 }",pattern switchNotMonitored(sw : Switch){,Bag(Switch),"public class Query { 
     public List<Switch> switchNotMonitored(Resource resource){",,,,
-14,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,neg,Retrieve sensors that monitor a switch. The switch position that targets the switch is followed by a route. The sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
+14,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/RouteSensor.vql,"neg,conj",Retrieve sensors that monitor a switch. The switch position that targets the switch is followed by a route. The sensor is not required by the route.,"pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){
     Route.follows(route, swP);
     SwitchPosition.target(swP, sw);
     TrackElement.monitoredBy(sw, sensor);
@@ -140,12 +140,12 @@ pattern required(sensor : Sensor, route : Route){
 }","pattern notRequiredRouteSensor(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch){","Bag(Tuple(route : Route, sensor : Sensor, swP : SwitchPosition, sw : Switch))","public class Query {
     public static record Match(Route route, Sensor sensor, SwitchPosition swP, Switch sw) {}
     public Set<Match> notRequiredRouteSensor(Resource resource) {",,,,
-15,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,normal,Retrieve all segments whose lengths are less or equal than zero.,"pattern negativeLength(segment : Segment){
+15,railway,trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/PosLength.vql,conj,Retrieve all segments whose lengths are less or equal than zero.,"pattern negativeLength(segment : Segment){
     Segment.length(segment, length);
     check(length <= 0);
 }",pattern negativeLength(segment : Segment){,Bag(Segment),"public class Query { 
     public List<Segment> negativeLength(Resource resource){",,,,
-16,railway,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"normal,neg","Two different routes where the exit semaphore of route1 is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
+16,railway,https://github.com/ftsrg/trainbenchmark/blob/master/trainbenchmark-tool-viatra-patterns/src/hu/bme/mit/trainbenchmark/benchmark/viatra/SemaphoreNeighbor.vql,"conj,neg","Two different routes where the exit semaphore of route1 is not the entry semaphore of the other. Each route requires a sensor, and the sensors monitor connected tracks.","pattern semaphoreNeighbor(semaphore: Semaphore, route1: Route, route2: Route, sensor1: Sensor, sensor2: Sensor, te1: TrackElement, te2: TrackElement){
        Route.exit(route1, semaphore);
 	Route.requires(route1, sensor1);
 	TrackElement.monitoredBy(te1, sensor1);
@@ -169,7 +169,7 @@ pattern entrySemaphore(route: Route, semaphore: Semaphore)
 	neg Channel.orderedBy(channel, _);
 }",pattern channelInKafkaNetworkWithoutOrderer(channel: Channel){,Bag(Channel),"public class Query { 
     public List<Channel> channelInKafkaNetworkWithoutOrderer(Resource resource){",,,,
-18,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,neg",Orderer organizations that are not part of a kafka network.,"pattern ordererOrganization(o: Organization){
+18,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"conj,neg",Orderer organizations that are not part of a kafka network.,"pattern ordererOrganization(o: Organization){
 	Organization.hosts(o, h);
 	Host.nodes(h, n);
 	OrderingNode(n);
@@ -179,7 +179,7 @@ pattern invalidOrdererOrganization(o: Organization){
 	neg KafkaFabricNetwork.organizations(_, o);
 }",pattern invalidOrdererOrganization(o: Organization){,Bag(Organization),"public class Query { 
     public List<Organization> invalidOrdererOrganization(Resource resource){",,,,
-19,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,or,"A host, channel and node, where the host either orders the channel via the node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
+19,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,disj,"A host, channel and node, where the host either orders the channel via the node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
 	OrderingNode.orders(n,c);
 	Host.nodes(h,n);
 } or {
@@ -189,7 +189,7 @@ pattern invalidOrdererOrganization(o: Organization){
 }","pattern peerHelper(c: Channel, h: Host, n: Node){","Bag(Tuple(c: Channel, h: Host, n: Node))","public class Query {
     public static record Match(Channel c, Host h, Node n) {}
     public Set<Match> peerHelper(Resource resource) {",,,,I think it is complex enough to justify an standalone query
-20,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or","Two different organizations that participate in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
+20,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"comp,disj","Two different organizations that participate in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern peerHelper(c: Channel, h: Host, n: Node){
 	OrderingNode.orders(n,c);
 	Host.nodes(h,n);
 } or {
@@ -208,7 +208,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern collaboratesWith(o1: Organization, o2: Organization){","Bag(Tuple(o1: Organization, o2: Organization))","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> collaboratesWith(Resource resource) {",,,,
-21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,find,or","Two organizations that do not collaborate. Two different organizations collaborate if the organizations participates in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
+21,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"neg,comp,disj","Two organizations that do not collaborate. Two different organizations collaborate if the organizations participates in a common channel. An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){
 	neg find collaboratesWith(o1, o2);
 }
 pattern peerHelper(c: Channel, h: Host, n: Node){
@@ -230,7 +230,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 }","pattern notCollaboratesWithSymmetric(o1: Organization, o2: Organization){","Bag(Tuple(o1: Organization, o2: Organization))","public class Query {
     public static record Match(Organization o1, Organization o2) {}
     public Set<Match> notCollaboratesWithSymmetric(Resource resource) {",,,,
-22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,find,Node that endorses multiple chaincode instances in the channel.,"pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
+22,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,comp,Node that endorses multiple chaincode instances in the channel.,"pattern endorsesMultipleChaincodes(n: EndorsingNode, c: Channel){
 	find endorsesChaincode(n, c, i1);
 	find endorsesChaincode(n, c, i2);
 	i1 != i2;
@@ -264,7 +264,7 @@ pattern collaboratesWith(o1: Organization, o2: Organization){
 	find participatesIn(o1, c);
 	find participatesIn(o2, c);
 }",,,,,,,This makes little sense compared to notCollaborateWithSymmetry
-24,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg","Node and channel, where the organization that hosts the host that has the node does not participate in the channel.  An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern cannotBePeerOf(n: Node, c: Channel){
+24,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"comp,disj,neg","Node and channel, where the organization that hosts the host that has the node does not participate in the channel.  An organization participates in a channel if it has a host, that either orders the channel via a node, or the host has a node endorsing a chaincode instance in the channel.","pattern cannotBePeerOf(n: Node, c: Channel){
 	Host.nodes(h, n);
 	Organization.hosts(o, h);
 	neg find participatesIn(o, c);
@@ -283,7 +283,7 @@ pattern participatesIn(o: Organization, c: Channel){
 }","pattern cannotBePeerOf(n: Node, c: Channel){","Bag(Tuple(n: Node, c: Channel))","public class Query {
     public static record Match(Node n, Channel c) {}
     public Set<Match> cannotBePeerOf(Resource resource) {",,,,
-25,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"find,or,neg","Node and chaincode instance where the channel of the chaincode instance is not related to the node. A node and channel are related if the node either orders the channel, or the node endorses a chaincode instance in the channel.","pattern cannotEndorse(n: Node, i: ChaincodeInstance){
+25,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,"comp,disj,neg","Node and chaincode instance where the channel of the chaincode instance is not related to the node. A node and channel are related if the node either orders the channel, or the node endorses a chaincode instance in the channel.","pattern cannotEndorse(n: Node, i: ChaincodeInstance){
 	Channel.chaincodes(c, i);
 	neg find peer(n, c);
 }
@@ -300,7 +300,7 @@ pattern peer(n: Node, c: Channel){
 }","pattern cannotEndorse(n: Node, i: ChaincodeInstance){","Bag(Tuple(n: Node, i: ChaincodeInstance))","public class Query {
     public static record Match(Node n, ChaincodeInstance i) {}
     public Set<Match> cannotEndorse(Resource resource) {",,,,
-26,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,normal,"Endorsing node, channel and chaincode, where the node endorses the chaincode and the chaincode belongs to the channel.","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
+26,dlt,https://refinery.tools/0.1.6/learn/tutorials/dlt/,comp,"Endorsing node, channel and chaincode, where the node endorses the chaincode and the chaincode belongs to the channel.","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){
 	Channel.chaincodes(c, i);
 	EndorsingNode.endorses(n, i);
 }","pattern endorsesChaincode(n: EndorsingNode, c: Channel, i: ChaincodeInstance){","Bag(Tuple(n: EndorsingNode, c: Channel, i: ChaincodeInstance))","public class Query {
@@ -315,28 +315,28 @@ private pattern allocatedApplication(app : ApplicationInstance) {
 	ApplicationInstance.allocatedTo(app, _);
 }",pattern notAllocatedButRunning(app : ApplicationInstance) {,Bag(ApplicationInstance),"public class Query { 
     public List<ApplicationInstance> notAllocatedButRunning(Resource resource){",,,,
-28,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Hosts where the available CPU of the host is greater than the total CPU.,"pattern availableGreaterThanTotalCpu(host : HostInstance) {
+28,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Hosts where the available CPU of the host is greater than the total CPU.,"pattern availableGreaterThanTotalCpu(host : HostInstance) {
 	HostInstance.availableCpu(host, aCpu);
 	HostInstance.totalCpu(host, tCpu);
 
 	check(aCpu > tCpu);
 }",pattern availableGreaterThanTotalCpu(host : HostInstance) {,Bag(HostInstance),"public class Query { 
     public List<HostInstance> availableGreaterThanTotalCpu(Resource resource){",,,,
-29,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Hosts where the available HDD of the host is greater than the total HDD.,"pattern availableGreaterThanTotalHdd(host : HostInstance) {
+29,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Hosts where the available HDD of the host is greater than the total HDD.,"pattern availableGreaterThanTotalHdd(host : HostInstance) {
 	HostInstance.availableHdd(host, aHdd);
 	HostInstance.totalHdd(host, tHdd);
 
 	check(aHdd > tHdd);
 }",pattern availableGreaterThanTotalHdd(host : HostInstance) {,Bag(HostInstance),"public class Query { 
     public List<HostInstance> availableGreaterThanTotalHdd(Resource resource){",,,,
-30,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Hosts where the available RAM of the host is greater than the total RAM.,"pattern availableGreaterThanTotalRam(host : HostInstance) {
+30,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Hosts where the available RAM of the host is greater than the total RAM.,"pattern availableGreaterThanTotalRam(host : HostInstance) {
 	HostInstance.availableRam(host, aRam);
 	HostInstance.totalRam(host, tRam);
 
 	check(aRam > tRam);
 }",pattern availableGreaterThanTotalRam(host : HostInstance) {,Bag(HostInstance),"public class Query { 
     public List<HostInstance> availableGreaterThanTotalRam(Resource resource){",,,,
-31,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Host where its IP address is not unique,"pattern nodeIpIsNotUnique(host : HostInstance){
+31,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Host where its IP address is not unique,"pattern nodeIpIsNotUnique(host : HostInstance){
 	find nodeIpOfHost(host, ip);
 	find nodeIpOfHost(otherHost, ip);
 	host != otherHost;
@@ -354,7 +354,7 @@ private pattern identifiableId(identifiable : Identifiable, id : java String) {
 	Identifiable.identifier(identifiable, id);
 }",pattern idContainsWhitespace(identifiable : Identifiable) {,Bag(Identifiable),"public class Query { 
     public List<Identifiable> idContainsWhitespace(Resource resource){",,,,"Now this is tricky because of the check, but we will see"
-33,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Identifiables where the ID is not unique.,"pattern idIsNotUnique(identifiable : Identifiable) {
+33,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Identifiables where the ID is not unique.,"pattern idIsNotUnique(identifiable : Identifiable) {
 	find identifiableId(identifiable, id);
 	find identifiableId(otherIdentifiable, id);
 	identifiable != otherIdentifiable; 
@@ -369,7 +369,7 @@ private pattern identifiableId(identifiable : Identifiable, id : java String) {
 }","pattern initialStateNotContainedByStateMachine(statemachine : StateMachine, state : State) {","Bag(Tuple(statemachine : StateMachine, state : State))","public class Query {
     public static record Match(StateMachine statemachine, State state) {}
     public Set<Match> initialStateNotContainedByStateMachine(Resource resource) {",,,,
-35,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,"neg,find",Transitions with source state but without target state,"pattern transitionWithoutTargetState(transition : Transition) {
+35,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,"neg,conj",Transitions with source state but without target state,"pattern transitionWithoutTargetState(transition : Transition) {
 	State.outgoingTransitions(source, transition);
 	neg find stateTransition(source, transition, _);
 }
@@ -379,7 +379,7 @@ private pattern stateTransition(source : State, transition : Transition, target 
 	Transition.targetState(transition, target);
 }",pattern transitionWithoutTargetState(transition : Transition) {,Bag(Transition),"public class Query { 
     public List<Transition> transitionWithoutTargetState(Resource resource){",,,,
-36,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,"neg,find",The target state of the transition is not in the same state machine,"private pattern stateTransition(source : State, transition : Transition, target : State) {
+36,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,"neg,comp",The target state of the transition is not in the same state machine,"private pattern stateTransition(source : State, transition : Transition, target : State) {
 	State.outgoingTransitions(source, transition);
 	Transition.targetState(transition, target);
 }
@@ -390,7 +390,7 @@ pattern targetStateNotContainedBySameStateMachine(transition : Transition, targe
 }","pattern targetStateNotContainedBySameStateMachine(transition : Transition, target : State) {","Bag(Tuple(transition : Transition, target : State))","public class Query {
     public static record Match(Transition transition, State target) {}
     public Set<Match> targetStateNotContainedBySameStateMachine(Resource resource) {",,,,
-37,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,normal,Multiple outgoing transitions of state define the same action,"pattern multipleTransitionsWithSameAction(state : State, action : java String) {
+37,cps,https://github.com/eclipse-viatra/org.eclipse.viatra.examples/blob/master/cps/queries/org.eclipse.viatra.examples.cps.queries/src/org/eclipse/viatra/examples/cps/model/validation/rules.vql,conj,Multiple outgoing transitions of state define the same action,"pattern multipleTransitionsWithSameAction(state : State, action : java String) {
 	State.outgoingTransitions(state, transition);
 	State.outgoingTransitions(state, otherTransition);
 	find actionOfTransition(transition, action);
