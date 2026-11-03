@@ -11,6 +11,7 @@ import glob
 import json
 from collections.abc import Iterable
 from collections import ChainMap
+from functools import lru_cache
 
 ################
 # Plot helpers #
@@ -140,7 +141,9 @@ def reorderColumns(df: pd.DataFrame, order: list=LLM_ORDER) -> pd.DataFrame:
 # Load generated responses #
 ############################
 
-def loadPrompts(path='finetuning/evaluation.db'):
+# The database path is fixed in practice, so one cached load is enough.
+@lru_cache(maxsize=1)
+def _loadAllPrompts(path):
     with sqlite3.connect(os.path.join(TEXT2VQL_ROOT,path)) as conn:
         prompts = pd.read_sql_query("SELECT * FROM evaluation", conn)
     
@@ -157,12 +160,24 @@ def loadPrompts(path='finetuning/evaluation.db'):
         
     prompts['llm'] = prompts['llm'].map(lambda x : LLM_NAME_MAPPING[x])
     return prompts
-PROMPTS = loadPrompts()
+
+def filterShots(prompts, k=None):
+    """
+    Keep only the first k shots (shotid is 0-based), so that "solved" means pass@k.
+    k=None keeps all shots. Always returns a copy, so cached data is never modified.
+    """
+    if k is None:
+        return prompts.copy()
+    return prompts[prompts["shotid"] < k].copy()
+
+def loadPrompts(k=None, path='finetuning/evaluation.db'):
+    return filterShots(_loadAllPrompts(path), k)
 
 #####################
 # Load ground truth #
 #####################
-def loadTruth(path='dataset_construction/test_metamodel/truth.csv'):
+@lru_cache(maxsize=1)
+def _loadTruth(path):
     df = pd.read_csv(
             os.path.join(TEXT2VQL_ROOT,path),
             encoding='unicode_escape',
@@ -176,7 +191,9 @@ def loadTruth(path='dataset_construction/test_metamodel/truth.csv'):
     df = df.dropna(subset=["id"])
     df["id"] = df["id"].astype(int)
     return df
-TRUTH = loadTruth()
+
+def loadTruth(path='dataset_construction/test_metamodel/truth.csv'):
+    return _loadTruth(path).copy()
 
 ####################################
 # Make improvement data            #
@@ -244,15 +261,20 @@ def make_tables(df):
         table = pd.DataFrame(data).set_index("llm")[caseids]
         tables[lang] = table.transpose()
     return tables
-def makeCountTable():
+# One entry per k: None (all shots) and 1..5 shots.
+@lru_cache(maxsize=6)
+def _makeCountTable(k):
     results = (
-        PROMPTS.copy().groupby(["llm", "finetune", "caseid", "category", "lang"])
+        loadPrompts(k=k).groupby(["llm", "finetune", "caseid", "category", "lang"])
         .size()
         .reset_index(name="count")
     )
     results["finetune"] = results["finetune"].map({True: "Finetuned", False: "In context"})
     #results["x_label"] = results["caseid"].astype(str) + " - " + results["finetune"]
     return make_tables(results)
+
+def makeCountTable(k=None):
+    return {lang: df.copy() for lang, df in _makeCountTable(k).items()}
 
 def inplaceRemapTable(df, mapper, exclude=['llm']):
     for col in df.columns:
@@ -276,7 +298,8 @@ def aggregateResultCount(column):
     return accu_ic, accu_ft , f"+{delta}" if delta>=0 else f"{delta}"
     
 def label(df):
-    df = df.merge(TRUTH[['id','domain','source']], left_index=True, right_on="id", how="left")
+    truth = loadTruth()
+    df = df.merge(truth[['id','domain','source']], left_index=True, right_on="id", how="left")
     df["group"] = df["domain"]  # default
     df.loc[(df["domain"] == "railway") & (df["source"] == "text2vql"), "group"] = "text2vql"
     df.loc[(df["domain"] == "railway") & (df["source"] != "text2vql"), "group"] = "railway"
@@ -325,8 +348,8 @@ def explode(df, group_col="group", row_suffixes=CFG_CUFFIX, aggregate_name=None)
     )
     return expanded_df
 
-def makeGroupCountTable(aggregate_name=None):
-    dfs = makeCountTable()
+def makeGroupCountTable(aggregate_name=None, k=None):
+    dfs = makeCountTable(k=k)
     return {
         'vql': reorderColumns(explode(label(dfs['vql']), aggregate_name=aggregate_name)),
         'ocl': reorderColumns(explode(label(dfs['ocl']), aggregate_name=aggregate_name)),
