@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start", "_comment": "//If you use a devcontainer, run it as: npx docusaurus start --host 0.0.0.0",
+    "start": "docusaurus start --host 0.0.0.0", "_comment": "//If you use a devcontainer, run it as: npx docusaurus start --host 0.0.0.0",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",

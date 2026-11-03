@@ -4,19 +4,19 @@ sidebar_position: 4
 
 # Finetuning
 
-Finetuning has to be performed in an environment with GPU. 
+Finetuning has to be performed in an environment with GPU, **not in our container**. 
 We used a jupyter environment with cuda and an NVIDIA A100. GPUs with 24GB VRAM should be sufficient. GPUs with less than 16 GB VRAM will not be sufficient.
 
 
-:::info
-The process relies on files in other directories of the project. Have the whole repository available in the environemnt. 
+:::warning
+The process relies on files in other directories (e.g., `dataset_construction/text2vql`) of the project. Have the whole repository available in the environemnt. 
 :::
 
 :::info[Working directory]
 Work in `finetuning`.
 :::
 
-## Run finetuning
+## Run fine-tuning
 
 We provide a helper script `finetune.sh` that performs the finetuning for `VQL`, `OCL` and `Java` if the input files are provided correctly. It is only designed to work with LLMs supported by the python code.
 
