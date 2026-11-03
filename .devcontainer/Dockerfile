@@ -3,12 +3,11 @@ FROM ubuntu:latest
 RUN apt update -y
 
 RUN apt install -y sudo
-RUN useradd -m -s /bin/bash abc 
-RUN usermod -aG sudo abc 
-RUN echo "abc ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN usermod -aG sudo ubuntu 
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 RUN apt update -y
-RUN apt install -y wget unzip git nano vim
+RUN apt install -y wget unzip git nano vim build-essential
 
 # Install java
 RUN apt install -y openjdk-21-jdk
@@ -25,10 +24,10 @@ RUN apt install python3-pip -y
 # Virtual env setup
 USER root
 COPY requirements.txt /opt/requirements.txt 
-RUN mkdir -p /opt/venv && chown -R abc:abc /opt/venv /opt/requirements.txt
-USER abc
+RUN mkdir -p /opt/venv && chown -R ubuntu:ubuntu /opt/venv /opt/requirements.txt
+USER ubuntu
 RUN python3 -m venv /opt/venv
 RUN /opt/venv/bin/pip install -r /opt/requirements.txt
 ENV PATH="/opt/venv/bin:$PATH"
 
-USER abc
+USER ubuntu

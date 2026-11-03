@@ -31,13 +31,13 @@
   // "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  //"postCreateCommand": "npm install -y"
+  //"postCreateCommand": "npm install -y"git 
 
   // Configure tool-specific properties.
   // "customizations": {},
 
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-  "remoteUser": "abc",
+  "remoteUser": "ubuntu",
   "containerEnv": {
     "SHELL": "/bin/bash",
     "GITHUB_ACTOR": "${localEnv:GITHUB_ACTOR}",
